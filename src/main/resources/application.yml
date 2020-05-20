@@ -1,0 +1,32 @@
+server:
+  port: 2020
+
+spring:
+  profiles:
+    active: application.yml
+  freemarker:
+    suffix: .ftl
+    cache: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///ohm_system?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: ohms
+    password: 123456
+  servlet:
+    multipart:
+      max-file-size: 10485760
+  mvc:
+    static-path-pattern: /static/**
+  cache:
+    cache-names: common,system,user
+    couchbase:
+      expiration: 18000
+  transaction:
+    rollback-on-commit-failure: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    open-in-view: true
+    database: mysql
