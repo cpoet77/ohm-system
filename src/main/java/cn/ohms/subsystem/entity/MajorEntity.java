@@ -11,20 +11,27 @@ import java.io.Serializable;
 
 /**
  * Major Entity
+ *
  * @author shc
+ * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-
 @Entity
-@Table("ohms_Major")
 @Getter
 @Setter
 @DynamicInsert
 @DynamicUpdate
 @Accessors(chain = true)
-public class MajorEntity implements Serializable  {
+@Table(name = "ohms_major")
+public class MajorEntity implements Serializable {
     @Id
-    @Column(name = "Major_id")
-    private String MajorName;//专业名
-    private Integer collegeId;//学院名
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
+    @Column
+    private String name;//专业名
+
+    @ManyToOne
+    @JoinColumn(name = "college_id", referencedColumnName = "id", nullable = false)
+    private CollegeEntity college;//所属学院
 }

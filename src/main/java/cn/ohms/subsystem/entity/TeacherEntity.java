@@ -7,11 +7,10 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -23,8 +22,15 @@ import java.io.Serializable;
 @Setter
 @Accessors(chain = true)
 @Table(name = "ohms_teacher")
-public class TeacherEntity extends UserEntity implements Serializable {
+public class TeacherEntity implements Serializable {
     @Id
     @Column(name = "teacher_id")
     private String teacherId;//教职工号
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "teacher")
+    private Set<CourseGroupEntity> courseGroups = new HashSet<>();//教师负责的课群
 }

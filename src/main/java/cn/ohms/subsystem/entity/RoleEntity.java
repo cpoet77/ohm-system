@@ -10,6 +10,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 角色
@@ -37,4 +39,7 @@ public class RoleEntity implements Serializable {
 
     @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime datetime; //角色添加时间
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<UserEntity> users = new HashSet<>();//获得该角色的所有用户
 }
