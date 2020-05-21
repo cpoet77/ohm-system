@@ -26,39 +26,39 @@ import java.io.Serializable;
 public abstract class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(insertable = false, updatable = false, columnDefinition = "INT COMMENT '用户id'")
+    @Column(insertable = false, updatable = false)
     @Min(1)
     protected Integer id;//id
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(5) COMMENT '真实姓名'")
+    @Column(nullable = false)
     @NotEmpty
     @Length(min = 2, max = 5)
     protected String name;//姓名
 
-    @Column(nullable = false, columnDefinition = "CHAR(32) COMMENT '加密密码'")
+    @Column(nullable = false)
     @NotEmpty
     @Length(min = 32, max = 32)
     protected String password;//加密过的密码
 
-    @Column(nullable = false, columnDefinition = "CHAR(32) COMMENT '密码加密用到的盐'")
+    @Column(nullable = false)
     @NotEmpty
     @Length(min = 32, max = 32)
     protected String salt;//加密用的盐
 
-    @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'M' COMMENT '用户性别'")
+    @Column(nullable = false)
     @NotNull
     @NSCharCheck({'M', 'F'})
     protected Character sex;//性别
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '头像地址'")
+    @Column(nullable = false)
     @URL
     protected String avatar;//头像地址
 
-    @Column(columnDefinition = "VARCHAR(128) COMMENT '邮箱地址'")
+    @Column
     @Length(min = 12, max = 128)
     protected String email;//邮箱地址
 
-    @Column(columnDefinition = "VARCHAR(15) COMMENT '手机号'")
+    @Column
     @Length(min = 10, max = 15)
     protected String phone;//手机号
 }
