@@ -6,7 +6,6 @@ import java.io.Serializable;
 /**
  * 学院类
  *
- * @author shc
  * @author <a>xuxi</a>
  */
 @Entity
