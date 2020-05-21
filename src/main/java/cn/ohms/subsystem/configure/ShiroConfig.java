@@ -1,7 +1,7 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/3.
 package cn.ohms.subsystem.configure;
 
-import cs.ohmsubsystem.common.NSCredentialsMatcher;
+import cn.ohms.subsystem.common.NSCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;

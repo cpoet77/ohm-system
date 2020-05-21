@@ -30,10 +30,6 @@ public class LoginRecordEntity implements Serializable {
     @Column
     private Long id;// 登录记录id
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UserEntity user;// 登录的用户
-
     @Column(name = "login_ip", nullable = false)
     private String loginIp; // 登录的ip
 

@@ -1,7 +1,7 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/5/7.
 package cn.ohms.subsystem.utils;
 
-import cs.ohmsubsystem.exception.NSParseFieldException;
+import cn.ohms.subsystem.exception.NSParseFieldException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.MultiValueMap;

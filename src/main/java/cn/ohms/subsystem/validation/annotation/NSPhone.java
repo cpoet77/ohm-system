@@ -2,7 +2,7 @@
 package cn.ohms.subsystem.validation.annotation;
 
 
-import cs.ohmsubsystem.validation.NSPhoneValidation;
+import cn.ohms.subsystem.validation.NSPhoneValidation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

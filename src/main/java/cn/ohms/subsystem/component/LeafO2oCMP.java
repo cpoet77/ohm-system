@@ -1,8 +1,8 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/5/14.
 package cn.ohms.subsystem.component;
 
-import cs.ohmsubsystem.utils.leafo2o.LeafConvertException;
-import cs.ohmsubsystem.utils.leafo2o.LeafO2oUtil;
+import cn.ohms.subsystem.utils.leafo2o.LeafConvertException;
+import cn.ohms.subsystem.utils.leafo2o.LeafO2oUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;

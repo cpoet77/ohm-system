@@ -1,7 +1,7 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/5/13.
 package cn.ohms.subsystem.component;
 
-import cs.ohmsubsystem.utils.PasswordUtil;
+import cn.ohms.subsystem.utils.PasswordUtil;
 import org.springframework.stereotype.Component;
 
 /**

@@ -2,7 +2,7 @@
 package cn.ohms.subsystem.validation;
 
 
-import cs.ohmsubsystem.validation.annotation.NSIDCard;
+import cn.ohms.subsystem.validation.annotation.NSIDCard;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -2,7 +2,7 @@
 package cn.ohms.subsystem.validation.annotation;
 
 
-import cs.ohmsubsystem.validation.NSCharCheckValidation;
+import cn.ohms.subsystem.validation.NSCharCheckValidation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

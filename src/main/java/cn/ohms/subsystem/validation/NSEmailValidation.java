@@ -2,7 +2,7 @@
 package cn.ohms.subsystem.validation;
 
 
-import cs.ohmsubsystem.validation.annotation.NSEmail;
+import cn.ohms.subsystem.validation.annotation.NSEmail;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

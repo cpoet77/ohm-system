@@ -1,33 +1,15 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/19.
 package cn.ohms.subsystem.controller;
 
-import cs.ohmsubsystem.common.ResponseResult;
-import cs.ohmsubsystem.entity.UserEntity;
-import cs.ohmsubsystem.exception.NSRuntimeException;
-import cs.ohmsubsystem.service.ResourceService;
-import cs.ohmsubsystem.service.UserService;
-import cs.ohmsubsystem.utils.FileUtil;
-import cs.ohmsubsystem.utils.NStringUtil;
-import cs.ohmsubsystem.utils.UUIDUtil;
-import org.apache.shiro.SecurityUtils;
+import cn.ohms.subsystem.common.ResponseResult;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
 
 /**
  * file controller
@@ -53,14 +35,6 @@ import java.util.Objects;
 @RequestMapping("/user/file")
 @Validated
 public class FileController {
-    private final static Logger log = LoggerFactory.getLogger(FileController.class);
-    private ResourceService resourceService;
-
-    @Autowired
-    public FileController(ResourceService resourceService) {
-        this.resourceService = resourceService;
-    }
-
     /**
      * 上传文件资源
      *
@@ -75,123 +49,33 @@ public class FileController {
     public ResponseResult upload(@PathVariable @Pattern(regexp = "^(common)|(sentinel)$") String genre
             , @NotNull @RequestParam("file") MultipartFile file
             , @RequestParam(defaultValue = "false", required = false) Boolean isPublic) {
-        boolean isCommon = "common".equals(genre);
-        if (file.isEmpty() || Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            return ResponseResult.enError().setMsg("Do not accept empty file uploads");
-        }
-        String fileName = file.getOriginalFilename();
-        String fix = FileUtil.getFilePostfix(fileName);
-        String name = FileUtil.getFileNameNoFix(fileName);
-        if (fix.isEmpty() || !(isCommon ? resourceService.isCommonFileFormat(fix) : resourceService
-                .isConfidentialFileFormat(fix))) {
-            return ResponseResult.enFail().setMsg("Unsupported file type");
-        }
-        if (name.isEmpty()) {
-            return ResponseResult.enFail().setMsg("Unknown file");
-        }
-        String UUID = UUIDUtil.uuid32pure();
-        String filePath = NStringUtil.joint("{}/{}{}", new SimpleDateFormat("yyyy/MM/dd").format(new Date())
-                , UUID, fix);
-        File toFile = new File(NStringUtil.joint("{}/{}", isCommon ? ResourceService.commonFilePath
-                : ResourceService.confidentialFilePath, filePath));
-        try {
-            file.transferTo(toFile);
-            return (isCommon ? ResponseResult.enSuccess().add("file", filePath)
-                    : resourceService.saveConfidentialResource((UserEntity) SecurityUtils.getSubject().getSession()
-                    .getAttribute(UserService.USER_SELF), UUID, name, fix, toFile.getPath(), isPublic));
-        } catch (IOException e) {
-            log.warn("文件上传保存失败", e);
-        }
+//        boolean isCommon = "common".equals(genre);
+//        if (file.isEmpty() || Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+//            return ResponseResult.enError().setMsg("Do not accept empty file uploads");
+//        }
+//        String fileName = file.getOriginalFilename();
+//        String fix = FileUtil.getFilePostfix(fileName);
+//        String name = FileUtil.getFileNameNoFix(fileName);
+//        if (fix.isEmpty() || !(isCommon ? resourceService.isCommonFileFormat(fix) : resourceService
+//                .isConfidentialFileFormat(fix))) {
+//            return ResponseResult.enFail().setMsg("Unsupported file type");
+//        }
+//        if (name.isEmpty()) {
+//            return ResponseResult.enFail().setMsg("Unknown file");
+//        }
+//        String UUID = UUIDUtil.uuid32pure();
+//        String filePath = NStringUtil.joint("{}/{}{}", new SimpleDateFormat("yyyy/MM/dd").format(new Date())
+//                , UUID, fix);
+//        File toFile = new File(NStringUtil.joint("{}/{}", isCommon ? ResourceService.commonFilePath
+//                : ResourceService.confidentialFilePath, filePath));
+//        try {
+//            file.transferTo(toFile);
+//            return (isCommon ? ResponseResult.enSuccess().add("file", filePath)
+//                    : resourceService.saveConfidentialResource((UserEntity) SecurityUtils.getSubject().getSession()
+//                    .getAttribute(UserService.USER_SELF), UUID, name, fix, toFile.getPath(), isPublic));
+//        } catch (IOException e) {
+//            log.warn("文件上传保存失败", e);
+//        }
         return ResponseResult.enError();
-    }
-
-    /**
-     * 下载普通资源
-     *
-     * @param year     上传的年份
-     * @param month    上传的月份
-     * @param day      上传于哪一天
-     * @param uuid     资源uuid
-     * @param fix      资源后缀
-     * @param response HttpServletResponse
-     */
-    @GetMapping("/common/{year}/{month}/{day}/{uuid}.{fix}")
-    public void common(@PathVariable @Pattern(regexp = "\\d{4}") String year
-            , @PathVariable @Pattern(regexp = "\\d{2}") String month
-            , @PathVariable @Pattern(regexp = "\\d{2}") String day
-            , @PathVariable @NotEmpty @Length(min = 32, max = 32) String uuid
-            , @PathVariable @NotEmpty String fix
-            , HttpServletResponse response) {
-        if (!resourceService.isCommonFileFormat(NStringUtil.joint(".{}", fix))) {
-            throw new NSRuntimeException("Unsupported format");
-        }
-        String filePath = NStringUtil.joint("{}/{}/{}/{}/{}.{}", ResourceService.commonFilePath, year, month, day
-                , uuid, fix);
-        File file = new File(filePath);
-        if (file.exists() && file.isFile() && file.canRead()) {
-            try {
-                doWriteData(file, response.getOutputStream());
-            } catch (IOException e) {
-                log.warn("Failed to get output stream");
-            }
-        }
-    }
-
-    /**
-     * 下载受保护的资源
-     * <p>注意：需要进行资源下载权限验证</p>
-     *
-     * @param resourceId 资源id
-     * @param fileName   文件名
-     * @param fix        后缀
-     * @param response   HttpServletResponse
-     */
-    @GetMapping("/resource/{resourceId}/{fileName}.{fix}")
-    @RequiresAuthentication
-    public void resource(@PathVariable @NotEmpty @Length(min = 32, max = 32) String resourceId
-            , @PathVariable @NotEmpty String fileName, @PathVariable @NotEmpty String fix
-            , @NotNull HttpServletResponse response) {
-        File file = resourceService.getResourceFile((UserEntity) SecurityUtils.getSubject().getSession()
-                .getAttribute(UserService.USER_SELF), resourceId, fileName, NStringUtil.joint(".{}", fix));
-        try {
-            if (file != null) {
-                doWriteData(file, response.getOutputStream());
-            } else {
-                throw new NSRuntimeException("Unqualified files or Output Stream");
-            }
-        } catch (IOException e) {
-            log.warn("Failed to get output stream");
-        }
-    }
-
-    /**
-     * 将文件数据写入输出流
-     *
-     * @param file File
-     * @param out  OutputStream
-     */
-    private void doWriteData(File file, OutputStream out) {
-        InputStream in = null;
-        try {
-            in = new FileInputStream(file);
-            byte[] block = new byte[256];
-            int length;
-            while ((length = in.read(block)) > 0) {
-                out.write(block, 0, length);
-            }
-        } catch (IOException e) {
-            throw new NSRuntimeException("File download transfer failed!");
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException ignored) {
-            }
-            try {
-                out.close();
-            } catch (IOException ignored) {
-            }
-        }
     }
 }

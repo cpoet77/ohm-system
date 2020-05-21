@@ -1,7 +1,7 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/1.
 package cn.ohms.subsystem.utils.image;
 
-import cs.ohmsubsystem.utils.FileUtil;
+import cn.ohms.subsystem.utils.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;

@@ -1,78 +1,64 @@
-// The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/24.
+// The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/21.
 package cn.ohms.subsystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import cn.ohms.subsystem.validation.annotation.NSCharCheck;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * User entity class
+ * user entity
  *
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
-@Table(name = "ohms_user")
-@DynamicInsert
-@DynamicUpdate
-public class UserEntity implements Serializable {
+@Getter
+@Setter
+@Accessors(chain = true)
+@MappedSuperclass
+public abstract class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer id;// 用户id
+    @Column(insertable = false, updatable = false, columnDefinition = "INT COMMENT '用户id'")
+    @Min(1)
+    protected Integer id;//id
 
-    @Column(unique = true, nullable = false)
-    private String name; // 用户名
+    @Column(nullable = false, columnDefinition = "VARCHAR(5) COMMENT '真实姓名'")
+    @NotEmpty
+    @Length(min = 2, max = 5)
+    protected String name;//姓名
 
-    @Column(name = "real_name", nullable = false)
-    private String realName; // 真实姓名
+    @Column(nullable = false, columnDefinition = "CHAR(32) COMMENT '加密密码'")
+    @NotEmpty
+    @Length(min = 32, max = 32)
+    protected String password;//加密过的密码
 
-    @Column(unique = true, nullable = false)
-    private String email; // 邮箱地址
+    @Column(nullable = false, columnDefinition = "CHAR(32) COMMENT '密码加密用到的盐'")
+    @NotEmpty
+    @Length(min = 32, max = 32)
+    protected String salt;//加密用的盐
 
-    @JsonIgnore
-    @Column(nullable = false, length = 32)
-    private String password; // 加密过的密码
+    @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'M' COMMENT '用户性别'")
+    @NotNull
+    @NSCharCheck({'M', 'F'})
+    protected Character sex;//性别
 
-    @JsonIgnore
-    @Column(nullable = false, length = 32)
-    private String salt; // 加密用的盐
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '头像地址'")
+    @URL
+    protected String avatar;//头像地址
 
-    @Column(nullable = false)
-    private Character sex; // 性别
+    @Column(columnDefinition = "VARCHAR(128) COMMENT '邮箱地址'")
+    @Length(min = 12, max = 128)
+    protected String email;//邮箱地址
 
-    @Column
-    private String avatar; // 头像地址
-
-    @Column(nullable = false)
-    private Integer activity; // 活跃度
-
-    @Column(name = "sign_up_time", insertable = false, updatable = false)
-    private LocalDateTime signUpTime; // 注册时间
-
-    @Column
-    private String locale; // 区域
-
-    @Column(insertable = false)
-    private Boolean activation; // 是否被激活
-
-    @JsonIgnoreProperties(value = "users")
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "ohms_user_role", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
-            , inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private Set<RoleEntity> roles = new HashSet<>(); // 用户所拥有的角色
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "users")
-    private Set<MessageBoxEntity> messages = new HashSet<>(); // 我的消息啊
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private Set<LoginRecordEntity> loginRecords = new HashSet<>();//登录记录
+    @Column(columnDefinition = "VARCHAR(15) COMMENT '手机号'")
+    @Length(min = 10, max = 15)
+    protected String phone;//手机号
 }

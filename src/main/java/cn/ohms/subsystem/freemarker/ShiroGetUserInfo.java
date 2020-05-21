@@ -1,7 +1,7 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/5/15.
 package cn.ohms.subsystem.freemarker;
 
-import cs.ohmsubsystem.service.UserService;
+import cn.ohms.subsystem.service.UserService;
 import freemarker.template.TemplateMethodModelEx;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;

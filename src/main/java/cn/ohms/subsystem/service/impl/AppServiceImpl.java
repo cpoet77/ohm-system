@@ -1,17 +1,13 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/3/29.
 package cn.ohms.subsystem.service.impl;
 
-import cs.ohmsubsystem.service.AppService;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.ohms.subsystem.service.AppService;
+import lombok.extern.java.Log;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -20,24 +16,17 @@ import java.util.regex.Pattern;
  * AppService实现
  *
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
- * @see cs.ohmsubsystem.service.AppService
+ * @see cn.ohms.subsystem.service.AppService
  */
 @Service("AppService")
+@Log
 public class AppServiceImpl implements AppService {
-    private final static Logger log = LoggerFactory.getLogger(AppServiceImpl.class);
     // 获取调用jar引入的参数args
     // 用于动态设定一些值
     @Resource
     private ApplicationArguments args;
     // 所有配置信息
     private final static Properties appInfo = new Properties();
-
-    private SystemRepository systemRepository;
-
-    @Autowired
-    public AppServiceImpl(SystemRepository systemRepository) {
-        this.systemRepository = systemRepository;
-    }
 
     /**
      * 加载配置
@@ -97,25 +86,6 @@ public class AppServiceImpl implements AppService {
         appInfo.put("ohmsNameZH", "在线作业管理系统");
     }
 
-    /**
-     * 读取系统表 system table
-     * <p><b>如果系统表存在该属性，则读出来后会保存起来。</b></p>
-     *
-     * @param name 属性名
-     * @return value | null
-     */
-    @Nullable
-    private String readSystemTable(String name) {
-        Optional<SystemEntity> optionalSystemEntity = systemRepository.findById(name);
-        if (!optionalSystemEntity.isPresent()) {
-            return null;
-        }
-        SystemEntity systemEntity = optionalSystemEntity.get();
-        String value = systemEntity.getValue();
-        appInfo.put(name, value);
-        return value;
-    }
-
     @Override
     public String getName() {
         return getAsString("ohmsName");
@@ -133,10 +103,7 @@ public class AppServiceImpl implements AppService {
 
     @Override
     public Object get(String name) {
-        if (contain(name)) {
-            return appInfo.get(name);
-        }
-        return readSystemTable(name);
+        return appInfo.get(name);
     }
 
     @Override
