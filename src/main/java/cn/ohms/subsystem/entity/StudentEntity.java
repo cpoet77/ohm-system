@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
 @Entity
-@Table("ohms_student")
+@Table(name ="ohms_student")
 public class StudentEntity extends UserEntity implements Serializable {
     @Id
     @Column(name = "student_id")
