@@ -2,18 +2,11 @@
 package cn.ohms.subsystem.entity.middle;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * UserRoleEntity
@@ -21,6 +14,8 @@ import java.util.Objects;
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
 @Entity
+@Data
+@Accessors(chain = true)
 @Table(name = "ohms_user_role")
 public class UserRoleEntity implements Serializable {
     @EmbeddedId
@@ -31,9 +26,12 @@ public class UserRoleEntity implements Serializable {
 
     @Embeddable
     @MappedSuperclass
+    @Data
+    @Accessors(chain = true)
     public static class Key implements Serializable {
         @Column(name = "user_id", nullable = false)
         private Integer userId;
+
         @Column(name = "role_id", nullable = false)
         private Byte roleId;
     }
