@@ -1,6 +1,12 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/5/4.
 package cn.ohms.subsystem.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,6 +17,11 @@ import java.time.LocalDateTime;
  * @author shc
  */
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@Getter
+@Setter
+@Accessors(chain = true)
 @Table(name = "ohms_role")
 public class RoleEntity implements Serializable {
     @Id

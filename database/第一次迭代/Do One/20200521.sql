@@ -114,3 +114,22 @@ CREATE TABLE IF NOT EXISTS ohms_login_record
     agent         VARCHAR(255) NULL COMMENT 'user-agent',
     FOREIGN KEY (user_id) REFERENCES ohms_user (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB COMMENT '用户登录记录';
+
+
+--
+-- 视图
+--
+
+-- 教师
+CREATE VIEW ohms_view_teacher AS
+SELECT u.*, t.teacher_id
+FROM ohms_user u,
+     ohms_teacher t
+WHERE t.user_id = u.id;
+
+-- 学生
+CREATE VIEW ohms_view_student AS
+SELECT u.*, s.student_id, s.major_id
+FROM ohms_user u,
+     ohms_student s
+WHERE u.id = s.user_id;
