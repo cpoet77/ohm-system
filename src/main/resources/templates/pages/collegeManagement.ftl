@@ -35,14 +35,16 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <form id="importCollegeForm" v-if="uploadCollegeFileShow">
-                                <div class="form-group">
-                                    <label for="collegeXlsFile">请选择学院信息的表格(仅支持后缀为.xls的文件)</label>
-                                    <input name="collegeXls" type="file" id="collegeXlsFile">
-                                </div>
-                                <button id="submitImport" type="button" class="btn btn-warning btn-sm">导入</button>
-                                <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
-                            </form>
+                            <div v-if="uploadCollegeFileShow">
+                                <form id="importCollegeForm">
+                                    <div class="form-group">
+                                        <label for="collegeXlsFile">请选择学院信息的表格(仅支持后缀为.xlsx的文件)</label>
+                                        <input name="collegeXls" accept=".xlsx" type="file" id="collegeXlsFile">
+                                    </div>
+                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
+                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
+                                </form>
+                            </div>
                             <table id="collegeList" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
@@ -87,7 +89,7 @@
         const Main = new Vue({
             el: '#main',
             data: {
-                uploadCollegeFileShow: false
+                uploadCollegeFileShow: true
             }
         });
         $(function () {
@@ -99,16 +101,27 @@
                 "info": true,
                 "autoWidth": false
             });
-            $('#importBtn').on('click', () => {
-                Main.uploadCollegeFileShow = !Main.uploadCollegeFileShow;
-            });
-            $('#closeImport').on('click', $('importBtn').click);
+            // $('#importBtn').on('click', () => {
+            //     Main.uploadCollegeFileShow = !Main.uploadCollegeFileShow;
+            // });
+            // $('#closeImport').on('click', $('importBtn').click);
             $('#submitImport').on('click', () => {
-                NS.post('/teachingSecretary/collegeManagement/importCollegeInfo', $('#importCollegeForm').serializeArray()
+                console.log(1111);
+                const importingMsg = xtip.load('导入中...');
+                const  importCollegeFormData = new FormData();
+                importCollegeFormData.append('collegeXls' , $('#collegeXlsFile')[0].files[0]);
+                console.log(importCollegeFormData);
+                NS.post('/teachingSecretary/collegeManagement/importCollegeInfo', importCollegeFormData
                     , (res) => {
-
+                        if (res.code === 1000) {
+                            NS.reload();
+                        } else {
+                            xtip.msg('导入失败！', {icon: 'e'})
+                        }
                     });
+                xtip.close(importingMsg);
             });
+            console.log(2222);
         });
     </script>
 </#assign>

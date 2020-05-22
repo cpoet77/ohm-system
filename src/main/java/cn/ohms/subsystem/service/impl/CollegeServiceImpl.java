@@ -39,6 +39,7 @@ public class CollegeServiceImpl implements CollegeService {
         List<CollegeTo> errorList = new ArrayList<>();
         try {
             List<CollegeTo> collegeTos = resourceService.inputStreamToTable(CollegeTo.class, in);
+            System.out.println(collegeTos);
             collegeTos.forEach(collegeTo -> {
                 CollegeEntity college = new CollegeEntity();
                 college.setName(collegeTo.getName()).setDescription(collegeTo.getDescription());
@@ -55,6 +56,12 @@ public class CollegeServiceImpl implements CollegeService {
 
     @Override
     public boolean saveCollege(CollegeEntity college) {
-        return (collegeRepository.save(college).getId() != null);
+        try{
+            collegeRepository.save(college);
+            return true;
+        }catch (Exception e){
+            log.warn("保存数据失败!", e);
+        }
+        return false;
     }
 }

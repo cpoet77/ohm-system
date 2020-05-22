@@ -26,7 +26,7 @@ public class CollegeEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Byte id; //学院id
+    private Integer id; //学院id
 
     @Column(nullable = false, unique = true)
     private String name; //学院名

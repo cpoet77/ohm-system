@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @author xuxi
  */
 @Repository
-public interface CollegeRepository extends JpaRepository<CollegeEntity, String>, JpaSpecificationExecutor<CollegeEntity> {
+public interface CollegeRepository extends JpaRepository<CollegeEntity, Integer>, JpaSpecificationExecutor<CollegeEntity> {
 }
