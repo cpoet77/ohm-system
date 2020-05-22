@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * @author _Struggler
  */
 @Repository
-public interface LoginRecordRepository extends JpaRepository<LoginRecordEntity, String>, JpaSpecificationExecutor<LoginRecordRepository> {
+public interface LoginRecordRepository extends JpaRepository<LoginRecordEntity, String>, JpaSpecificationExecutor<LoginRecordEntity> {
 
 }

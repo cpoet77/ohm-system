@@ -39,7 +39,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> 教师管理</a></li>
-                    <li><a href="../tables/data.html"><i class="fa fa-circle-o"></i> 学生管理</a></li>
+                    <li><a href="/teacherSecretary/studentManagement"><i class="fa fa-circle-o"></i> 学生管理</a></li>
                 </ul>
             </li>
             <li class="treeview">
