@@ -1,15 +1,21 @@
-// The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/19.
+// The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/22.
 package cn.ohms.subsystem.service.impl;
 
 import cn.ohms.subsystem.service.ResourceService;
+import com.github.liaochong.myexcel.core.DefaultExcelReader;
 import org.springframework.stereotype.Service;
 
-/**
- * ResourceService实现
- *
- * @author <a href="https://www.nsleaf.cn">nsleaf</a>
- */
-@Service("resourceServiceImpl")
-public class ResourceServiceImpl implements ResourceService {
+import java.io.InputStream;
+import java.util.List;
 
+/**
+ * @author <a href="https://www.nsleaf.cn">nsleaf</a>
+ * @see cn.ohms.subsystem.service.ResourceService
+ */
+@Service("resourceService")
+public class ResourceServiceImpl implements ResourceService {
+    @Override
+    public <T> List<T> inputStreamToTable(Class<T> clazz, InputStream in) throws Exception {
+        return (DefaultExcelReader.of(clazz).sheet(0).rowFilter(row -> row.getRowNum() > 0).read(in));
+    }
 }

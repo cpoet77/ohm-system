@@ -1,4 +1,4 @@
-package cn.ohms.subsystem.controller;
+package cn.ohms.subsystem.controller.teacher;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  **/
 
 @Controller
-@RequestMapping("/teachingSecretary/collegeManagement")
-public class CollegeManagementController {
+@RequestMapping("/teachingSecretary/courseGroupManagement")
+public class CourseGroupManagementController {
     @GetMapping
     public String index(){
-        return "pages/collegeManagement";
+        return "pages/courseGroupManagement";
     }
-
 }

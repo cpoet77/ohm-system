@@ -36,9 +36,6 @@ public class LoginServiceImpl implements LoginService {
     public void loginRecord(HttpServletRequest request, UserEntity user) {
         // 获取登录ip地址
         String ip = NSIPUtil.getIpAddress(request);
-        for(int i = 0;i < 100;++i){
-            System.out.println(i);
-        }
         try {
             String message = NSIPUtil.get(ip);
             Map<String, String> map = JsonUtil.decode(message, JsonUtil.mapTypeReferenceStr());

@@ -22,46 +22,46 @@
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section class="content" id="main">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">学院管理</h3>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning">添加</button>
+                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
+                                <button type="button" class="btn btn-success">导出</button>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example2" class="table table-bordered table-hover">
+                            <form id="importCollegeForm" v-if="uploadCollegeFileShow">
+                                <div class="form-group">
+                                    <label for="collegeXlsFile">请选择学院信息的表格(仅支持后缀为.xls的文件)</label>
+                                    <input name="collegeXls" type="file" id="collegeXlsFile">
+                                </div>
+                                <button id="submitImport" type="button" class="btn btn-warning btn-sm">导入</button>
+                                <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
+                            </form>
+                            <table id="collegeList" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>序号</th>
-                                    <th>类别</th>
                                     <th>院系</th>
-                                    <th>院长</th>
                                     <th>人数</th>
                                     <th>介绍</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th>1</th>
-                                    <td>二级</td>
-                                    <td>数据科学与信息工程学院</td>
-                                    <td>李某</td>
-                                    <td>1500</td>
-                                    <td>*****</td>
-                                </tr>
+                                <#list colleges as college>
+                                    <tr>
+                                        <th>${college.id}</th>
+                                        <td>${college.name}</td>
+                                        <td>1500</td>
+                                        <td>${college.description}</td>
+                                    </tr>
+                                </#list>
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>序号</th>
-                                    <th>类别</th>
-                                    <th>院系</th>
-                                    <th>院长</th>
-                                    <th>人数</th>
-                                    <th>介绍</th>
-                                </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -79,4 +79,37 @@
     <#include "../common/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
+<#assign restFooter>
+    <!-- DataTables -->
+    <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script>
+        const Main = new Vue({
+            el: '#main',
+            data: {
+                uploadCollegeFileShow: false
+            }
+        });
+        $(function () {
+            $('#collegeList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+            $('#importBtn').on('click', () => {
+                Main.uploadCollegeFileShow = !Main.uploadCollegeFileShow;
+            });
+            $('#closeImport').on('click', $('importBtn').click);
+            $('#submitImport').on('click', () => {
+                NS.post('/teachingSecretary/collegeManagement/importCollegeInfo', $('#importCollegeForm').serializeArray()
+                    , (res) => {
+
+                    });
+            });
+        });
+    </script>
+</#assign>
 <#include "../common/footer.ftl" />

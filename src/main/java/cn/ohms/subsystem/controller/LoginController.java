@@ -69,14 +69,12 @@ public class LoginController {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         try {
-            System.out.println(1111);
             subject.login(token);
             /* 登录成功，获取用户信息 */
             UserEntity user = userService.findUserByName(username);
             if (user != null) {
                 subject.getSession().setAttribute(UserService.USER_SELF, user);
                 loginService.loginRecord(request, user);
-                System.out.println(222);
                 /* 验证完成，登录成功 */
                 return ResponseResult.enSuccess();
             }
