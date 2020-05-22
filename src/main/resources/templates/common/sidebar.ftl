@@ -25,7 +25,7 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> 学院管理</a></li>
+                    <li><a href="../pages/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a></li>
                     <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> 专业管理</a></li>
                     <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> 课群管理</a></li>
                 </ul>
