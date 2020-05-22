@@ -133,3 +133,23 @@ SELECT u.*, s.student_id, s.major_id
 FROM ohms_user u,
      ohms_student s
 WHERE u.id = s.user_id;
+
+
+--
+-- 初始化数据
+--
+INSERT INTO ohms_role(name, description)
+VALUES ('admin', '超级管理员'),
+       ('teachingSecretary', '教学秘书'),
+       ('teacher', '教师'),
+       ('student', '学生');
+
+INSERT INTO ohms_user(name, password, salt)
+VALUES ('王国富', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da');
+
+INSERT INTO ohms_teacher(teacher_id, user_id)
+VALUES ('201742010122', 1);
+
+INSERT INTO ohms_user_role(user_id, role_id)
+VALUES (1, 1),
+       (1, 2);
