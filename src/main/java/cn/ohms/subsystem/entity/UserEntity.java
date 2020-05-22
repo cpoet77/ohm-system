@@ -4,6 +4,8 @@ package cn.ohms.subsystem.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,14 +22,19 @@ import java.util.Set;
 @Accessors(chain = true)
 @Entity
 @Table(name = "ohms_user")
+@DynamicUpdate
+@DynamicInsert
 public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(insertable = false, updatable = false)
     protected Integer id;//id
 
-    @Column(nullable = false)
-    protected String name;//姓名
+    @Column(unique = true, nullable = false)
+    protected String name;//用户名
+
+    @Column(name = "real_name", nullable = false)
+    private String realName;//姓名
 
     @Column(nullable = false)
     protected String password;//加密过的密码

@@ -19,14 +19,17 @@ CREATE TABLE IF NOT EXISTS ohms_role
 
 CREATE TABLE IF NOT EXISTS ohms_user
 (
-    id       INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户id',
-    name     NVARCHAR(5)  NOT NULL COMMENT '用户名',
-    password CHAR(32)     NOT NULL COMMENT '加密过的密码',
-    salt     CHAR(32)     NOT NULL COMMENT '加密用到的盐',
-    sex      CHAR(1)      NOT NULL DEFAULT 'M' COMMENT '用户性别',
-    avatar   VARCHAR(128) NULL COMMENT '用户头像地址',
-    email    VARCHAR(78)  NULL COMMENT '用户邮箱',
-    phone    VARCHAR(15)  NULL COMMENT '用户手机',
+    id        INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户id',
+    name      VARCHAR(48)  NOT NULL COMMENT '用户名',
+    real_name NVARCHAR(5)  NOT NULL COMMENT '姓名',
+    password  CHAR(32)     NOT NULL COMMENT '加密过的密码',
+    salt      CHAR(32)     NOT NULL COMMENT '加密用到的盐',
+    sex       CHAR(1)      NOT NULL DEFAULT 'M' COMMENT '用户性别',
+    avatar    VARCHAR(128) NULL COMMENT '用户头像地址',
+    email     VARCHAR(78)  NULL COMMENT '用户邮箱',
+    phone     VARCHAR(15)  NULL COMMENT '用户手机',
+    UNIQUE (name),
+    CHECK ( LENGTH(name) > 3 ),
     CHECK ( LENGTH(name) > 1 ),
     CHECK ( LENGTH(password) = 32 ),
     CHECK ( LENGTH(salt) = 32 ),
@@ -134,7 +137,6 @@ FROM ohms_user u,
      ohms_student s
 WHERE u.id = s.user_id;
 
-
 --
 -- 初始化数据
 --
@@ -144,8 +146,8 @@ VALUES ('admin', '超级管理员'),
        ('teacher', '教师'),
        ('student', '学生');
 
-INSERT INTO ohms_user(name, password, salt)
-VALUES ('王国富', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da');
+INSERT INTO ohms_user(name,real_name, password, salt)
+VALUES ('gzmu-201742010122', '王国富', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da');
 
 INSERT INTO ohms_teacher(teacher_id, user_id)
 VALUES ('201742010122', 1);

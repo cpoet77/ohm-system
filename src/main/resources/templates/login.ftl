@@ -14,16 +14,25 @@
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
 
-        <form>
+        <form method="post">
             <div class="form-group has-feedback">
-                <input name="doId" type="text" class="form-control"
-                       placeholder="学号">
+                <input name="uname" type="text" class="form-control"
+                       placeholder="用户名">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
                 <input name="password" type="password" class="form-control"
                        placeholder="密码">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row form-group has-feedback">
+                <div class="col-xs-4">
+                    <img src="http://210.40.132.26:8011/sys/ValidateCode.aspx?t=743" width="100%" height="78%" />
+                </div>
+                <div class="col-xs-8">
+                    <input name="verificationCode" type="text" class="form-control"
+                           placeholder="验证码">
+                </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
@@ -47,15 +56,15 @@
         /*********** nsleaf www.nsleaf.cn 2020.05.05 **************/
         /***********************************************************/
         $(() => {
-            const registerForm = $('form');
-            registerForm.bootstrapValidator({
+            const form = $('form');
+            form.bootstrapValidator({
                 verbose: false,     /* 对field内的条件按顺序验证 */
                 message: '数据校验失败',
                 fields: {
-                    doId: {
+                    uname: {
                         validators: {
                             notEmpty: {
-                                message: '填写不不正确'
+                                message: '用户名不能为空'
                             }
                         }
                     },
@@ -74,10 +83,10 @@
             });
             /* 绑定点击事件 */
             $('#submitBtn').on('click', () => {
-                const bootstrapValidator = registerForm.data('bootstrapValidator');
+                const bootstrapValidator = form.data('bootstrapValidator');
                 if (bootstrapValidator.validate().isValid()) {
                     const loginLoad = xtip.load('登录中...');
-                    NS.post('/login/finishLogin', registerForm.serializeArray(), (res) => {
+                    NS.post('/login/finishLogin', form.serializeArray(), (res) => {
                         if (res.code === 1000) {
                             xtip.msg('登录成功', {icon: 's'});
                             NS.to('${backUrl}', 2000);
@@ -87,7 +96,7 @@
                         xtip.close(loginLoad);
                     });
                 }
-            })
+            });
         })
     </script>
 </#assign>

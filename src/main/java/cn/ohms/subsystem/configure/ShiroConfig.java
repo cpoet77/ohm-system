@@ -132,9 +132,9 @@ public class ShiroConfig {
         jdbcRealm.setDataSource(dataSource);
         jdbcRealm.setPermissionsLookupEnabled(true);
         jdbcRealm.setName("jdbcRealm");
-        String sqlSelectRole = "SELECT name role_name FROM ohms_role WHERE id IN (SELECT role_id FROM ohms_user_role our , ohms_user ou WHERE our.user_id = ou.id AND ou.email = ?)";
-        String sqlSelectPermission = "SELECT name permission_name FROM ohms_permission WHERE id IN (SELECT permission_id FROM ohms_role_permission orp, ohms_role orl WHERE orp.role_id = orl.id AND orl.name = ?)";
-        String sqlSelectAuthentication = "SELECT password, salt password_salt FROM ohms_user WHERE email = ?";
+        String sqlSelectRole = "SELECT name role_name FROM ohms_role WHERE id IN (SELECT role_id FROM ohms_user_role our , ohms_user ou WHERE our.user_id = ou.id AND ou.name = ?)";
+        String sqlSelectPermission = "";
+        String sqlSelectAuthentication = "SELECT password, salt password_salt FROM ohms_user WHERE name = ?";
         jdbcRealm.setUserRolesQuery(sqlSelectRole);
         jdbcRealm.setPermissionsQuery(sqlSelectPermission);
         jdbcRealm.setAuthenticationQuery(sqlSelectAuthentication);
