@@ -2,7 +2,7 @@
 package cn.ohms.subsystem.service;
 
 import cn.ohms.subsystem.common.ResponseResult;
-import cn.ohms.subsystem.entity.CollegeEntity;
+import cn.ohms.subsystem.entity.TeacherEntity;
 
 import java.io.InputStream;
 import java.util.List;
@@ -10,27 +10,27 @@ import java.util.List;
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-public interface CollegeService {
+public interface TeacherService {
     /**
-     * 获取所有学院信息
+     * 返回所有教师信息
      *
-     * @return CollegeEntity for list
+     * @return TeacherEntity for list
      */
-    List<CollegeEntity> findAll();
+    List<TeacherEntity> findAll();
 
     /**
-     * 导入学院信息
+     * 导入教师信息
      *
      * @param in InputStream
      * @return ResponseResult
      */
-    ResponseResult importCollegeInfo(InputStream in);
+    ResponseResult importTeacherInfo(InputStream in);
 
     /**
-     * 保护学院信息
+     * 保存教师
      *
-     * @param college CollegeEntity
-     * @return true | false
+     * @param teacher TeacherEntity
+     * @return true|false
      */
-    boolean saveCollege(CollegeEntity college);
+    boolean saveTeacher(TeacherEntity teacher);
 }

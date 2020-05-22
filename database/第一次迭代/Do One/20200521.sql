@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS ohms_college
     id          TINYINT PRIMARY KEY AUTO_INCREMENT COMMENT '学院id',
     name        NVARCHAR(64) NOT NULL COMMENT '学院名',
     description TEXT         NULL COMMENT '学院描述',
+    datetime    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '导入时间',
     UNIQUE (name),
     CHECK ( LENGTH(name) > 2 )
 ) ENGINE = InnoDB COMMENT '学院表';
@@ -60,6 +61,7 @@ CREATE TABLE IF NOT EXISTS ohms_major
     id         INT PRIMARY KEY AUTO_INCREMENT COMMENT '专业id',
     name       NVARCHAR(64) NOT NULL COMMENT '专业名',
     college_id TINYINT      NOT NULL COMMENT '学院id',
+    datetime   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '导入时间',
     FOREIGN KEY (college_id) REFERENCES ohms_college (id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (name),
     CHECK ( LENGTH(name) > 4 )
@@ -146,7 +148,7 @@ VALUES ('admin', '超级管理员'),
        ('teacher', '教师'),
        ('student', '学生');
 
-INSERT INTO ohms_user(name,real_name, password, salt)
+INSERT INTO ohms_user(name, real_name, password, salt)
 VALUES ('gzmu-201742010122', '王国富', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da');
 
 INSERT INTO ohms_teacher(teacher_id, user_id)

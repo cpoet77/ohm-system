@@ -2,7 +2,7 @@ package cn.ohms.subsystem.controller.teacher;
 
 import cn.ohms.subsystem.common.ResponseResult;
 import cn.ohms.subsystem.service.CollegeService;
-import cn.ohms.subsystem.tableobject.CollegeTo;
+import cn.ohms.subsystem.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 教学秘书
@@ -53,13 +52,12 @@ public class CollegeManagementController {
     @PostMapping("/importCollegeInfo")
     @ResponseBody
     public ResponseResult importCollegeInfo(@RequestParam("collegeXls") @NotNull MultipartFile collegeXls) {
-        try (InputStream in = collegeXls.getInputStream()) {
-            List<CollegeTo> collegeTos = collegeService.importCollegeInfo(in);
-            if (collegeTos != null) {
-                return ResponseResult.enSuccess().add("errList", collegeTos);
+        if (!collegeXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(collegeXls.getOriginalFilename()))) {
+            try (InputStream in = collegeXls.getInputStream()) {
+                return collegeService.importCollegeInfo(in);
+            } catch (IOException e) {
+                log.warn("获取io流失败!", e);
             }
-        } catch (IOException e) {
-            log.warn("获取io流失败!", e);
         }
         return ResponseResult.enFail();
     }

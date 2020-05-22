@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
 @Repository
-public interface RoleRepository extends JpaRepository<RoleEntity, Byte>, JpaSpecificationExecutor<RoleEntity> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Integer>, JpaSpecificationExecutor<RoleEntity> {
+    RoleEntity findByName(String name);
 }

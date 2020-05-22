@@ -1,6 +1,7 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/22.
 package cn.ohms.subsystem.service.impl;
 
+import cn.ohms.subsystem.common.ResponseResult;
 import cn.ohms.subsystem.entity.CollegeEntity;
 import cn.ohms.subsystem.repository.CollegeRepository;
 import cn.ohms.subsystem.service.CollegeService;
@@ -35,32 +36,34 @@ public class CollegeServiceImpl implements CollegeService {
     }
 
     @Override
-    public List<CollegeTo> importCollegeInfo(InputStream in) {
+    public ResponseResult importCollegeInfo(InputStream in) {
         List<CollegeTo> errorList = new ArrayList<>();
         try {
             List<CollegeTo> collegeTos = resourceService.inputStreamToTable(CollegeTo.class, in);
-            System.out.println(collegeTos);
             collegeTos.forEach(collegeTo -> {
-                CollegeEntity college = new CollegeEntity();
-                college.setName(collegeTo.getName()).setDescription(collegeTo.getDescription());
-                if(!saveCollege(college)){
+                CollegeEntity college = new CollegeEntity().setName(collegeTo.getName()).setDescription(collegeTo.getDescription());
+                if (!saveCollege(college)) {
                     errorList.add(collegeTo);
                 }
             });
-            return errorList;
+            int count = collegeTos.size();
+            int fail = errorList.size();
+            int success = count - fail;
+            return (ResponseResult.enSuccess().add("count", count).add("success", success).add("fail", fail)
+                    .add("errList", errorList));
         } catch (Exception e) {
             log.warn("导入表格失败！", e);
         }
-        return null;
+        return ResponseResult.enError();
     }
 
     @Override
     public boolean saveCollege(CollegeEntity college) {
-        try{
+        try {
             collegeRepository.save(college);
             return true;
-        }catch (Exception e){
-            log.warn("保存数据失败!", e);
+        } catch (Exception e) {
+            log.warn("保存数据失败! msg : {}", e.getLocalizedMessage());
         }
         return false;
     }

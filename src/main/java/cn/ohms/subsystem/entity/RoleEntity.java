@@ -29,7 +29,7 @@ public class RoleEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Byte id; //角色id
+    private Integer id; //角色id
 
     @Column(nullable = false, unique = true)
     private String name; //角色名

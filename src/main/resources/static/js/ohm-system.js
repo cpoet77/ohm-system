@@ -65,10 +65,34 @@
          */
         post: function (url, data, success, fail, contentType) {
             return $.ajax({
-                method: 'post',
+                type: 'POST',
                 url: url,
                 data: data,
                 contentType: NS.isNull(contentType) ? 'application/x-www-form-urlencoded; charset=UTF-8' : contentType,
+                dataType: 'json',
+                success: success,
+                fail: !NS.isNull(fail) ? fail : () => {
+                    xtip.closeAll();
+                    xtip.msg(NS.message.tips.operationFailed, {times: 3000, icon: 'e'});
+                }
+            });
+        },
+
+        /**
+         * post请求上传文件
+         * @param url
+         * @param data
+         * @param success
+         * @param fail
+         * @returns {*}
+         */
+        postFile: function (url, data, success, fail) {
+            return $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                processData: false,
+                contentType: false,
                 dataType: 'json',
                 success: success,
                 fail: !NS.isNull(fail) ? fail : () => {

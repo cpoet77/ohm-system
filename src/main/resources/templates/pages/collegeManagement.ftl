@@ -35,8 +35,8 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div v-if="uploadCollegeFileShow">
-                                <form id="importCollegeForm">
+                            <div v-show="uploadCollegeFileShow">
+                                <form id="importCollegeForm" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="collegeXlsFile">请选择学院信息的表格(仅支持后缀为.xlsx的文件)</label>
                                         <input name="collegeXls" accept=".xlsx" type="file" id="collegeXlsFile">
@@ -52,15 +52,26 @@
                                     <th>院系</th>
                                     <th>人数</th>
                                     <th>介绍</th>
+                                    <th>导入时间</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <#list colleges as college>
                                     <tr>
-                                        <th>${college.id}</th>
-                                        <td>${college.name}</td>
+                                        <th>${college.id!""}</th>
+                                        <td>${college.name!""}</td>
                                         <td>1500</td>
-                                        <td>${college.description}</td>
+                                        <td>${college.description!""}</td>
+                                        <td>${college.datetime!""}</td>
+                                        <td>
+                                            <div class="btn-group-sm">
+                                                <button type="button" class="btn btn-warning btn-sm"><i
+                                                            class="fa fa-pencil-square-o"></i></button>
+                                                <button type="button" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </#list>
                                 </tbody>
@@ -89,7 +100,7 @@
         const Main = new Vue({
             el: '#main',
             data: {
-                uploadCollegeFileShow: true
+                uploadCollegeFileShow: false
             }
         });
         $(function () {
@@ -101,27 +112,39 @@
                 "info": true,
                 "autoWidth": false
             });
-            // $('#importBtn').on('click', () => {
-            //     Main.uploadCollegeFileShow = !Main.uploadCollegeFileShow;
-            // });
-            // $('#closeImport').on('click', $('importBtn').click);
+            const importBtn = $('#importBtn');
+            importBtn.on('click', () => {
+                Main.uploadCollegeFileShow = !Main.uploadCollegeFileShow;
+            });
+            $('#closeImport').on('click', () => {
+                importBtn.click();
+            });
             $('#submitImport').on('click', () => {
-                console.log(1111);
                 const importingMsg = xtip.load('导入中...');
-                const  importCollegeFormData = new FormData();
-                importCollegeFormData.append('collegeXls' , $('#collegeXlsFile')[0].files[0]);
-                console.log(importCollegeFormData);
-                NS.post('/teachingSecretary/collegeManagement/importCollegeInfo', importCollegeFormData
-                    , (res) => {
+                NS.postFile('/teachingSecretary/collegeManagement/importCollegeInfo'
+                    , new FormData($('#importCollegeForm')[0]), (res) => {
                         if (res.code === 1000) {
-                            NS.reload();
+                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
+                            let tipIcon = 's';
+                            if (res.data.count !== res.data.success) {
+                                tips += '<br />错误列表：<br/><ol>';
+                                let errList = res.data.errList;
+                                for (let key in errList) {
+                                    tips += '<li><b>学院名：</b>' + errList[key].name + '</li>';
+                                }
+                                tips += '</ol>';
+                                tipIcon = 'w';
+                            }
+                            tips += '<br/><b>请点击确定重新加载数据！</b>';
+                            xtip.confirm(tips, () => {
+                                NS.reload();
+                            }, {icon: tipIcon});
                         } else {
                             xtip.msg('导入失败！', {icon: 'e'})
                         }
                     });
                 xtip.close(importingMsg);
-            });
-            console.log(2222);
+            })
         });
     </script>
 </#assign>
