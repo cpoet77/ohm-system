@@ -2,12 +2,16 @@
 package cn.ohms.subsystem.service.impl;
 
 import cn.ohms.subsystem.service.AppService;
-import lombok.extern.java.Log;
+import cn.ohms.subsystem.utils.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -18,9 +22,12 @@ import java.util.regex.Pattern;
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  * @see cn.ohms.subsystem.service.AppService
  */
-@Service("AppService")
-@Log
+@Service("appService")
+@Slf4j
 public class AppServiceImpl implements AppService {
+    // 站点信息配置文件路径
+    private final static String SITE_INFO_PATH = "/ohmsubsystem.properties";
+
     // 获取调用jar引入的参数args
     // 用于动态设定一些值
     @Resource
@@ -35,6 +42,7 @@ public class AppServiceImpl implements AppService {
     @PostConstruct
     private void load() {
         log.info("Loading system related information ...");
+        loadSiteInfo();         // 加载站点信息
         parseArgs();            // 解析传入参数
         setSystemProperty();    // 设定系统信息
         setOHMSMsg();           // OHMS相关信息
@@ -75,6 +83,20 @@ public class AppServiceImpl implements AppService {
     }
 
     /**
+     * 加载站点信息
+     * <p>配置文件为ohmsubsystem.properties</p>
+     */
+    private void loadSiteInfo() {
+        log.info("Load site information");
+        try (InputStream in = FileUtil.getInputStream(SITE_INFO_PATH); InputStreamReader reader
+                = new InputStreamReader(in, "GBK")) {
+            appInfo.load(reader);
+        } catch (IOException e) {
+            log.error("加载配置文件失败！！", e);
+        }
+    }
+
+    /**
      * 设定OHMS相关信息
      */
     private void setOHMSMsg() {
@@ -94,11 +116,6 @@ public class AppServiceImpl implements AppService {
     @Override
     public String getVersion() {
         return getAsString("version");
-    }
-
-    @Override
-    public String getDomain() {
-        return getAsString("siteDomain");
     }
 
     @Override

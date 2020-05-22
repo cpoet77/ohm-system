@@ -25,13 +25,6 @@ public interface AppService {
     String getVersion();
 
     /**
-     * 获取部署的域名
-     * <p>http(s)://...</p>
-     * @return entity
-     */
-    String getDomain();
-
-    /**
      * get属性
      * @param name 需要获取的属性
      * @return 属性|null
