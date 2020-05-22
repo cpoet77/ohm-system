@@ -9,13 +9,13 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                学生管理
+                教师管理
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
                 <li><a href="#">用户管理</a></li>
-                <li class="active">学生管理</li>
+                <li class="active">教师管理</li>
             </ol>
         </section>
 
@@ -37,7 +37,7 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>学号</th>
+                                    <th>职工号</th>
                                     <th>姓名</th>
                                     <th>性别</th>
                                     <th>邮箱</th>
@@ -224,7 +224,7 @@
                                 <tfoot>
                                 <tr>
                                     <th>ID</th>
-                                    <th>学号</th>
+                                    <th>职工号</th>
                                     <th>姓名</th>
                                     <th>性别</th>
                                     <th>邮箱</th>
@@ -252,14 +252,14 @@
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script>
         $(function () {
-           /* $("#example1").DataTable();*/
+            /* $("#example1").DataTable();*/
             $('#example2').DataTable({
                 "paging": true,
-                "lengthChange": true,
+                "lengthChange": false,
                 "searching": true,
                 "ordering": true,
                 "info": true,
-                "autoWidth": true
+                "autoWidth": false
             });
         });
     </script>
