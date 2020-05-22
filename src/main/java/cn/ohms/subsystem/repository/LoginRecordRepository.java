@@ -3,11 +3,12 @@ package cn.ohms.subsystem.repository;
 import cn.ohms.subsystem.entity.LoginRecordEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
 /**
- * @auther _Struggler
- * 2020/5/22 11:04
+ * @author _Struggler
  */
-public interface LoginRecordRepository extends JpaRepository<LoginRecordEntity,String>, JpaSpecificationExecutor<LoginRecordEntity> {
+@Repository
+public interface LoginRecordRepository extends JpaRepository<LoginRecordEntity, String>, JpaSpecificationExecutor<LoginRecordRepository> {
 
 }

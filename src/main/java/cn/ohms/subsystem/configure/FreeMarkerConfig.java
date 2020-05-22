@@ -35,7 +35,7 @@ public class FreeMarkerConfig {
         configuration.setSharedVariable("OHMS_NAME", appService.getAsString("ohmsName"));
         configuration.setSharedVariable("OHMS_NAME_FORMAT", appService.getAsString("ohmsNameFormat"));
         configuration.setSharedVariable("OHMS_VERSION", appService.getAsString("version"));
-        configuration.setSharedVariable("sys", appInfo);
+        configuration.setSharedVariable("appInfo", appInfo);
         configuration.setSharedVariable("shiroGetUserInfo", new ShiroGetUserInfo());
         configuration.setSharedVariable("shiroIsAuth", new ShiroIsAuth());
     }

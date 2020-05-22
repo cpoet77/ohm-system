@@ -4,7 +4,6 @@
 <#assign notUser></#assign>
 <#include "../common/head.ftl" />
 <div class="wrapper">
-    <#include "../common/header.ftl" />
     <!-- Full Width Column -->
     <div class="content-wrapper">
         <div class="container">
