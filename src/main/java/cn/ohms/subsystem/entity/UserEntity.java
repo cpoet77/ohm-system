@@ -28,31 +28,31 @@ public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(insertable = false, updatable = false)
-    protected Integer id;//id
+    private Integer id;//id
 
     @Column(unique = true, nullable = false)
-    protected String name;//用户名
+    private String name;//用户名
 
     @Column(name = "real_name", nullable = false)
     private String realName;//姓名
 
     @Column(nullable = false)
-    protected String password;//加密过的密码
+    private String password;//加密过的密码
 
     @Column(nullable = false)
-    protected String salt;//加密用的盐
+    private String salt;//加密用的盐
 
     @Column(nullable = false)
-    protected Character sex;//性别
+    private Character sex;//性别
 
     @Column(nullable = false)
-    protected String avatar;//头像地址
+    private String avatar;//头像地址
 
     @Column
-    protected String email;//邮箱地址
+    private String email;//邮箱地址
 
     @Column
-    protected String phone;//手机号
+    private String phone;//手机号
 
     @OneToOne(mappedBy = "user")
     private StudentEntity student;
