@@ -55,4 +55,14 @@ public interface UserService {
      * @return true|false
      */
     boolean saveUser(UserEntity user);
+
+    /**
+     *
+     *
+     * @param realName 真实姓名
+     * @return UserEntity
+     */
+    UserEntity findUserByRealName(String realName);
+
+
 }

@@ -52,7 +52,6 @@
                                     <th>学院</th>
                                     <th>专业</th>
                                     <th>学制</th>
-                                    <th>学科</th>
                                     <th>导入时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -64,8 +63,7 @@
                                         <td>${major.college.name!""}</td>
                                         <td>${major.name!""}</td>
                                         <td>4</td>
-                                        <th>工学</th>
-                                        <td>${major.datatime!""}</td>
+                                        <td>${major.datetime!""}</td>
                                         <td>
                                             <div class="btn-group-sm">
                                                 <button type="button" class="btn btn-warning btn-sm"><i

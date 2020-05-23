@@ -14,6 +14,7 @@ import cn.ohms.subsystem.service.UserService;
 import cn.ohms.subsystem.tableobject.TeacherTo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -92,5 +93,15 @@ public class TeacherServiceImpl implements TeacherService {
             log.error("保存教师信息失败, msg : {}", e.getLocalizedMessage());
         }
         return false;
+    }
+
+    @Override
+    @Cacheable(cacheNames = {"common"}, key = "#name")
+    public TeacherEntity findTeacherHasCacheByName(String name) {
+        UserEntity user = userService.findUserByRealName(name);
+        if(user == null){
+            return null;
+        }
+        return user.getTeacher();
     }
 }
