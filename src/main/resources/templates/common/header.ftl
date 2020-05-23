@@ -42,17 +42,18 @@
                 <!-- UserEntity Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <img src="<#if u.avatar??>${u.avatar}<#elseif u.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
+                             class="user-image" alt="${u.name!"user"} avatar">
+                        <span class="hidden-xs">${u.realName!"获取姓名失败"}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- UserEntity image -->
                         <li class="user-header">
-                            <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
+                            <img src="<#if u.avatar??>${u.avatar}<#elseif u.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
+                                 class="img-circle" alt="${u.name!"user"} avatar">
                             <p>
-                                Alexander Pierce - Web Developer
-                                <small>Member since Nov. 2012</small>
+                                ${u.realName!"获取姓名失败"}
+                                <small>${u.name!"获取用户名失败"}</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->
@@ -61,7 +62,7 @@
                                 <a href="#" class="btn btn-default btn-flat">个人资料</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">注销登录</a>
+                                <a href="#" onclick="NS.logout()" class="btn btn-default btn-flat">注销登录</a>
                             </div>
                         </li>
                     </ul>

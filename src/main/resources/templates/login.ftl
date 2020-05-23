@@ -4,11 +4,12 @@
 <#assign restHead>
     <link rel="stylesheet" href="/static/plugins/bootstrapvalidator/bootstrapValidator.min.css">
     <link rel="stylesheet" href="/static/plugins/xtiper-plugins/css/xtiper.css">
+    <link rel="stylesheet" href="/static/plugins/slideunlock/slide-unlock.css">
 </#assign>
 <#include "common/head.ftl" />
 <div class="login-box">
     <div class="login-logo">
-        <a href="/">${OHMS_NAME_FORMAT}</a>
+        <a href="/">${siteNameFormat!""}</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -18,7 +19,7 @@
             <div class="form-group has-feedback">
                 <input name="uname" type="text" class="form-control"
                        placeholder="用户名">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <span class="fa fa-user-secret form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
                 <input name="password" type="password" class="form-control"
@@ -26,12 +27,10 @@
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
             <div class="row form-group has-feedback">
-                <div class="col-xs-4">
-                    <img src="http://210.40.132.26:8011/sys/ValidateCode.aspx?t=743" width="100%" height="78%" />
-                </div>
-                <div class="col-xs-8">
-                    <input name="verificationCode" type="text" class="form-control"
-                           placeholder="验证码">
+                <div id="slider">
+                    <div id="slider_bg"></div>
+                    <span id="label">>></span>
+                    <span id="labelTip">拖动滑块验证</span>
                 </div>
             </div>
             <div class="row">
@@ -51,6 +50,7 @@
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/xtiper-plugins/js/xtiper.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
+    <script src="/static/plugins/slideunlock/slideunlock.js"></script>
     <script>
         /***********************************************************/
         /*********** nsleaf www.nsleaf.cn 2020.05.05 **************/
@@ -65,6 +65,11 @@
                         validators: {
                             notEmpty: {
                                 message: '用户名不能为空'
+                            },
+                            stringLength: {
+                                min: 8,
+                                max: 32,
+                                message: '用户名长度不符合规定'
                             }
                         }
                     },
@@ -81,9 +86,16 @@
                     }
                 }
             });
+            const sliderUnlock = new SliderUnlock('#slider', {successLabelTip: '验证通过'}, () => {
+            });
+            sliderUnlock.init();
             /* 绑定点击事件 */
             $('#submitBtn').on('click', () => {
                 const bootstrapValidator = form.data('bootstrapValidator');
+                if (!sliderUnlock.isOk) {
+                    xtip.msg("请先拖动滑块在进行登录！");
+                    return;
+                }
                 if (bootstrapValidator.validate().isValid()) {
                     const loginLoad = xtip.load('登录中...');
                     NS.post('/login/finishLogin', form.serializeArray(), (res) => {
