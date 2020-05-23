@@ -62,7 +62,7 @@
                                 <a href="#" class="btn btn-default btn-flat">个人资料</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">注销登录</a>
+                                <a href="#" onclick="NS.logout()" class="btn btn-default btn-flat">注销登录</a>
                             </div>
                         </li>
                     </ul>
