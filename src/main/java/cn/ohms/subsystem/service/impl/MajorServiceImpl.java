@@ -46,33 +46,27 @@ public class MajorServiceImpl implements MajorService {
         try {
             List<MajorTo> majorTos = resourceService.inputStreamToTable(MajorTo.class, in);
             majorTos.forEach(majorTo -> {
-//                MajorEntity major = new MajorEntity().setName(majorTo.getName());
-//                if(!saveMajor(major)){
-//                    errorList.add(majorTo);
-//                }
-            CollegeEntity college = new CollegeEntity().setName(majorTo.getCollege());
-            if (collegeService.saveCollege(college)) {
-                MajorEntity major = new MajorEntity().setName(majorTo.getName()).setCollege(college);
-                if (!saveMajor(major)) {
+                CollegeEntity college = collegeService.findCollegeHasCacheByName(majorTo.getCollege());
+                if (college != null) {
+                    MajorEntity major = new MajorEntity().setName(majorTo.getName()).setCollege(college);
+                    if (!saveMajor(major)) {
+                        errorList.add(majorTo);
+                    }
+                } else {
                     errorList.add(majorTo);
                 }
-            } else {
-                errorList.add(majorTo);
-            }
-        });
-        int count = majorTos.size();
-        int fail = errorList.size();
-        int success = count - fail;
-        return (ResponseResult.enSuccess().add("count", count).add("success", success).add("fail", fail)
-                .add("errList", errorList));
-    } catch(
-    Exception e)
-
-    {
-        log.warn("导入表格失败！", e);
-    }
+            });
+            int count = majorTos.size();
+            int fail = errorList.size();
+            int success = count - fail;
+            return (ResponseResult.enSuccess().add("count", count).add("success", success).add("fail", fail)
+                    .add("errList", errorList));
+        } catch (
+                Exception e) {
+            log.warn("导入表格失败！", e);
+        }
         return ResponseResult.enError();
-}
+    }
 
     @Override
     public boolean saveMajor(MajorEntity major) {
@@ -84,4 +78,6 @@ public class MajorServiceImpl implements MajorService {
         }
         return false;
     }
+
+
 }

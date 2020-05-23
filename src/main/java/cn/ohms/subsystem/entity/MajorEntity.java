@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Major Entity
@@ -30,6 +31,9 @@ public class MajorEntity implements Serializable {
 
     @Column
     private String name;//专业名
+
+    @Column(nullable = false)
+    private LocalDateTime datetime;
 
     @ManyToOne
     @JoinColumn(name = "college_id", referencedColumnName = "id", nullable = false)

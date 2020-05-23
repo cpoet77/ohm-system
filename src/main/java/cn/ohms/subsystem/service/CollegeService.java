@@ -27,10 +27,19 @@ public interface CollegeService {
     ResponseResult importCollegeInfo(InputStream in);
 
     /**
-     * 保护学院信息
+     * 保存学院信息
      *
      * @param college CollegeEntity
      * @return true | false
      */
     boolean saveCollege(CollegeEntity college);
+
+    /**
+     * 根据name查询college
+     * <p>在缓存有效期内，查找cache - database</p>
+     *
+     * @param name 学院名
+     * @return CollegeEntity
+     */
+    CollegeEntity findCollegeHasCacheByName(String name);
 }

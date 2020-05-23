@@ -9,6 +9,7 @@ import cn.ohms.subsystem.service.ResourceService;
 import cn.ohms.subsystem.tableobject.CollegeTo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -66,5 +67,11 @@ public class CollegeServiceImpl implements CollegeService {
             log.warn("保存数据失败! msg : {}", e.getLocalizedMessage());
         }
         return false;
+    }
+
+    @Override
+    @Cacheable(cacheNames = {"common"}, key = "#name")
+    public CollegeEntity findCollegeHasCacheByName(String name) {
+        return collegeRepository.findByName(name);
     }
 }
