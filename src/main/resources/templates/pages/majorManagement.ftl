@@ -1,4 +1,4 @@
-<#-- 学院管理 -->
+<#-- 专业管理 -->
 <#assign activeIndex></#assign>
 <#assign pageTitle>专业课群</#assign>
 <#include "../common/head.ftl" />
@@ -22,46 +22,61 @@
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section class="content" id="main">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">专业管理</h3>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning">添加</button>
+                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
+                                <button type="button" class="btn btn-success">导出</button>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example2" class="table table-bordered table-hover">
+                            <div v-show="uploadMajorFileShow">
+                                <form id="importMajorForm" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="majorXlsFile">请选择专业信息的表格(仅支持后缀为.xlsx的文件)</label>
+                                        <input name="majorXls" accept=".xlsx" type="file" id="majorXlsFile">
+                                    </div>
+                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
+                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
+                                </form>
+                            </div>
+                            <table id="majorList" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>序号</th>
                                     <th>学院</th>
                                     <th>专业</th>
                                     <th>学制</th>
-                                    <th>介绍</th>
                                     <th>学科</th>
+                                    <th>导入时间</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th>1</th>
-                                    <td>数据科学与信息工程学院</td>
-                                    <td>计算机科学与技术</td>
-                                    <td>4</td>
-                                    <th>******</th>
-                                    <td>工学</td>
-                                </tr>
+                                <#list majors as major>
+                                    <tr>
+                                        <th>${major.id!""}</th>
+                                        <td>${major.college.name!""}</td>
+                                        <td>${major.name!""}</td>
+                                        <td>4</td>
+                                        <th>工学</th>
+                                        <td>${major.datatime!""}</td>
+                                        <td>
+                                            <div class="btn-group-sm">
+                                                <button type="button" class="btn btn-warning btn-sm"><i
+                                                            class="fa fa-pencil-square-o"></i></button>
+                                                <button type="button" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </#list>
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>序号</th>
-                                    <th>学院</th>
-                                    <th>专业</th>
-                                    <th>学制</th>
-                                    <th>介绍</th>
-                                    <th>学科</th>
-                                </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -79,4 +94,60 @@
     <#include "../common/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
+<#assign restFooter>
+    <!-- DataTables -->
+    <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script>
+        const Main = new Vue({
+            el: '#main',
+            data: {
+                uploadMajorFileShow: false
+            }
+        });
+        $(function () {
+            $('#majorList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+            const importBtn = $('#importBtn');
+            importBtn.on('click', () => {
+                Main.uploadMajorFileShow = !Main.uploadMajorFileShow;
+            });
+            $('#closeImport').on('click', () => {
+                importBtn.click();
+            });
+            $('#submitImport').on('click', () => {
+                const importingMsg = xtip.load('导入中...');
+                NS.postFile('/teachingSecretary/majorManagement/importMajorInfo'
+                    , new FormData($('#importMajorForm')[0]), (res) => {
+                        if (res.code === 1000) {
+                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
+                            let tipIcon = 's';
+                            if (res.data.count !== res.data.success) {
+                                tips += '<br />错误列表：<br/><ol>';
+                                let errList = res.data.errList;
+                                for (let key in errList) {
+                                    tips += '<li><b>专业名：</b>' + errList[key].name + '</li>';
+                                }
+                                tips += '</ol>';
+                                tipIcon = 'w';
+                            }
+                            tips += '<br/><b>请点击确定重新加载数据！</b>';
+                            xtip.confirm(tips, () => {
+                                NS.reload();
+                            }, {icon: tipIcon});
+                        } else {
+                            xtip.msg('导入失败！', {icon: 'e'})
+                        }
+                    });
+                xtip.close(importingMsg);
+            })
+        });
+    </script>
+</#assign>
 <#include "../common/footer.ftl" />
