@@ -19,7 +19,7 @@
             <div class="form-group has-feedback">
                 <input name="uname" type="text" class="form-control"
                        placeholder="用户名">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                <span class="fa fa-user-secret form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">
                 <input name="password" type="password" class="form-control"
