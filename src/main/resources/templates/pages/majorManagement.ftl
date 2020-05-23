@@ -22,7 +22,7 @@
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section class="content" id="main">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
@@ -61,7 +61,7 @@
                                 <#list majors as major>
                                     <tr>
                                         <th>${major.id!""}</th>
-                                        <td>${major.college.id!""}</td>
+                                        <td>${major.college.name!""}</td>
                                         <td>${major.name!""}</td>
                                         <td>4</td>
                                         <th>工学</th>
@@ -116,7 +116,7 @@
             });
             const importBtn = $('#importBtn');
             importBtn.on('click', () => {
-                Main.uploadmajorFileShow = !Main.uploadMajorFileShow;
+                Main.uploadMajorFileShow = !Main.uploadMajorFileShow;
             });
             $('#closeImport').on('click', () => {
                 importBtn.click();
