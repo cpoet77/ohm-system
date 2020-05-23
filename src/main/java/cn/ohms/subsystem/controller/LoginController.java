@@ -5,12 +5,12 @@ import cn.ohms.subsystem.common.ResponseResult;
 import cn.ohms.subsystem.entity.UserEntity;
 import cn.ohms.subsystem.service.LoginService;
 import cn.ohms.subsystem.service.UserService;
+import cn.ohms.subsystem.utils.NStringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +49,10 @@ public class LoginController {
      */
     @GetMapping
     public ModelAndView index(@RequestParam(required = false, defaultValue = "/") String backUrl) {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            return (new ModelAndView(NStringUtil.joint("redirect:{}", backUrl)));
+        }
         return (new ModelAndView("login").addObject("backUrl", backUrl));
     }
 
@@ -62,11 +66,13 @@ public class LoginController {
      */
     @PostMapping("/finishLogin")
     @ResponseBody
-    @RequiresGuest
     public ResponseResult finishLogin(@RequestParam("uname") @NotEmpty String username
             , @RequestParam @NotEmpty @Pattern(regexp = "^[a-zA-Z0-9_]{6,20}$") String password
             , HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            return ResponseResult.enSuccess();
+        }
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         try {
             subject.login(token);
