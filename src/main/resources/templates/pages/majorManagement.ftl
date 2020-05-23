@@ -144,8 +144,8 @@
                         } else {
                             xtip.msg('导入失败！', {icon: 'e'})
                         }
+                        xtip.close(importingMsg);
                     });
-                xtip.close(importingMsg);
             })
         });
     </script>

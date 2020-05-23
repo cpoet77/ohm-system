@@ -13,6 +13,6 @@ public class MajorTo {
     @ExcelColumn(title = "学院",index = 0)
     private String college;
 
-    @ExcelColumn(title = "专业", index = 1)
+    @ExcelColumn(title = "专业名", index = 1)
     private String name;
 }

@@ -34,4 +34,6 @@ public interface MajorService {
      * @return true | false
      */
     boolean saveMajor(MajorEntity major);
+
+
 }
