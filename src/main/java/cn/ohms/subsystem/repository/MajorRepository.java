@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * @author shc
  */
 @Repository
-public interface MajorRepository extends JpaRepository<MajorEntity, String>, JpaSpecificationExecutor<MajorEntity> {
+public interface MajorRepository extends JpaRepository<MajorEntity, Integer>, JpaSpecificationExecutor<MajorEntity> {
 
 }
