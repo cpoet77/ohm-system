@@ -33,4 +33,8 @@ public class StudentEntity implements Serializable {
 
     @ManyToMany(mappedBy = "students")
     private Set<CourseGroupEntity> courseGroups = new HashSet<>();//加入的课群
+
+    @ManyToOne
+    @JoinColumn(name = "major_id", referencedColumnName = "id", nullable = false)
+    private MajorEntity major;//所属专业
 }

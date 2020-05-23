@@ -35,5 +35,13 @@ public interface MajorService {
      */
     boolean saveMajor(MajorEntity major);
 
+    /**
+     *据name 查询major
+     * <p>在缓存有效期内，查找cache - database</p>
+     *
+     * @param: name 专业名
+     * @return: MajorEntity
+     */
+    MajorEntity findMajorHashCacheByName(String name);
 
 }
