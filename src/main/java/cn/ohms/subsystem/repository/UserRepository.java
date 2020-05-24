@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {
     UserEntity findByName(String name);
+
+    UserEntity findByRealName(String realName);
 }

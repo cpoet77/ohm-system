@@ -6,11 +6,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
- * CourseGroup  Repository
+ * 2020/5/23 23:59
  *
  * @author LRC
  */
-
 @Repository
-public interface CourseGroupRepository extends JpaRepository<CourseGroupEntity, String>, JpaSpecificationExecutor<CourseGroupEntity> {
+public interface CourseGroupRepository extends JpaRepository<CourseGroupEntity, Integer>, JpaSpecificationExecutor<CourseGroupEntity> {
 }

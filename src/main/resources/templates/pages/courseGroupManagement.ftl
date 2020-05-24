@@ -1,6 +1,6 @@
-<#-- 学院管理 -->
+<#-- 课群管理 -->
 <#assign activeIndex></#assign>
-<#assign pageTitle>学院管理</#assign>
+<#assign pageTitle>课群管理</#assign>
 <#include "../common/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">
@@ -23,16 +23,30 @@
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section class="content" id="main">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">课群管理</h3>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning">添加</button>
+                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
+                                <button type="button" class="btn btn-success">导出</button>
+                            </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example2" class="table table-bordered table-hover">
+                            <div v-show="uploadCourseGroupFileShow">
+                                <form id="importCourseGroupForm" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="courseGroupXlsFile">请选择课群信息的表格(仅支持后缀为.xlsx的文件)</label>
+                                        <input name="courseGroupXls" accept=".xlsx" type="file" id="courseGroupXlsFile">
+                                    </div>
+                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
+                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
+                                </form>
+                            </div>
+                            <table id="courseGroupList" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>序号</th>
@@ -40,29 +54,28 @@
                                     <th>课程</th>
                                     <th>介绍</th>
                                     <th>创建时间</th>
-                                    <th>状态</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th>1</th>
-                                    <td>张科</td>
-                                    <td>软件工程</td>
-                                    <td>软件工程课群</td>
-                                    <td>2020.2.3</td>
-                                    <td>开启</td>
-                                </tr>
+                                <#list courseGroups as courseGroup>
+                                    <tr>
+                                        <th>${courseGroup.id!""}</th>
+                                        <td>${courseGroup.teacher.user.realName!""}</td>
+                                        <td>${courseGroup.name!""}</td>
+                                        <td>${courseGroup.description!""}</td>
+                                        <td>${courseGroup.createTime!""}</td>
+                                        <td>
+                                            <div class="btn-group-sm">
+                                                <button type="button" class="btn btn-warning btn-sm"><i
+                                                            class="fa fa-pencil-square-o"></i></button>
+                                                <button type="button" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </#list>
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>序号</th>
-                                    <th>老师</th>
-                                    <th>课程</th>
-                                    <th>介绍</th>
-                                    <th>创建时间</th>
-                                    <th>状态</th>
-                                </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -80,4 +93,60 @@
     <#include "../common/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
+<#assign restFooter>
+    <!-- DataTables -->
+    <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script>
+        const Main = new Vue({
+            el: '#main',
+            data: {
+                uploadCourseGroupFileShow: false
+            }
+        });
+        $(function () {
+            $('#courseGroupList').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+            const importBtn = $('#importBtn');
+            importBtn.on('click', () => {
+                Main.uploadCourseGroupFileShow = !Main.uploadCourseGroupFileShow;
+            });
+            $('#closeImport').on('click', () => {
+                importBtn.click();
+            });
+            $('#submitImport').on('click', () => {
+                const importingMsg = xtip.load('导入中...');
+                NS.postFile('/teachingSecretary/courseGroupManagement/importCourseGroupInfo'
+                    , new FormData($('#importCourseGroupForm')[0]), (res) => {
+                        if (res.code === 1000) {
+                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
+                            let tipIcon = 's';
+                            if (res.data.count !== res.data.success) {
+                                tips += '<br />错误列表：<br/><ol>';
+                                let errList = res.data.errList;
+                                for (let key in errList) {
+                                    tips += '<li><b>课程名：</b>' + errList[key].name + '</li>';
+                                }
+                                tips += '</ol>';
+                                tipIcon = 'w';
+                            }
+                            tips += '<br/><b>请点击确定重新加载数据！</b>';
+                            xtip.confirm(tips, () => {
+                                NS.reload();
+                            }, {icon: tipIcon});
+                        } else {
+                            xtip.msg('导入失败！', {icon: 'e'})
+                        }
+                        xtip.close(importingMsg);
+                    });
+            })
+        });
+    </script>
+</#assign>
 <#include "../common/footer.ftl" />

@@ -58,4 +58,9 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public UserEntity findUserByRealName(String realName) {
+        return userRepository.findByRealName(realName);
+    }
 }
