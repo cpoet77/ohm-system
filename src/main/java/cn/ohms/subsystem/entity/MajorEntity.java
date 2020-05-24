@@ -29,7 +29,7 @@ public class MajorEntity implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column
+    @Column(nullable = false)
     private String name;//专业名
 
     @Column(nullable = false)

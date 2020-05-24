@@ -20,216 +20,61 @@
         </section>
 
         <!-- Main content -->
-        <section class="content">
+        <section class="content" id="main">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-warning">导入</button>
+                                <button type="button" class="btn btn-warning">添加</button>
+                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
                                 <button type="button" class="btn btn-success">导出</button>
-                                <button type="button" class="btn btn-warning">删除</button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="example2" class="table table-bordered table-striped">
+                            <div v-show="uploadStudentFileShow">
+                                <form id="importStudentForm" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="studentXlsFile">请选择学生信息表格(仅支持后缀为.xlsx的文件)</label>
+                                        <input name="studentXls" accept=".xlsx" type="file" id="studentXlsFile">
+                                    </div>
+                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
+                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
+                                </form>
+                            </div>
+                            <table id="studentList" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>用户名</th>
                                     <th>学号</th>
                                     <th>姓名</th>
                                     <th>性别</th>
-                                    <th>邮箱</th>
+                                    <th>专业名</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Firefox 1.5</td>
-                                    <td>Win 98+ / OSX.2+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Mozilla 1.3</td>
-                                    <td>Win 95+ / OSX.1+</td>
-                                    <td>1.3</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Mozilla 1.4</td>
-                                    <td>Win 95+ / OSX.1+</td>
-                                    <td>1.4</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Mozilla 1.5</td>
-                                    <td>Win 95+ / OSX.1+</td>
-                                    <td>1.5</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Mozilla 1.6</td>
-                                    <td>Win 95+ / OSX.1+</td>
-                                    <td>1.6</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Mozilla 1.7</td>
-                                    <td>Win 98+ / OSX.1+</td>
-                                    <td>1.7</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Mozilla 1.8</td>
-                                    <td>Win 98+ / OSX.1+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Seamonkey 1.1</td>
-                                    <td>Win 98+ / OSX.2+</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Gecko</td>
-                                    <td>Epiphany 2.20</td>
-                                    <td>Gnome</td>
-                                    <td>1.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>Safari 1.2</td>
-                                    <td>OSX.3</td>
-                                    <td>125.5</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>Safari 1.3</td>
-                                    <td>OSX.3</td>
-                                    <td>312.8</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>Safari 2.0</td>
-                                    <td>OSX.4+</td>
-                                    <td>419.3</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>Safari 3.0</td>
-                                    <td>OSX.4+</td>
-                                    <td>522.1</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>OmniWeb 5.5</td>
-                                    <td>OSX.4+</td>
-                                    <td>420</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>iPod Touch / iPhone</td>
-                                    <td>iPod</td>
-                                    <td>420.1</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Webkit</td>
-                                    <td>S60</td>
-                                    <td>S60</td>
-                                    <td>413</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Presto</td>
-                                    <td>Opera 7.0</td>
-                                    <td>Win 95+ / OSX.1+</td>
-                                    <td>-</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Presto</td>
-                                    <td>Opera 7.5</td>
-                                    <td>Win 95+ / OSX.2+</td>
-                                    <td>-</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Presto</td>
-                                    <td>Opera 8.0</td>
-                                    <td>Win 95+ / OSX.2+</td>
-                                    <td>-</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Presto</td>
-                                    <td>Opera 8.5</td>
-                                    <td>Win 95+ / OSX.2+</td>
-                                    <td>-</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Presto</td>
-                                    <td>Nokia N800</td>
-                                    <td>N800</td>
-                                    <td>-</td>
-                                    <td>A</td>
-                                </tr>
-
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>NetFront 3.4</td>
-                                    <td>Embedded devices</td>
-                                    <td>-</td>
-                                    <td>A</td>
-                                </tr>
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>Dillo 0.8</td>
-                                    <td>Embedded devices</td>
-                                    <td>-</td>
-                                    <td>X</td>
-                                </tr>
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>PSP browser</td>
-                                    <td>PSP</td>
-                                    <td>-</td>
-                                    <td>C</td>
-                                </tr>
-                                <tr>
-                                    <td>Other browsers</td>
-                                    <td>All others</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>U</td>
-                                </tr>
+                                <#list students as student>
+                                    <tr>
+                                        <td>${student.user.id!""}</td>
+                                        <td>${student.user.name!""}</td>
+                                        <td>${student.studentId!""}</td>
+                                        <td>${student.user.realName!""}</td>
+                                        <td>${student.user.sex!""}</td>
+                                        <td>${student.major.name}</td>
+                                        <td>
+                                            <div class="btn-group-sm">
+                                                <button type="button" class="btn btn-warning btn-sm"><i
+                                                            class="fa fa-pencil-square-o"></i></button>
+                                                <button type="button" class="btn btn-danger btn-sm"><i
+                                                            class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </#list>
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>学号</th>
-                                    <th>姓名</th>
-                                    <th>性别</th>
-                                    <th>邮箱</th>
-                                </tr>
-                                </tfoot>
                             </table>
                         </div>
 
@@ -251,9 +96,14 @@
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script>
+        const Main = new Vue({
+            el: '#main',
+            data: {
+                uploadStudentFileShow: false
+            }
+        });
         $(function () {
-           /* $("#example1").DataTable();*/
-            $('#example2').DataTable({
+            $('#studentList').DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
@@ -261,6 +111,40 @@
                 "info": true,
                 "autoWidth": true
             });
+            const importBtn = $('#importBtn');
+            importBtn.on('click', () => {
+                Main.uploadStudentFileShow = !Main.uploadStudentFileShow;
+            });
+            $('#closeImport').on('click', () => {
+                importBtn.click();
+            });
+            $('#submitImport').on('click', () => {
+                const importingMsg = xtip.load('导入中...');
+                NS.postFile('/teachingSecretary/studentManagement/importStudentInfo'
+                    , new FormData($('#importStudentForm')[0]), (res) => {
+                        if (res.code === 1000) {
+                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
+                            let tipIcon = 's';
+                            if (res.data.count !== res.data.success) {
+                                tips += '<br />错误列表：<br/><ol>';
+                                let errList = res.data.errList;
+                                console.log(errList);
+                                for (let key in errList) {
+                                    tips += '<li><b>学号：</b>' + errList[key].studentId + '</li>';
+                                }
+                                tips += '</ol>';
+                                tipIcon = 'w';
+                            }
+                            tips += '<br/><b>请点击确定重新加载数据！</b>';
+                            xtip.confirm(tips, () => {
+                                NS.reload();
+                            }, {icon: tipIcon});
+                        } else {
+                            xtip.msg('导入失败！', {icon: 'e'})
+                        }
+                    });
+                xtip.close(importingMsg);
+            })
         });
     </script>
 </#assign>

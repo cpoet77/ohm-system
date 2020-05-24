@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MajorRepository extends JpaRepository<MajorEntity, Integer>, JpaSpecificationExecutor<MajorEntity> {
-
+    MajorEntity findByName(String name);
 }
