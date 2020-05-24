@@ -1,6 +1,8 @@
 <#-- author: _Struggler -->
 <#-- 学生管理界面 -->
 <#assign  pageTitle>学生管理</#assign>
+<#assign isUserManagement = true />
+<#assign isStudentManagement = true />
 <#include "../common/head.ftl"/>
 <div class="wrapper">
     <#include "../common/header.ftl"/>

@@ -16,8 +16,9 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="header">菜单</li>
-            <li class="active"><a href="/"><i class="fa fa-dashboard"></i> <span>控制台</span></a></li>
-            <li class="treeview">
+            <li class="<#if isDashboard??>active</#if>"><a href="/"><i class="fa fa-dashboard"></i> <span>控制台</span></a>
+            </li>
+            <li class="treeview <#if isCourseManagement??>active</#if>">
                 <a href="#">
                     <i class="fa fa-mortar-board"></i> <span>课程管理</span>
                     <span class="pull-right-container">
@@ -25,12 +26,16 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a></li>
-                    <li><a href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 专业管理</a></li>
-                    <li><a href="/teachingSecretary/courseGroupManagement"><i class="fa fa-circle-o"></i> 课群管理</a></li>
+                    <li class="<#if isCollegeManagement??>active</#if>"><a
+                                href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a></li>
+                    <li class="<#if isMajorManagement??>active</#if>"><a
+                                href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 专业管理</a></li>
+                    <li class="<#if isCourseGroupManagement??>active</#if>"><a
+                                href="/teachingSecretary/courseGroupManagement"><i class="fa fa-circle-o"></i> 课群管理</a>
+                    </li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="treeview <#if isUserManagement??>active</#if>">
                 <a href="#">
                     <i class="fa fa-group"></i> <span>用户管理</span>
                     <span class="pull-right-container">
@@ -38,8 +43,12 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/teachingSecretary/teacherManagement"><i class="fa fa-circle-o"></i> 教师管理</a></li>
-                    <li><a href="/teachingSecretary/studentManagement"><i class="fa fa-circle-o"></i> 学生管理</a></li>
+                    <li class="<#if isTeacherManagement??>active</#if>"><a
+                                href="/teachingSecretary/teacherManagement"><i
+                                    class="fa fa-circle-o"></i> 教师管理</a></li>
+                    <li class="<#if isStudentManagement??>active</#if>"><a
+                                href="/teachingSecretary/studentManagement"><i
+                                    class="fa fa-circle-o"></i> 学生管理</a></li>
                 </ul>
             </li>
             <li class="treeview">

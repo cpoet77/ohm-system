@@ -1,6 +1,8 @@
 <#-- 专业管理 -->
 <#assign activeIndex></#assign>
-<#assign pageTitle>专业课群</#assign>
+<#assign pageTitle>专业管理</#assign>
+<#assign isCourseManagement = true />
+<#assign isMajorManagement = true />
 <#include "../common/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">

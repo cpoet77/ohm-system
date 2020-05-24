@@ -1,6 +1,8 @@
 <#-- 学院管理 -->
 <#assign activeIndex></#assign>
 <#assign pageTitle>学院管理</#assign>
+<#assign isCourseManagement = true />
+<#assign isCollegeManagement = true />
 <#include "../common/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">

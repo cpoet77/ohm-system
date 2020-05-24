@@ -1,6 +1,9 @@
 <#-- author: _Struggler -->
-<#-- 学生管理界面 -->
-<#assign  pageTitle>学生管理</#assign>
+<#-- author: nsleaf www.nsleaf.cn -->
+<#-- 教师管理界面 -->
+<#assign  pageTitle>教师管理</#assign>
+<#assign isUserManagement = true />
+<#assign isTeacherManagement = true />
 <#include "../common/head.ftl"/>
 <div class="wrapper">
     <#include "../common/header.ftl"/>
