@@ -1,0 +1,67 @@
+package cs.ohms.subsystem.controller.teacher;
+
+import cs.ohms.subsystem.common.ResponseResult;
+import cs.ohms.subsystem.service.StudentService;
+import cs.ohms.subsystem.utils.FileUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * 2020/5/22 14:08
+ *
+ * @author _Struggler
+ */
+@Controller
+@RequestMapping("/teachingSecretary/studentManagement")
+@Slf4j
+@RequiresRoles(value = {"teachingSecretary"})
+public class StudentManagementController {
+    private StudentService studentService;
+
+    @Autowired
+    public StudentManagementController (StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    /**
+     * 学生管理
+     *
+     * @param: void
+     * @return: ModelAndView
+     */
+    @GetMapping
+    public ModelAndView index ( ) {
+        ModelAndView view = new ModelAndView("pages/studentManagement");
+        return view.addObject("students", studentService.findAll());
+    }
+
+    /**
+     * 导入学生信息
+     *
+     * @param: studentXls MultipartFile
+     * @return: ResponseResult
+     */
+    @PostMapping("/importStudentInfo")
+    @ResponseBody
+    public ResponseResult importStudentInfo (@RequestParam("studentXls") @NotNull MultipartFile studentXls) {
+
+        System.out.println("xlsx".equals(FileUtil.getFilePostfix(studentXls.getOriginalFilename())));
+        if (!studentXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(studentXls.getOriginalFilename()))) {
+            try(InputStream inputStream = studentXls.getInputStream()) {
+                return studentService.importStudentInfo(inputStream);
+            } catch (IOException e) {
+                log.error("获取io流失败", e);
+            }
+        }
+        return ResponseResult.enFail();//返回错误信息
+    }
+}

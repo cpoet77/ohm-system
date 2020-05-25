@@ -51,6 +51,17 @@
                                     class="fa fa-circle-o"></i> 学生管理</a></li>
                 </ul>
             </li>
+            <li class="treeview <#if safetyManagement??>active</#if>">
+                <a href="#">
+                    <i class="fa fa-group"></i> <span>安全管理</span>
+                    <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<#if loginLog??>active</#if>"><a href="#"><i class="fa fa-circle-o"></i> 登录日志</a></li>
+                </ul>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-wrench"></i> <span>系统相关</span>

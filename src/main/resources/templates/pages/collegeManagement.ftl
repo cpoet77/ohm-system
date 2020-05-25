@@ -3,6 +3,9 @@
 <#assign pageTitle>学院管理</#assign>
 <#assign isCourseManagement = true />
 <#assign isCollegeManagement = true />
+<#assign restHead>
+    <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+</#assign>
 <#include "../common/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">
@@ -13,11 +16,10 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                课程管理
-                <!--<small>advanced tables</small>-->
+                学院管理
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
+                <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
                 <li><a href="#">课程管理</a></li>
                 <li class="active">学院管理</li>
             </ol>
@@ -46,6 +48,7 @@
                                     <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
                                     <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
                                 </form>
+                                <br/>
                             </div>
                             <table id="collegeList" class="table table-bordered table-hover">
                                 <thead>
@@ -58,25 +61,6 @@
                                     <th>操作</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <#list colleges as college>
-                                    <tr>
-                                        <th>${college.id!""}</th>
-                                        <td>${college.name!""}</td>
-                                        <td>1500</td>
-                                        <td>${college.description!""}</td>
-                                        <td>${college.datetime!""}</td>
-                                        <td>
-                                            <div class="btn-group-sm">
-                                                <button type="button" class="btn btn-warning btn-sm"><i
-                                                            class="fa fa-pencil-square-o"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i
-                                                            class="fa fa-trash-o"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </#list>
-                                </tbody>
                             </table>
                         </div>
                         <!-- /.box-body -->
@@ -107,12 +91,19 @@
         });
         $(function () {
             $('#collegeList').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
+                language: {
+                    url: '/static/plugins/datatables/zh.json'
+                },
+                paging: true,
+                stripeClasses: ["odd", "even"],
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                scrollX: true,
+                ajax: (data, callback, settings) => {
+                    console.log(data);
+                }
             });
             const importBtn = $('#importBtn');
             importBtn.on('click', () => {

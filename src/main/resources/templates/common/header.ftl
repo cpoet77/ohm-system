@@ -52,7 +52,7 @@
                             <img src="<#if u.avatar??>${u.avatar}<#elseif u.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
                                  class="img-circle" alt="${u.name!"user"} avatar">
                             <p>
-                                ${u.realName!"获取姓名失败"}
+                                ${u.realName!"获取姓名失败"} (<#if isRoles("admin")>超级管理员<#elseif isRoles("teachingSecretary")>教学秘书<#elseif isRoles("teacher")>教师<#else>学生</#if>)
                                 <small>${u.name!"获取用户名失败"}</small>
                             </p>
                         </li>
