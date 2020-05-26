@@ -3,6 +3,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CollegeEntity;
+import cs.ohms.subsystem.viewobject.CollegeVo;
 
 import java.io.InputStream;
 import java.util.List;
@@ -14,9 +15,9 @@ public interface CollegeService {
     /**
      * 获取所有学院信息
      *
-     * @return CollegeEntity for list
+     * @return CollegeVo for list
      */
-    List<CollegeEntity> findAll();
+    List<CollegeVo> findAll();
 
     /**
      * 分页获取学院列表

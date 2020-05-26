@@ -43,8 +43,13 @@ public class CollegeServiceImpl implements CollegeService {
     }
 
     @Override
-    public List<CollegeEntity> findAll() {
-        return collegeRepository.findAll();
+    public List<CollegeVo> findAll() {
+        List<CollegeEntity> colleges = collegeRepository.findAll();
+        List<CollegeVo> collegeVos = new ArrayList<>();
+        colleges.forEach(college -> {
+            collegeVos.add(new CollegeVo().setId(college.getId()).setName(college.getName()));
+        });
+        return collegeVos;
     }
 
     @Override
