@@ -3,6 +3,8 @@
 -- nsleaf
 --
 
+# DROP DATABASE IF EXISTS ohm_subsystem;
+
 CREATE DATABASE IF NOT EXISTS ohm_subsystem CHAR SET 'UTF8';
 
 USE ohm_subsystem;
@@ -48,7 +50,7 @@ CREATE TABLE IF NOT EXISTS ohms_user_role
 
 CREATE TABLE IF NOT EXISTS ohms_college
 (
-    id          TINYINT PRIMARY KEY AUTO_INCREMENT COMMENT '学院id',
+    id          INT PRIMARY KEY AUTO_INCREMENT COMMENT '学院id',
     name        NVARCHAR(64) NOT NULL COMMENT '学院名',
     description TEXT         NULL COMMENT '学院描述',
     datetime    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '导入时间',
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS ohms_major
 (
     id         INT PRIMARY KEY AUTO_INCREMENT COMMENT '专业id',
     name       NVARCHAR(64) NOT NULL COMMENT '专业名',
-    college_id TINYINT      NOT NULL COMMENT '学院id',
+    college_id INT      NOT NULL COMMENT '学院id',
     datetime   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '导入时间',
     FOREIGN KEY (college_id) REFERENCES ohms_college (id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (name),
