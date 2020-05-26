@@ -66,6 +66,17 @@
                     </#if>
                 </ul>
             </li>
+            <li class="treeview <#if personalCenter??>active</#if>">
+                <a href="#">
+                    <i class="fa fa-user"></i> <span>个人中心</span>
+                    <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<#if myProfile??>active</#if>"><a href="#"><i class="fa fa-circle-o"></i> 我的资料</a></li>
+                </ul>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-wrench"></i> <span>系统相关</span>
