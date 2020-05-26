@@ -37,9 +37,9 @@ public class StudentServiceImpl implements StudentService {
     private MajorService majorService;
 
     @Autowired
-    public StudentServiceImpl (UserService userService, StudentRepository studentRepository,
-                               ResourceService resourceService, PasswordCMP passwordCMP,
-                               RoleRepository roleRepository, MajorService majorService) {
+    public StudentServiceImpl(UserService userService, StudentRepository studentRepository,
+                              ResourceService resourceService, PasswordCMP passwordCMP,
+                              RoleRepository roleRepository, MajorService majorService) {
         this.userService = userService;
         this.studentRepository = studentRepository;
         this.resourceService = resourceService;
@@ -50,12 +50,12 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<StudentEntity> findAll ( ) {
+    public List<StudentEntity> findAll() {
         return studentRepository.findAll();
     }
 
     @Override
-    public ResponseResult importStudentInfo (InputStream inputStream) {
+    public ResponseResult importStudentInfo(InputStream inputStream) {
         RoleEntity role = roleRepository.findByName(UserService.USER_STUDENT_ROLE);
         if (null == role) {
             log.error("请确保学生角色存在！");
@@ -67,7 +67,7 @@ public class StudentServiceImpl implements StudentService {
             studentTos.forEach(studentTo -> {
                 String salt = passwordCMP.produceSalt();
                 MajorEntity major = majorService.findMajorHashCacheByName(studentTo.getMajor());
-                if(null != major ){
+                if (null != major) {
                     UserEntity user = new UserEntity().setName(userService.createDefaultName(studentTo.getStudentId()))
                             .setRealName(studentTo.getRealName()).setPassword(passwordCMP.encryptPassword(studentTo.getPassword(), salt))
                             .setSalt(salt).setSex("男".equals(studentTo.getSex()) ? 'M' : 'F');
@@ -96,7 +96,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Boolean saveStudent (StudentEntity student) {
+    public Boolean saveStudent(StudentEntity student) {
         try {
             studentRepository.save(student);
             return true;

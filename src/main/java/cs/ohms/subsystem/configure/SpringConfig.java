@@ -8,6 +8,7 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.PathResource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.io.IOException;
  */
 @SpringBootConfiguration
 @EnableCaching
+@EnableAsync
 public class SpringConfig {
     private static final Logger log = LoggerFactory.getLogger(SpringConfig.class);
 

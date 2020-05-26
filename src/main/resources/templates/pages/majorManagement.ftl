@@ -40,7 +40,8 @@
                             <div v-show="uploadMajorFileShow">
                                 <form id="importMajorForm" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <label for="majorXlsFile">请选择专业信息的表格(仅支持后缀为.xlsx的文件)</label>
+                                        <label for="majorXlsFile">请选择专业信息的表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
+                                                    href="/static/docs/专业信息导入模板.xlsx">下载模板</a>】</label>
                                         <input name="majorXls" accept=".xlsx" type="file" id="majorXlsFile">
                                     </div>
                                     <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>

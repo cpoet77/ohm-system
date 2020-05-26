@@ -39,7 +39,8 @@
                             <div v-show="uploadTeacherFileShow">
                                 <form id="importTeacherForm" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <label for="teacherXlsFile">请选择教职工信息表格(仅支持后缀为.xlsx的文件)</label>
+                                        <label for="teacherXlsFile">请选择教职工信息表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
+                                                    href="/static/docs/教师信息导入模板.xlsx">下载模板</a>】</label>
                                         <input name="teacherXls" accept=".xlsx" type="file" id="teacherXlsFile">
                                     </div>
                                     <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>

@@ -3,18 +3,27 @@ package cs.ohms.subsystem.service.impl;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CollegeEntity;
+import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.repository.CollegeRepository;
+import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.CollegeService;
 import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.tableobject.CollegeTo;
+import cs.ohms.subsystem.viewobject.CollegeVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -24,16 +33,34 @@ import java.util.List;
 public class CollegeServiceImpl implements CollegeService {
     private ResourceService resourceService;
     private CollegeRepository collegeRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    public CollegeServiceImpl(ResourceService resourceService, CollegeRepository collegeRepository) {
+    public CollegeServiceImpl(ResourceService resourceService, CollegeRepository collegeRepository, StudentRepository studentRepository) {
         this.resourceService = resourceService;
         this.collegeRepository = collegeRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
     public List<CollegeEntity> findAll() {
         return collegeRepository.findAll();
+    }
+
+    @Override
+    public ResponseResult getCollegesByPage(int start, int length) {
+        int page = (int) Math.ceil((double) start / length);
+        Page<CollegeEntity> colleges = collegeRepository.findAll(PageRequest.of(page, length, Sort.Direction.DESC, "datetime"));
+        long count = collegeRepository.count();
+        List<Object> resultList = new ArrayList<>();
+        colleges.forEach(college -> {
+            Set<MajorEntity> majors = college.getMajors();
+            long countStudent = majors.stream().mapToLong(major -> studentRepository.countByMajor(major)).sum();
+            CollegeVo collegeVo = new CollegeVo().setCountMajor((long) majors.size()).setCountStudent(countStudent);
+            BeanUtils.copyProperties(college, collegeVo);
+            resultList.add(collegeVo);
+        });
+        return ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", count).add("data", resultList);
     }
 
     @Override
@@ -65,6 +92,26 @@ public class CollegeServiceImpl implements CollegeService {
             return true;
         } catch (Exception e) {
             log.warn("保存数据失败! msg : {}", e.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean saveCollege(Integer id, String name, String description) {
+        if (id == null) {
+            return saveCollege(new CollegeEntity().setName(name).setDescription(description));
+        }
+        Optional<CollegeEntity> collegeOptional = collegeRepository.findById(id);
+        return collegeOptional.filter(collegeEntity -> saveCollege(collegeEntity.setName(name).setDescription(description))).isPresent();
+    }
+
+    @Override
+    public boolean deleteCollege(Integer id) {
+        try {
+            collegeRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            log.warn("删除学院信息失败！id {}", id);
         }
         return false;
     }

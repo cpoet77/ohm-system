@@ -4,11 +4,13 @@ package cs.ohms.subsystem.tableobject;
 import com.github.liaochong.myexcel.core.annotation.ExcelColumn;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
 @Data
-public class CollegeTo {
+public class CollegeTo implements Serializable {
     @ExcelColumn(title = "学院名", index = 0)
     private String name;
 

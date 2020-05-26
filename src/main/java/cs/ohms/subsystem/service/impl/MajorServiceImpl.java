@@ -80,10 +80,7 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public MajorEntity findMajorHashCacheByName (String name) {
-
-       return majorRepository.findByName(name);
+    public MajorEntity findMajorHashCacheByName(String name) {
+        return majorRepository.findByName(name);
     }
-
-
 }

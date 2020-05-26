@@ -183,4 +183,25 @@
             }, {icon: 'a'});
         }
     };
+    (() => {/* 阻止回车提交表单 */
+        document.onkeydown = function (event) {
+            let target, code, tag;
+            if (!event) {
+                event = window.event;
+                target = event.srcElement;
+                code = event.keyCode;
+                if (code === 13) {
+                    tag = target.tagName;
+                    return tag === "TEXTAREA";
+                }
+            } else {
+                target = event.target;
+                code = event.keyCode;
+                if (code === 13) {
+                    tag = target.tagName;
+                    return tag !== "INPUT";
+                }
+            }
+        }
+    })();
 })();

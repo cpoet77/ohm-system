@@ -5,13 +5,15 @@ import cs.ohms.subsystem.service.CollegeService;
 import cs.ohms.subsystem.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -22,7 +24,7 @@ import java.io.InputStream;
  */
 @Controller
 @RequestMapping("/teachingSecretary/collegeManagement")
-@RequiresRoles(value = {"teachingSecretary"})
+@RequiresRoles(value = {"admin", "teachingSecretary"})
 @Slf4j
 public class CollegeManagementController {
     private CollegeService collegeService;
@@ -38,13 +40,25 @@ public class CollegeManagementController {
      * @return view
      */
     @GetMapping
-    public ModelAndView index() {
-        ModelAndView view = new ModelAndView("pages/collegeManagement");
-        return view.addObject("colleges", collegeService.findAll());
+    public String index() {
+        return "pages/collegeManagement";
     }
 
     /**
-     * 获取学院信息
+     * 获取学院信息列表
+     *
+     * @return ResponseResult
+     */
+    @PostMapping("/collegeInfoList")
+    @ResponseBody
+    public ResponseResult collegeInfoList(@RequestParam("draw") @NotNull @Min(1) Integer draw
+            , @RequestParam("start") @NotNull @Min(0) Integer start
+            , @RequestParam("length") @NotNull @Min(5) Integer length) {
+        return (collegeService.getCollegesByPage(start, length).add("draw", draw));
+    }
+
+    /**
+     * 导入学院信息
      *
      * @param collegeXls excel表格文件
      * @return ResponseResult
@@ -60,5 +74,34 @@ public class CollegeManagementController {
             }
         }
         return ResponseResult.enFail();
+    }
+
+    /**
+     * 保存单条学院信息
+     *
+     * @param id                 学院id,null进为添加学院
+     * @param collegeName        学院名
+     * @param collegeDescription 学院简介
+     * @return ResponseResult
+     */
+    @PostMapping("/saveOneCollegeInfo")
+    @ResponseBody
+    public ResponseResult saveOneCollegeInfo(@RequestParam(value = "id") @Min(1) Integer id
+            , @RequestParam("name") @NotEmpty @Length(min = 2, max = 64) String collegeName
+            , @RequestParam("description") String collegeDescription) {
+        return (collegeService.saveCollege(id, collegeName, collegeDescription) ? ResponseResult.enSuccess() : ResponseResult.enFail());
+    }
+
+    /**
+     * 删除单条学院信息
+     *
+     * @param id 学院id
+     * @return ResponseResult
+     */
+    @PostMapping("/deleteCollegeInfo")
+    @ResponseBody
+    public ResponseResult deleteCollegeInfo(@RequestParam("collegeId") @NotNull @Min(1) Integer id) {
+        return (collegeService.deleteCollege(id) ? ResponseResult.enSuccess().add("id", id) : ResponseResult.enFail()
+                .add("id", id));
     }
 }

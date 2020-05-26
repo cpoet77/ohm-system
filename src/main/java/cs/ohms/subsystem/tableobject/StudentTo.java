@@ -3,13 +3,15 @@ package cs.ohms.subsystem.tableobject;
 import com.github.liaochong.myexcel.core.annotation.ExcelColumn;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 2020/5/23 11:49
  *
  * @author _Struggler
  */
 @Data
-public class StudentTo {
+public class StudentTo implements Serializable {
     @ExcelColumn(title = "学号",index = 0)
     private String studentId;//学生id
 

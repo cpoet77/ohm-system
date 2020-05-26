@@ -41,7 +41,8 @@
                             <div v-show="uploadCourseGroupFileShow">
                                 <form id="importCourseGroupForm" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <label for="courseGroupXlsFile">请选择课群信息的表格(仅支持后缀为.xlsx的文件)</label>
+                                        <label for="courseGroupXlsFile">请选择课群信息的表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
+                                                    href="/static/docs/课群信息导入模板.xlsx">下载模板</a>】</label>
                                         <input name="courseGroupXls" accept=".xlsx" type="file" id="courseGroupXlsFile">
                                     </div>
                                     <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>

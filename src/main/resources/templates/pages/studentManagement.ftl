@@ -32,13 +32,23 @@
                                 <button id="importBtn" type="button" class="btn btn-warning">导入</button>
                                 <button type="button" class="btn btn-success">导出</button>
                             </div>
+                            <form id="filterForm">
+                                <div class="form-group">
+                                    <label>Select</label>
+                                    <select class="form-control">
+                                        <option>数信学院</option>
+                                        <option>option 2</option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
                             <div v-show="uploadStudentFileShow">
                                 <form id="importStudentForm" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <label for="studentXlsFile">请选择学生信息表格(仅支持后缀为.xlsx的文件)</label>
+                                        <label for="studentXlsFile">请选择学生信息表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
+                                                    href="/static/docs/学生信息导入模板.xlsx">下载模板</a>】</label>
                                         <input name="studentXls" accept=".xlsx" type="file" id="studentXlsFile">
                                     </div>
                                     <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
