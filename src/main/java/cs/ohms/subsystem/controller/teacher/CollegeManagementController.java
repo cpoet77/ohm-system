@@ -58,6 +58,17 @@ public class CollegeManagementController {
     }
 
     /**
+     * 获取所有学院基本信息列表
+     *
+     * @return ResponseResult
+     */
+    @PostMapping("/collegeInfoAllList")
+    @ResponseBody
+    public ResponseResult collegeInfoAllList() {
+        return ResponseResult.enSuccess().add("colleges", collegeService.findAll());
+    }
+
+    /**
      * 导入学院信息
      *
      * @param collegeXls excel表格文件
