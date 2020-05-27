@@ -26,10 +26,9 @@
         <section class="content">
             <ul class="list-unstyled clearfix">
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('blue')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-blue"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'blue'>full-opacity-hover</#if>">
                         <div>
                             <span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9;"></span><span
                                     class="bg-light-blue"
@@ -41,10 +40,9 @@
                     </a>
                     <p class="text-center no-margin">Blue</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('black')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-black"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'black'>full-opacity-hover</#if>">
                         <div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix"><span
                                     style="display:block; width: 20%; float: left; height: 7px; background: #fefefe;"></span><span
                                     style="display:block; width: 80%; float: left; height: 7px; background: #fefefe;"></span>
@@ -56,10 +54,9 @@
                     </a>
                     <p class="text-center no-margin">Black</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('purple')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-purple"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'purple'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-purple-active"></span><span class="bg-purple"
                                                                          style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -71,10 +68,9 @@
                     </a>
                     <p class="text-center no-margin">Purple</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('green')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-green"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'green'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-green-active"></span><span class="bg-green"
                                                                         style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -86,10 +82,9 @@
                     </a>
                     <p class="text-center no-margin">Green</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('red')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-red"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'red'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-red-active"></span><span class="bg-red"
                                                                       style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -101,10 +96,9 @@
                     </a>
                     <p class="text-center no-margin">Red</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('yellow')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-yellow"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'yellow'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-yellow-active"></span><span class="bg-yellow"
                                                                          style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -116,10 +110,9 @@
                     </a>
                     <p class="text-center no-margin">Yellow</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('blue-light')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-blue-light"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'blue-light'>full-opacity-hover</#if>">
                         <div>
                             <span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9;"></span><span
                                     class="bg-light-blue"
@@ -131,10 +124,9 @@
                     </a>
                     <p class="text-center no-margin" style="font-size: 12px">Blue Light</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('black-light')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-black-light"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'black-light'>full-opacity-hover</#if>">
                         <div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix"><span
                                     style="display:block; width: 20%; float: left; height: 7px; background: #fefefe;"></span><span
                                     style="display:block; width: 80%; float: left; height: 7px; background: #fefefe;"></span>
@@ -146,10 +138,9 @@
                     </a>
                     <p class="text-center no-margin" style="font-size: 12px">Black Light</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('purple-light')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-purple-light"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'purple-light'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-purple-active"></span><span class="bg-purple"
                                                                          style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -161,10 +152,9 @@
                     </a>
                     <p class="text-center no-margin" style="font-size: 12px">Purple Light</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('green-light')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-green-light"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'green-light'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-green-active"></span><span class="bg-green"
                                                                         style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -176,10 +166,9 @@
                     </a>
                     <p class="text-center no-margin" style="font-size: 12px">Green Light</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('red-light')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-red-light"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'red-light'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-red-active"></span><span class="bg-red"
                                                                       style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -191,10 +180,9 @@
                     </a>
                     <p class="text-center no-margin" style="font-size: 12px">Red Light</p></li>
                 <li style="float:left; width: 33.33333%; padding: 5px;" onclick="NS.setSink('yellow-light')"><a
-                            href="javascript:void(0);"
-                            data-skin="skin-yellow-light"
+                            href="#"
                             style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)"
-                            class="clearfix full-opacity-hover">
+                            class="clearfix <#if u.skin != 'yellow-light'>full-opacity-hover</#if>">
                         <div><span style="display:block; width: 20%; float: left; height: 7px;"
                                    class="bg-yellow-active"></span><span class="bg-yellow"
                                                                          style="display:block; width: 80%; float: left; height: 7px;"></span>
@@ -216,8 +204,9 @@
 <#assign restFooter>
     <script>
         $(function () {
+            const currentUserSkin = '${u.skin}';
             NS.setSink = (skinName) => {
-                if (NS.isNull(skinName)) {
+                if (NS.isNull(skinName) || skinName === currentUserSkin) {
                     return;
                 }
                 const setSinkLoad = xtip.load('设置主题中...');

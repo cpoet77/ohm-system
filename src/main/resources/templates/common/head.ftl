@@ -5,8 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>${pageTitle!siteTitle}
-        | <#if pageSubtitle??>${pageSubtitle}<#elseif siteSubTitle??>${siteSubTitle}<#else>${OHMS_NAME}</#if></title>
+    <title>${pageTitle!siteTitle} | <#if pageSubtitle??>${pageSubtitle}<#elseif siteSubTitle??>${siteSubTitle}<#else>${OHMS_NAME}</#if></title>
     <link rel="icon" sizes="any" href="/static/images/favicon.ico">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
