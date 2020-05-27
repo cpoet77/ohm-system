@@ -30,6 +30,8 @@
                                 href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a></li>
                     <li class="<#if isMajorManagement??>active</#if>"><a
                                 href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 专业管理</a></li>
+                    <li class="<#if classManagement??>active</#if>"><a
+                                href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 班级管理</a></li>
                     <li class="<#if isCourseGroupManagement??>active</#if>"><a
                                 href="/teachingSecretary/courseGroupManagement"><i class="fa fa-circle-o"></i> 课群管理</a>
                     </li>
@@ -75,6 +77,8 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="<#if myProfile??>active</#if>"><a href="#"><i class="fa fa-circle-o"></i> 我的资料</a></li>
+                    <li class="<#if themeCenter??>active</#if>"><a href="/user/interfaceThemeCenter"><i
+                                    class="fa fa-circle-o"></i> 主题管理</a></li>
                 </ul>
             </li>
             <li class="treeview">

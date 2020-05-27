@@ -63,4 +63,16 @@ public class UserServiceImpl implements UserService {
     public UserEntity findUserByRealName(String realName) {
         return userRepository.findByRealName(realName);
     }
+
+    @Override
+    public boolean saveSkin(UserEntity user, String skinName) {
+        try {
+            user.setSkin(skinName);
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.warn("用户主题设置失败！");
+        }
+        return false;
+    }
 }

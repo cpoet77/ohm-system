@@ -57,12 +57,17 @@ public interface UserService {
     boolean saveUser(UserEntity user);
 
     /**
-     *
-     *
      * @param realName 真实姓名
      * @return UserEntity
      */
     UserEntity findUserByRealName(String realName);
 
-
+    /**
+     * 设置皮肤
+     *
+     * @param user     需要设置的用户
+     * @param skinName 皮肤名称
+     * @return true|false
+     */
+    boolean saveSkin(UserEntity user, String skinName);
 }

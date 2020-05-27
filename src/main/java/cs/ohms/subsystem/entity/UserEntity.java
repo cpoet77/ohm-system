@@ -54,6 +54,9 @@ public class UserEntity implements Serializable {
     @Column
     private String phone;//手机号
 
+    @Column
+    private String skin;//界面皮肤
+
     @OneToOne(mappedBy = "user")
     private StudentEntity student;
 

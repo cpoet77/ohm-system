@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS ohms_user
     avatar    VARCHAR(128) NULL COMMENT '用户头像地址',
     email     VARCHAR(78)  NULL COMMENT '用户邮箱',
     phone     VARCHAR(15)  NULL COMMENT '用户手机',
+    skin      VARCHAR(15)  NOT NULL DEFAULT 'purple' COMMENT '界面皮肤',
     UNIQUE (name),
     CHECK ( LENGTH(name) > 3 ),
     CHECK ( LENGTH(name) > 1 ),
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS ohms_major
 (
     id         INT PRIMARY KEY AUTO_INCREMENT COMMENT '专业id',
     name       NVARCHAR(64) NOT NULL COMMENT '专业名',
-    college_id INT      NOT NULL COMMENT '学院id',
+    college_id INT          NOT NULL COMMENT '学院id',
     datetime   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '导入时间',
     FOREIGN KEY (college_id) REFERENCES ohms_college (id) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (name),
