@@ -61,11 +61,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="<#if loginLog??>active</#if>"><a href="#"><i class="fa fa-circle-o"></i> 登录日志</a></li>
-                    <#if isRoles("admin")>
-                        <li class="<#if userLoginLog??>active</#if>"><a href="#"><i class="fa fa-circle-o"></i>
-                                用户登录日志</a></li>
-                    </#if>
+                    <li class="<#if loginLog??>active</#if>"><a href="/common/loginRecord"><i
+                                    class="fa fa-circle-o"></i> 登录日志</a></li>
                 </ul>
             </li>
             <li class="treeview <#if personalCenter??>active</#if>">

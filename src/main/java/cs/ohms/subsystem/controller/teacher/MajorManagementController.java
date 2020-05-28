@@ -47,17 +47,19 @@ public class MajorManagementController {
     /**
      * 分布获取专业列表
      *
-     * @param draw   获取次数
-     * @param start  起点位置
-     * @param length 长度
+     * @param draw            获取次数
+     * @param start           起点位置
+     * @param length          长度
+     * @param filterCollegeId 过滤的学院id
      * @return ResponseResult
      */
     @PostMapping("/majorInfoList")
     @ResponseBody
     public ResponseResult majorInfoList(@RequestParam("draw") @NotNull @Min(1) Integer draw
             , @RequestParam("start") @NotNull @Min(0) Integer start
-            , @RequestParam("length") @NotNull @Min(5) Integer length) {
-        return majorService.getMajorByPage(start, length).add("draw", draw);
+            , @RequestParam("length") @NotNull @Min(5) Integer length
+            , @RequestParam("filterCollegeId") Integer filterCollegeId) {
+        return majorService.getMajorByCollegeAndPage(filterCollegeId, start, length).add("draw", draw);
     }
 
     /**

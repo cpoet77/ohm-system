@@ -32,5 +32,5 @@
 <#if bodyClass??>
 <body class="${bodyClass}">
 <#else>
-<body class="hold-transition skin-${u.skin!"purple"} sidebar-mini fixed">
+<body class="hold-transition skin-${u.skin!"green"} sidebar-mini fixed">
 </#if>

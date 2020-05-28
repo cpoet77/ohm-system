@@ -20,13 +20,14 @@ public interface MajorService {
     List<MajorEntity> findAll();
 
     /**
-     * 分布获取专业列表
+     * 根据学院id分布获取专业列表
      *
-     * @param start  起点
-     * @param length 长度
+     * @param collegeId 学院id
+     * @param start     开始位置
+     * @param length    数量
      * @return ResponseResult
      */
-    ResponseResult getMajorByPage(int start, int length);
+    ResponseResult getMajorByCollegeAndPage(Integer collegeId, int start, int length);
 
     /**
      * 导入专业信息

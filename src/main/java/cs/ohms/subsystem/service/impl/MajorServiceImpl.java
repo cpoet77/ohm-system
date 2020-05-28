@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ import java.util.Optional;
  * 2020/5/23 1:40
  *
  * @author LRC
- **/
+ */
 @Service("majorService")
 @Slf4j
 public class MajorServiceImpl implements MajorService {
@@ -54,9 +55,10 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    public ResponseResult getMajorByPage(int start, int length) {
+    public ResponseResult getMajorByCollegeAndPage(Integer collegeId, int start, int length) {
         int page = (int) Math.ceil((double) start / length);
-        Page<MajorEntity> majors = majorRepository.findAll(PageRequest.of(page, length, Sort.Direction.DESC, "datetime"));
+        Pageable pageable = PageRequest.of(page, length, Sort.Direction.DESC, "datetime");
+        Page<MajorEntity> majors = (collegeId == null ? majorRepository.findAll(pageable) : majorRepository.findByCollege_Id(collegeId, pageable));
         List<MajorVo> majorVos = new ArrayList<>();
         majors.forEach(major -> {
             MajorVo majorVo = new MajorVo().setCountStudents(studentRepository.countByMajor(major))
@@ -65,7 +67,8 @@ public class MajorServiceImpl implements MajorService {
             majorVos.add(majorVo);
         });
         long count = majorRepository.count();
-        return ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", count).add("data", majorVos);
+        return (ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", collegeId != null
+                ? majorRepository.countByCollege_Id(collegeId) : count).add("data", majorVos));
     }
 
     @Override

@@ -80,7 +80,7 @@ public class LoginController {
             UserEntity user = userService.findUserByName(username);
             if (user != null) {
                 subject.getSession().setAttribute(UserService.USER_SELF, user);
-                loginService.loginRecord(request, user);
+                loginService.loginRecord(request, user, request.getHeader("User-Agent"));
                 /* 验证完成，登录成功 */
                 return ResponseResult.enSuccess();
             }

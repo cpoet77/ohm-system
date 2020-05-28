@@ -17,8 +17,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                课程管理
-                <!--<small>advanced tables</small>-->
+                专业管理
             </h1>
             <ol class="breadcrumb">
                 <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
@@ -38,7 +37,10 @@
                                         data-target="#saveMajorModal">添加
                                 </button>
                                 <button id="importBtn" type="button" class="btn btn-warning">导入</button>
-                                <button type="button" class="btn btn-success">导出</button>
+                                <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                        data-target="#dataFilterModal">过滤
+                                </button>
                             </div>
                         </div>
                         <!-- /.box-header -->
@@ -120,6 +122,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="dataFilterModal" tabindex="-1" role="dialog"
+                     aria-labelledby="dataFilterModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="dataFilterModalLabel">
+                                    数据过滤
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="dataFilterForm">
+                                    <div class="form-group">
+                                        <label>选择学院</label>
+                                        <select class="form-control" name="collegeId"
+                                                v-model="filterDataCollegeId">
+                                            <option value="null">所有学院</option>
+                                            <option v-for="collegeInfo in collegeInfoList" :key="collegeInfo.id"
+                                                    :value="collegeInfo.id">{{collegeInfo.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.row -->
         </section>
@@ -146,13 +176,24 @@
                         name: null,
                         collegeId: null
                     },
-                    collegeInfoList: null
+                    collegeInfoList: null,
+                    filterDataCollegeId: null
+                },
+                watch: {
+                    filterDataCollegeId: function (newVal, oldVal) {
+                        datatable.ajax.reload();
+                    }
                 },
                 methods: {
                     clearSaveOneMajorInfo: function () {
                         Main.saveOneMajorInfo.id = null;
                         Main.saveOneMajorInfo.name = null;
                         Main.saveOneMajorInfo.collegeId = null;
+                    },
+                    loadCollegeInfoList: function () {
+                        NS.post("/teachingSecretary/collegeManagement/collegeInfoAllList", null, (res) => {
+                            Main.collegeInfoList = res.data.colleges;
+                        });
                     }
                 }
             });
@@ -174,7 +215,8 @@
                     NS.post('/teachingSecretary/majorManagement/majorInfoList', {
                         draw: data.draw,
                         start: data.start,
-                        length: data.length
+                        length: data.length,
+                        filterCollegeId: Main.filterDataCollegeId === 'null' ? null : Main.filterDataCollegeId,
                     }, (res) => {
                         callback(res.data);
                     });
@@ -278,9 +320,10 @@
                     });
             });
             saveMajorModal.on('show.bs.modal', () => {
-                NS.post("/teachingSecretary/collegeManagement/collegeInfoAllList", null, (res) => {
-                    Main.collegeInfoList = res.data.colleges;
-                });
+                Main.loadCollegeInfoList();
+            });
+            $('#dataFilterModal').on('show.bs.modal', () => {
+                Main.loadCollegeInfoList();
             });
             saveMajorModal.on('hide.bs.modal', () => {
                 Main.clearSaveOneMajorInfo();

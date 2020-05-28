@@ -2,6 +2,7 @@
 package cs.ohms.subsystem.service.impl;
 
 import cn.nsleaf.utils.NSimpleHttpException;
+import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.LoginRecordEntity;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.repository.LoginRecordRepository;
@@ -10,6 +11,9 @@ import cs.ohms.subsystem.utils.JsonUtil;
 import cs.ohms.subsystem.utils.NSIPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void loginRecord(HttpServletRequest request, UserEntity user) {
+    public void loginRecord(HttpServletRequest request, UserEntity user, String userAgent) {
         // 获取登录ip地址
         String ip = NSIPUtil.getIpAddress(request);
         try {
@@ -48,11 +52,22 @@ public class LoginServiceImpl implements LoginService {
                 loginRecord.setCity(map.get("city"));
                 loginRecord.setCityCode(map.get("cityCode"));
                 loginRecord.setAddress(map.get("addr"));
-                loginRecord.setAddress(request.getHeader("UserEntity-Agent"));
+                loginRecord.setAgent(userAgent);
                 loginRecordRepository.save(loginRecord);
             }
         } catch (NSimpleHttpException e) {
             log.info("Login record, failed to get ip address information.ip {} : , message : {}", ip, e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseResult getLoginInfoListByPage(UserEntity user, Integer page, Integer size) {
+        try {
+            Page<LoginRecordEntity> userPage = loginRecordRepository.findByUser(user, PageRequest.of(page, size, Sort.Direction.DESC, "datetime"));
+            return ResponseResult.enSuccess().add("list", userPage.toList()).add("count", userPage.getTotalElements()).add("size", userPage.getNumberOfElements()).add("page", page);
+        } catch (Exception e) {
+            log.warn("获取登录日志失败，userId : {}", user.getId());
+        }
+        return ResponseResult.enFail();
     }
 }
