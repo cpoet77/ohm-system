@@ -1,7 +1,6 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/5/8.
 package cs.ohms.subsystem.service.impl;
 
-import cn.nsleaf.utils.NSimpleHttpException;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.LoginRecordEntity;
 import cs.ohms.subsystem.entity.UserEntity;
@@ -55,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
                 loginRecord.setAgent(userAgent);
                 loginRecordRepository.save(loginRecord);
             }
-        } catch (NSimpleHttpException e) {
+        } catch (Exception e) {
             log.info("Login record, failed to get ip address information.ip {} : , message : {}", ip, e.getMessage());
         }
     }
