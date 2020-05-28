@@ -19,6 +19,13 @@ public interface TeacherService {
     List<TeacherEntity> findAll();
 
     /**
+     * 根据教师真实姓名获得教师信息
+     *
+     * @param realName String
+     * @return TeacherEntity
+     */
+    TeacherEntity findTeacherByRealName(String realName);
+    /**
      * 导入教师信息
      *
      * @param in InputStream

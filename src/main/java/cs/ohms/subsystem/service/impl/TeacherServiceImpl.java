@@ -49,6 +49,15 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public TeacherEntity findTeacherByRealName (String realName) {
+        UserEntity user = userService.findUserByRealName(realName);
+        if(user == null){
+            return null;
+        }
+        return user.getTeacher();
+    }
+
+    @Override
     public ResponseResult importTeacherInfo(InputStream in) {
         RoleEntity role = roleRepository.findByName(UserService.USER_TEACHER_ROLE);
         if (role == null) {
