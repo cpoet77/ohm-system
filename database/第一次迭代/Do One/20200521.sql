@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS ohms_user
     avatar    VARCHAR(128) NULL COMMENT '用户头像地址',
     email     VARCHAR(78)  NULL COMMENT '用户邮箱',
     phone     VARCHAR(15)  NULL COMMENT '用户手机',
-    skin      VARCHAR(15)  NOT NULL DEFAULT 'purple' COMMENT '界面皮肤',
+    skin      VARCHAR(15)  NOT NULL DEFAULT 'green' COMMENT '界面皮肤',
     UNIQUE (name),
     CHECK ( LENGTH(name) > 3 ),
     CHECK ( LENGTH(name) > 1 ),
@@ -120,9 +120,9 @@ CREATE TABLE IF NOT EXISTS ohms_login_record
     city_code     VARCHAR(6)   NULL COMMENT '城市代码',
     address       VARCHAR(98)  NULL COMMENT '登录的地址',
     agent         VARCHAR(255) NULL COMMENT 'user-agent',
+    datetime      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
     FOREIGN KEY (user_id) REFERENCES ohms_user (id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB COMMENT '用户登录记录';
-
 
 --
 -- 视图
