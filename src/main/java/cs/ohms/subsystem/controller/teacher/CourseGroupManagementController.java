@@ -1,16 +1,19 @@
 package cs.ohms.subsystem.controller.teacher;
 
+import com.sun.org.apache.regexp.internal.RE;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -36,9 +39,24 @@ public class CourseGroupManagementController {
      * @return view
      */
     @GetMapping
-    public ModelAndView index(){
-        ModelAndView view = new ModelAndView("/pages/courseGroupManagement");
-        return view.addObject("courseGroups",courseGroupService.findAll());
+    public String index(){
+       return "/pages/courseGroupManagement";
+    }
+
+    /**
+     * 分布获取课程列表
+     *
+     * @param draw   获取次数
+     * @param start  起点位置
+     * @param length 长度
+     * @return ResponseResult
+     */
+    @PostMapping("/courseGroupInfoList")
+    @ResponseBody
+    public ResponseResult courseGoupList(@RequestParam("draw") @NotNull @Min(1) Integer draw
+            ,@RequestParam("start") @NotNull @Min(0) Integer start
+            ,@RequestParam("length") @NotNull @Min(5) Integer length){
+        return courseGroupService.getCourseGroupByPage(start,length).add("draw",draw);
     }
 
     @PostMapping("/importCourseGroupInfo")
@@ -53,4 +71,39 @@ public class CourseGroupManagementController {
         }
         return ResponseResult.enFail();
     }
+
+    /**
+     * 保存课群信息
+     *
+     * @param id        课群id，id为null时是添加操作，否则为更新操作
+     * @param courseGroupName 课程名
+     * @param teacherRealName 教师真实姓名
+     * @param description 课群描述
+     * @param state 课群状态
+     * @return ResponseResult
+     */
+    @PostMapping("/saveOneCourseGroupInfo")
+    @ResponseBody
+    public ResponseResult saveOneCourseGroupInfo(@RequestParam("id") @Min(1) Integer id
+            , @RequestParam("teacherRealName") @NotNull String teacherRealName
+            , @RequestParam("courseGroupName") @NotEmpty @Length(min = 2, max = 64) String courseGroupName
+            , @RequestParam("description") String description
+            , @RequestParam("state") String state){
+        return courseGroupService.saveCourseGroup(id, teacherRealName, courseGroupName,  description, state) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+    }
+
+    /**
+     * 根据删除一条课群信息
+     *
+     * @param id 课群id
+     * @return ResponseResult
+     */
+
+    @PostMapping("/deleteOneCourseGroupInfo")
+    @ResponseBody
+    public ResponseResult deletOneCourseGroupInfo(@RequestParam("id") @NotNull @Min(1) Integer id){
+        return courseGroupService.deleteCourseGroup(id) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+
+    }
+
 }
