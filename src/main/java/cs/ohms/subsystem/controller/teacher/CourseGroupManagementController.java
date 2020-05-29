@@ -1,6 +1,5 @@
 package cs.ohms.subsystem.controller.teacher;
 
-import com.sun.org.apache.regexp.internal.RE;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.utils.FileUtil;
@@ -98,12 +97,10 @@ public class CourseGroupManagementController {
      * @param id 课群id
      * @return ResponseResult
      */
-
     @PostMapping("/deleteOneCourseGroupInfo")
     @ResponseBody
-    public ResponseResult deletOneCourseGroupInfo(@RequestParam("id") @NotNull @Min(1) Integer id){
+    public ResponseResult deleteOneCourseGroupInfo(@RequestParam("id") @NotNull @Min(1) Integer id){
         return courseGroupService.deleteCourseGroup(id) ? ResponseResult.enSuccess() : ResponseResult.enFail();
-
     }
 
 }
