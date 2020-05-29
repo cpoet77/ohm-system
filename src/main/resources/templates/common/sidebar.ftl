@@ -73,7 +73,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="<#if myProfile??>active</#if>"><a href="#"><i class="fa fa-circle-o"></i> 我的资料</a></li>
+                    <li class="<#if myProfile??>active</#if>"><a href="/user/myProfile"><i class="fa fa-circle-o"></i>
+                            我的资料</a></li>
                     <li class="<#if themeCenter??>active</#if>"><a href="/user/interfaceThemeCenter"><i
                                     class="fa fa-circle-o"></i> 主题管理</a></li>
                 </ul>

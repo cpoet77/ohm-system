@@ -31,6 +31,16 @@ public class UserController {
     }
 
     /**
+     * 个人资料页面
+     *
+     * @return view
+     */
+    @GetMapping("/myProfile")
+    public String myProfile() {
+        return "pages/myProfile";
+    }
+
+    /**
      * 主题中心
      *
      * @return view
