@@ -80,7 +80,6 @@
                 methods: {
                     loadLoginRecordList: function () {
                         NS.post('/common/loginRecord/loginInfoList', {page: this.page, size: this.size}, (res) => {
-                            const dataLoad = xtip.load('数据加载中...');
                             if (res.code === 1000) {
                                 if (res.data.size === 0) {
                                     xtip.msg('没有数据了...');
@@ -95,7 +94,6 @@
                             } else {
                                 xtip.msg('获取数据失败！!');
                             }
-                            xtip.close(dataLoad);
                             this.loadLock = true;
                         })
                     },
