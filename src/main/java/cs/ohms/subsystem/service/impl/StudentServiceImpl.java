@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<StudentVo> findAll() {
+    public List<StudentVo> findVoAll() {
         List<StudentEntity> studentList = studentRepository.findAll();
         List<StudentVo> studentVos = new ArrayList<>();
 

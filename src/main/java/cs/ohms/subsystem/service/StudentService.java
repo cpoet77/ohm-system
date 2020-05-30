@@ -17,9 +17,9 @@ public interface StudentService {
     /**
      * 获取所有学生信息
      *
-     * @return StudentEntity for List
+     * @return StudentVo for List
      */
-    List<StudentVo> findAll();
+    List<StudentVo> findVoAll();
 
     /**
      * 导入学生信息

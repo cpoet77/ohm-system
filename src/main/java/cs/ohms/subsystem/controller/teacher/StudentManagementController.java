@@ -28,35 +28,34 @@ public class StudentManagementController {
     private StudentService studentService;
 
     @Autowired
-    public StudentManagementController (StudentService studentService) {
+    public StudentManagementController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     /**
      * 学生管理
      *
-     * @param: void
-     * @return: ModelAndView
+     * @return view
      */
     @GetMapping
-    public ModelAndView index ( ) {
+    public ModelAndView index() {
         ModelAndView view = new ModelAndView("pages/studentManagement");
-        return view.addObject("students", studentService.findAll());
+        return view.addObject("students", studentService.findVoAll());
     }
 
     /**
      * 导入学生信息
      *
-     * @param: studentXls MultipartFile
-     * @return: ResponseResult
+     * @param studentXls studentXls
+     * @return ResponseResult
      */
     @PostMapping("/importStudentInfo")
     @ResponseBody
-    public ResponseResult importStudentInfo (@RequestParam("studentXls") @NotNull MultipartFile studentXls) {
+    public ResponseResult importStudentInfo(@RequestParam("studentXls") @NotNull MultipartFile studentXls) {
 
         System.out.println("xlsx".equals(FileUtil.getFilePostfix(studentXls.getOriginalFilename())));
         if (!studentXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(studentXls.getOriginalFilename()))) {
-            try(InputStream inputStream = studentXls.getInputStream()) {
+            try (InputStream inputStream = studentXls.getInputStream()) {
                 return studentService.importStudentInfo(inputStream);
             } catch (IOException e) {
                 log.error("获取io流失败", e);
