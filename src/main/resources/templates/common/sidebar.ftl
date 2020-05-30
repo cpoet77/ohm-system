@@ -31,7 +31,7 @@
                     <li class="<#if isMajorManagement??>active</#if>"><a
                                 href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 专业管理</a></li>
                     <li class="<#if isClassManagement??>active</#if>"><a
-                                href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 班级管理</a></li>
+                                href="/teachingSecretary/classManagement"><i class="fa fa-circle-o"></i> 班级管理</a></li>
                     <li class="<#if isCourseGroupManagement??>active</#if>"><a
                                 href="/teachingSecretary/courseGroupManagement"><i class="fa fa-circle-o"></i> 课群管理</a>
                     </li>
