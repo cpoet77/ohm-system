@@ -71,6 +71,16 @@ CREATE TABLE IF NOT EXISTS ohms_major
     CHECK ( LENGTH(name) > 4 )
 ) ENGINE = InnoDB COMMENT '专业表';
 
+CREATE TABLE IF NOT EXISTS ohms_class
+(
+    id       INT PRIMARY KEY AUTO_INCREMENT COMMENT '班级id',
+    name     NVARCHAR(10) NOT NULL COMMENT '名称',
+    major_id INT          NOT NULL COMMENT '专业id',
+    datetime DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '导入时间',
+    FOREIGN KEY (major_id) REFERENCES ohms_major (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CHECK ( LENGTH(name) > 0 )
+) ENGINE = InnoDB COMMENT '班级表';
+
 CREATE TABLE IF NOT EXISTS ohms_teacher
 (
     teacher_id VARCHAR(24) PRIMARY KEY COMMENT '教职工号',
@@ -94,9 +104,9 @@ CREATE TABLE IF NOT EXISTS ohms_student
 (
     student_id CHAR(12) PRIMARY KEY COMMENT '学号',
     user_id    INT NOT NULL COMMENT '用户id',
-    major_id   INT NOT NULL COMMENT '专业id',
+    class_id   INT NOT NULL COMMENT '专业id',
     FOREIGN KEY (user_id) REFERENCES ohms_user (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (major_id) REFERENCES ohms_major (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (class_id) REFERENCES ohms_class (id) ON DELETE CASCADE ON UPDATE CASCADE,
     CHECK ( LENGTH(student_id) = 12 )
 ) ENGINE = InnoDB COMMENT '学生表';
 
@@ -221,13 +231,6 @@ SELECT u.*, t.teacher_id
 FROM ohms_user u,
      ohms_teacher t
 WHERE t.user_id = u.id;
-
--- 学生
-CREATE VIEW ohms_view_student AS
-SELECT u.*, s.student_id, s.major_id
-FROM ohms_user u,
-     ohms_student s
-WHERE u.id = s.user_id;
 
 --
 -- 初始化数据
