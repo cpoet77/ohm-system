@@ -60,7 +60,7 @@ public class CollegeServiceImpl implements CollegeService {
         List<Object> resultList = new ArrayList<>();
         colleges.forEach(college -> {
             Set<MajorEntity> majors = college.getMajors();
-            long countStudent = majors.stream().mapToLong(major -> studentRepository.countByMajor(major)).sum();
+            long countStudent = 0/*majors.stream().mapToLong(major -> studentRepository.countByMajor(major)).sum()*/;
             CollegeVo collegeVo = new CollegeVo().setCountMajor((long) majors.size()).setCountStudent(countStudent);
             BeanUtils.copyProperties(college, collegeVo);
             resultList.add(collegeVo);

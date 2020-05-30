@@ -9,6 +9,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Major Entity
@@ -33,7 +35,10 @@ public class MajorEntity implements Serializable {
     private String name;//专业名
 
     @Column(nullable = false)
-    private LocalDateTime datetime;
+    private LocalDateTime datetime;//导入时间
+
+    @OneToMany(mappedBy = "major")
+    private Set<ClassEntity> clazzs = new HashSet<>();//专业下的班级
 
     @ManyToOne
     @JoinColumn(name = "college_id", referencedColumnName = "id", nullable = false)

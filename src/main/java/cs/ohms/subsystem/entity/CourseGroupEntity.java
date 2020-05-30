@@ -38,7 +38,7 @@ public class CourseGroupEntity implements Serializable {
     @Column(name = "description")
     private String description; //课群介绍
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", nullable = false)
     private LocalDateTime createTime;//课群创建时间
 
     @Column(name = "state")

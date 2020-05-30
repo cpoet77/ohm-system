@@ -58,16 +58,22 @@ public class UserEntity implements Serializable {
     private String skin;//界面皮肤
 
     @OneToOne(mappedBy = "user")
-    private StudentEntity student;
+    private StudentEntity student;//学生
 
     @OneToOne(mappedBy = "user")
-    private TeacherEntity teacher;
+    private TeacherEntity teacher;//教师
 
     @ManyToMany
     @JoinTable(name = "ohms_user_role", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)}
             , inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)})
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Set<RoleEntity> roles = new HashSet<>();//拥有的角色
 
     @OneToMany(mappedBy = "user")
     private Set<LoginRecordEntity> loginRecords = new HashSet<>();//登录记录
+
+    @OneToMany(mappedBy = "user")
+    private Set<ResourceEntity> resources = new HashSet<>();//上传的记录
+
+    @ManyToMany(mappedBy = "users")
+    private Set<MessageBoxEntity> messageBox = new HashSet<>();//消息箱
 }

@@ -73,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
                             .setSalt(salt).setSex("男".equals(studentTo.getSex()) ? 'M' : 'F');
                     user.getRoles().add(role);
                     if (userService.saveUser(user)) {
-                        StudentEntity student = new StudentEntity().setStudentId(studentTo.getStudentId()).setUser(user).setMajor(major);
+                        StudentEntity student = new StudentEntity().setStudentId(studentTo.getStudentId()).setUser(user)/*.setMajor(major)*/;
                         if (!saveStudent(student)) {
                             errList.add(studentTo);
                         }

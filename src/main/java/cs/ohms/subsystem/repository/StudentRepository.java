@@ -1,7 +1,6 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/21.
 package cs.ohms.subsystem.repository;
 
-import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.entity.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,5 +13,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, String>, JpaSpecificationExecutor<StudentEntity> {
-    long countByMajor(MajorEntity major);
+
 }

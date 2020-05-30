@@ -29,12 +29,15 @@ public class StudentEntity implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private UserEntity user;
+    private UserEntity user;//用户信息
 
     @ManyToMany(mappedBy = "students")
     private Set<CourseGroupEntity> courseGroups = new HashSet<>();//加入的课群
 
     @ManyToOne
-    @JoinColumn(name = "major_id", referencedColumnName = "id", nullable = false)
-    private MajorEntity major;//所属专业
+    @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false)
+    private ClassEntity clazz;//所属班级
+
+    @OneToMany(mappedBy = "student")
+    private Set<PushHomeworkEntity> pushHomework = new HashSet<>();//上传的作业
 }
