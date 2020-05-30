@@ -61,7 +61,7 @@ public class MajorServiceImpl implements MajorService {
         Page<MajorEntity> majors = (collegeId == null ? majorRepository.findAll(pageable) : majorRepository.findByCollege_Id(collegeId, pageable));
         List<MajorVo> majorVos = new ArrayList<>();
         majors.forEach(major -> {
-            MajorVo majorVo = new MajorVo()/*.setCountStudents(studentRepository.countByMajor(major))*/
+            MajorVo majorVo = new MajorVo().setCountStudents(studentRepository.countByMajor_id(major.getId()))
                     .setCollege(major.getCollege().getName()).setCollegeId(major.getCollege().getId());
             BeanUtils.copyProperties(major, majorVo);
             majorVos.add(majorVo);

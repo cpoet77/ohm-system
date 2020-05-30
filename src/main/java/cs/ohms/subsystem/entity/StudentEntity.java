@@ -21,7 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table(name = "ohms_student")
+@Table(name = "ohms_view_student")
 public class StudentEntity implements Serializable {
     @Id
     @Column(name = "student_id")
@@ -33,6 +33,14 @@ public class StudentEntity implements Serializable {
 
     @ManyToMany(mappedBy = "students")
     private Set<CourseGroupEntity> courseGroups = new HashSet<>();//加入的课群
+
+    @ManyToOne
+    @JoinColumn(name = "college_id", referencedColumnName = "id")
+    private CollegeEntity college;//所属学院
+
+    @ManyToOne
+    @JoinColumn(name = "major_id", referencedColumnName = "id")
+    private MajorEntity major;//专业
 
     @ManyToOne
     @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false)

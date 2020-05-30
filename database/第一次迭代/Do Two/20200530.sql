@@ -223,6 +223,33 @@ create table if not exists ohms_push_homework_resource
 
 
 --
+-- 视图
+--
+
+-- 专业视图
+CREATE VIEW ohms_view_major AS
+SELECT om.id, om.name, oc.id college_id, oc.name college_name
+FROM ohms_college oc,
+     ohms_major om
+WHERE oc.id = om.college_id;
+
+
+-- 班级视图
+CREATE VIEW ohms_view_class AS
+SELECT oc.id, oc.name, oc.datetime, ovm.id major_id, ovm.name major_name, ovm.college_id, ovm.college_name
+FROM ohms_class oc,
+     ohms_view_major ovm
+WHERE oc.major_id = ovm.id;
+
+
+-- 学生视图
+CREATE VIEW ohms_view_student AS
+SELECT os.*, ovc.name class_name, ovc.major_id, ovc.major_name, ovc.college_id, ovc.college_name
+FROM ohms_student os,
+     ohms_view_class ovc
+WHERE os.class_id = ovc.id;
+
+--
 -- 初始化数据
 --
 INSERT INTO ohms_role(name, description)

@@ -3,8 +3,8 @@ package cs.ohms.subsystem.service.impl;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CollegeEntity;
-import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.repository.CollegeRepository;
+import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.CollegeService;
 import cs.ohms.subsystem.service.ResourceService;
@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -33,12 +32,15 @@ import java.util.Set;
 public class CollegeServiceImpl implements CollegeService {
     private ResourceService resourceService;
     private CollegeRepository collegeRepository;
+    private MajorRepository majorRepository;
     private StudentRepository studentRepository;
 
     @Autowired
-    public CollegeServiceImpl(ResourceService resourceService, CollegeRepository collegeRepository, StudentRepository studentRepository) {
+    public CollegeServiceImpl(ResourceService resourceService, CollegeRepository collegeRepository, MajorRepository majorRepository
+            , StudentRepository studentRepository) {
         this.resourceService = resourceService;
         this.collegeRepository = collegeRepository;
+        this.majorRepository = majorRepository;
         this.studentRepository = studentRepository;
     }
 
@@ -59,9 +61,8 @@ public class CollegeServiceImpl implements CollegeService {
         long count = collegeRepository.count();
         List<Object> resultList = new ArrayList<>();
         colleges.forEach(college -> {
-            Set<MajorEntity> majors = college.getMajors();
-            long countStudent = 0/*majors.stream().mapToLong(major -> studentRepository.countByMajor(major)).sum()*/;
-            CollegeVo collegeVo = new CollegeVo().setCountMajor((long) majors.size()).setCountStudent(countStudent);
+            CollegeVo collegeVo = new CollegeVo().setCountMajor(majorRepository.countByCollege_Id(college.getId()))
+                    .setCountStudent(studentRepository.countByCollege_id(college.getId()));
             BeanUtils.copyProperties(college, collegeVo);
             resultList.add(collegeVo);
         });
