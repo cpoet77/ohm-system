@@ -255,8 +255,11 @@
                     },
                     collegeId: {
                         validators: {
-                            notEmpty: {
-                                message: '请选择学院'
+                            callback: {
+                                message: '请选择本专业所属的学院',
+                                callback: function (value, validator) {
+                                    return !NS.isNull(Main.saveOneMajorInfo.collegeId);
+                                }
                             }
                         }
                     }
