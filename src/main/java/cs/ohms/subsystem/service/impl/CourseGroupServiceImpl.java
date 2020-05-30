@@ -114,7 +114,6 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     @Override
     public boolean saveCourseGroup (Integer id, String teacherRealName,String courseGroupName,  String description, String state) {
         TeacherEntity teacher = teacherService.findTeacherByRealName(teacherRealName);
-        System.out.println(teacher);
         if(null == teacher){
             return false;
         }

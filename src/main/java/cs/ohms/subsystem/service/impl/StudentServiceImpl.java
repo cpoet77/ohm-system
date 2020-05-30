@@ -2,17 +2,12 @@ package cs.ohms.subsystem.service.impl;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.component.PasswordCMP;
-import cs.ohms.subsystem.entity.MajorEntity;
-import cs.ohms.subsystem.entity.RoleEntity;
-import cs.ohms.subsystem.entity.StudentEntity;
-import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.entity.*;
 import cs.ohms.subsystem.repository.RoleRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
-import cs.ohms.subsystem.service.MajorService;
-import cs.ohms.subsystem.service.ResourceService;
-import cs.ohms.subsystem.service.StudentService;
-import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.service.*;
 import cs.ohms.subsystem.tableobject.StudentTo;
+import cs.ohms.subsystem.viewobject.StudentVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,23 +30,43 @@ public class StudentServiceImpl implements StudentService {
     private PasswordCMP passwordCMP;
     private RoleRepository roleRepository;
     private MajorService majorService;
+    private ClassService classService;
 
     @Autowired
     public StudentServiceImpl(UserService userService, StudentRepository studentRepository,
                               ResourceService resourceService, PasswordCMP passwordCMP,
-                              RoleRepository roleRepository, MajorService majorService) {
+                              RoleRepository roleRepository, MajorService majorService,ClassService classService) {
         this.userService = userService;
         this.studentRepository = studentRepository;
         this.resourceService = resourceService;
         this.passwordCMP = passwordCMP;
         this.roleRepository = roleRepository;
         this.majorService = majorService;
+        this.classService = classService;
     }
 
 
     @Override
-    public List<StudentEntity> findAll() {
-        return studentRepository.findAll();
+    public List<StudentVo> findAll() {
+        List<StudentEntity> studentList = studentRepository.findAll();
+        List<StudentVo> studentVos = new ArrayList<>();
+
+        studentList.forEach(studentEntity -> {
+            studentVos.add(new StudentVo()
+                    .setName(studentEntity.getUser().getName())
+                    .setId(studentEntity.getUser().getId())
+                    .setRealName(studentEntity.getUser().getRealName())
+                    .setStudentId(studentEntity.getStudentId())
+                    .setSex(studentEntity.getUser().getSex())
+                    .setClassId(studentEntity.getClazz().getId())
+                    .setClassName(studentEntity.getClazz().getName())
+                    .setCollegeId(studentEntity.getCollege().getId())
+                    .setCollegeName(studentEntity.getCollege().getName())
+                    .setMajorId(studentEntity.getMajor().getId())
+                    .setMajorName(studentEntity.getMajor().getName())
+            );
+        });
+        return studentVos;
     }
 
     @Override
@@ -73,7 +88,8 @@ public class StudentServiceImpl implements StudentService {
                             .setSalt(salt).setSex("男".equals(studentTo.getSex()) ? 'M' : 'F');
                     user.getRoles().add(role);
                     if (userService.saveUser(user)) {
-                        StudentEntity student = new StudentEntity().setStudentId(studentTo.getStudentId()).setUser(user)/*.setMajor(major)*/;
+                        ClassEntity clazz = classService.findClassHashCacheByName(studentTo.getClassName());
+                        StudentEntity student = new StudentEntity().setStudentId(studentTo.getStudentId()).setUser(user).setClazz(clazz);
                         if (!saveStudent(student)) {
                             errList.add(studentTo);
                         }

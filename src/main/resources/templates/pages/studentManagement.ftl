@@ -63,6 +63,7 @@
                                     <th>学号</th>
                                     <th>姓名</th>
                                     <th>性别</th>
+                                    <th>班级</th>
                                     <th>专业名</th>
                                     <th>操作</th>
                                 </tr>
@@ -70,12 +71,13 @@
                                 <tbody>
                                 <#list students as student>
                                     <tr>
-                                        <td>${student.user.id!""}</td>
-                                        <td>${student.user.name!""}</td>
+                                        <td>${student.id!""}</td>
+                                        <td>${student.name!""}</td>
                                         <td>${student.studentId!""}</td>
-                                        <td>${student.user.realName!""}</td>
-                                        <td>${student.user.sex!""}</td>
-                                        <td>${student.major.name}</td>
+                                        <td>${student.realName!""}</td>
+                                        <td>${student.sex!""}</td>
+                                        <td>${student.className!""}</td>
+                                        <td>${student.majorName!""}</td>
                                         <td>
                                             <div class="btn-group-sm">
                                                 <button type="button" class="btn btn-warning btn-sm"><i
