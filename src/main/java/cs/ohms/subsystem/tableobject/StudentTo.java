@@ -24,6 +24,11 @@ public class StudentTo implements Serializable {
     @ExcelColumn(title = "性别",index = 3)
     private String sex;//性别
 
-    @ExcelColumn(title = "专业名",index = 4)
+    @ExcelColumn(title = "班级", index = 4)
+    private String className;
+
+    @ExcelColumn(title = "专业名",index = 5)
     private String major;//学生所属专业
+
+
 }

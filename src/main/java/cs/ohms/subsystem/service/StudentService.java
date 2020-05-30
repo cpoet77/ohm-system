@@ -2,6 +2,8 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.StudentEntity;
+import cs.ohms.subsystem.viewobject.StudentVo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.List;
@@ -17,7 +19,7 @@ public interface StudentService {
      *
      * @return StudentEntity for List
      */
-    List<StudentEntity> findAll();
+    List<StudentVo> findAll();
 
     /**
      * 导入学生信息
@@ -25,6 +27,7 @@ public interface StudentService {
      * @param inputStream  InputStream
      * @return ResponseResult
      */
+    @Transactional
     ResponseResult importStudentInfo(InputStream inputStream);
 
     /**
