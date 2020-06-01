@@ -57,7 +57,8 @@ public class LoginController {
             }
             return (new ModelAndView(NStringUtil.joint("redirect:{}", backUrl)));
         }
-        return (new ModelAndView("login").addObject("backUrl", backUrl));
+        return (new ModelAndView("login").addObject("backUrl", NStringUtil.isEmpty(backUrl)
+                ? "/" : backUrl));
     }
 
     /**

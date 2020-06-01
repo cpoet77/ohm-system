@@ -1,33 +1,44 @@
 <#-- 首页 -->
-<#assign activeIndex></#assign>
-<#assign pageTitle>OHMS控制台</#assign>
-<#assign isDashboard = true />
-<#include "common/admin/head.ftl" />
-<!-- Site wrapper -->
+<#assign activeIndex = true />
+<#assign pageTitle>首页</#assign>
+<#include "common/head.ftl" />
 <div class="wrapper">
-    <#include "common/admin/header.ftl" />
-    <#include "common/admin/sidebar.ftl" />
-    <!-- Content Wrapper. Contains page content -->
+    <#include "common/header.ftl" />
+    <!-- Full Width Column -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                控制台
-            </h1>
-        </section>
+        <div class="container">
+            <!-- Main content -->
+            <section class="content">
+                <div class="callout callout-info">
+                    <h4>Tip!</h4>
 
-        <!-- Main content -->
-        <section class="content">
-            <div class="callout callout-info">
-                <h4>OhmSubsystem，作业在线提交系统</h4>
+                    <p>Add the layout-top-nav class to the body tag to get this layout. This feature can also be used with a
+                        sidebar! So use this class if you want to remove the custom dropdown menus from the navbar and use regular
+                        links instead.</p>
+                </div>
+                <div class="callout callout-danger">
+                    <h4>Warning!</h4>
 
-                <p>准备好了吗？让学生提交第一份作业！</p>
-            </div>
-        </section>
-        <!-- /.content -->
+                    <p>The construction of this layout differs from the normal one. In other words, the HTML markup of the navbar
+                        and the content will slightly differ than that of the normal layout.</p>
+                </div>
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Blank Box</h3>
+                    </div>
+                    <div class="box-body">
+                        The great content goes here
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.container -->
     </div>
     <!-- /.content-wrapper -->
-    <#include "common/admin/copyright.ftl" />
+    <#include "common/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
 <#include "common/footer.ftl" />
