@@ -54,8 +54,9 @@ public class ClassManagementController {
     public ResponseResult classInfoList(@RequestParam("draw") @NotNull @Min(1) Integer draw
             , @RequestParam("start") @NotNull @Min(0) Integer start
             , @RequestParam("length") @NotNull @Min(5) Integer length
-            , @RequestParam("majorId") @Min(1) Integer majorId) {
-        return (classService.getClassByMajorAndPage(majorId, start, length).add("draw", draw));
+            , @RequestParam("collegeId") @NotNull @Min(-1) Integer collegeId
+            , @RequestParam("majorId") @NotNull @Min(-1) Integer majorId) {
+        return (classService.getClassByCollegeAndMajorAndPage(collegeId ,majorId, start, length).add("draw", draw));
     }
 
     /**

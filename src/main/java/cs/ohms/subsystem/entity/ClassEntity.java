@@ -20,7 +20,7 @@ import java.util.Set;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "ohms_class")
+@Table(name = "ohms_view_class")
 @DynamicInsert
 @DynamicUpdate
 public class ClassEntity implements Serializable {
@@ -35,6 +35,10 @@ public class ClassEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "major_id", referencedColumnName = "id", nullable = false)
     private MajorEntity major;//所属专业
+
+    @ManyToOne
+    @JoinColumn(name = "college_id", referencedColumnName = "id")
+    private CollegeEntity college;//所属学院
 
     @OneToMany(mappedBy = "clazz")
     private Set<StudentEntity> students = new HashSet<>();//本班下的所有学生

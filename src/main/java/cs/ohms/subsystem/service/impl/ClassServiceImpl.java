@@ -42,25 +42,25 @@ public class ClassServiceImpl implements ClassService {
 
 
     @Override
-    public ResponseResult getClassByMajorAndPage(Integer majorId, Integer start, Integer length) {
+    public ResponseResult getClassByCollegeAndMajorAndPage(Integer collegeId, Integer majorId, Integer start, Integer length) {
         int page = (int) Math.ceil((double) start / length);
         Pageable pageable = PageRequest.of(page, length, Sort.Direction.DESC, "datetime");
-        Page<ClassEntity> classEntities = majorId == null ? classRepository.findAll(pageable) : classRepository.findAllByMajor_Id(majorId, pageable);
+        Page<ClassEntity> classEntities = (majorId == -1 ? (collegeId == -1 ? classRepository.findAll(pageable)
+                : classRepository.findAllByCollege_Id(collegeId, pageable)) : classRepository.findAllByMajor_Id(majorId, pageable));
         List<ClassVo> classVos = new ArrayList<>();
-        classEntities.forEach(classEntity -> {
-            classVos.add(new ClassVo()
-                    .setId(classEntity.getId())
-                    .setName(classEntity.getName())
-                    .setCollegeId(classEntity.getMajor().getCollege().getId())
-                    .setCollegeName(classEntity.getMajor().getCollege().getName())
-                    .setMajorId(classEntity.getMajor().getId())
-                    .setMajorName(classEntity.getMajor().getName())
-                    .setDatetime(classEntity.getDatetime())
-                    .setCountStudent(studentRepository.countByClazz_id(classEntity.getId())));
-        });
+        classEntities.forEach(classEntity -> classVos.add(new ClassVo()
+                .setId(classEntity.getId())
+                .setName(classEntity.getName())
+                .setCollegeId(classEntity.getMajor().getCollege().getId())
+                .setCollegeName(classEntity.getMajor().getCollege().getName())
+                .setMajorId(classEntity.getMajor().getId())
+                .setMajorName(classEntity.getMajor().getName())
+                .setDatetime(classEntity.getDatetime())
+                .setCountStudent(studentRepository.countByClazz_id(classEntity.getId()))));
         long count = classRepository.count();
-        return (ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", majorId != null
-                ? classRepository.countByMajor_Id(majorId) : count).add("data", classVos));
+        return (ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", majorId != -1
+                ? classRepository.countByMajor_Id(majorId) : (collegeId != -1 ? classRepository.countByCollege_Id(collegeId)
+                : count)).add("data", classVos));
     }
 
     @Override

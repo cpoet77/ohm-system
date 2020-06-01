@@ -120,6 +120,78 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="dataFilterModal" tabindex="-1" role="dialog"
+                     aria-labelledby="dataFilterModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="dataFilterModalLabel">
+                                    数据过滤
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="dataFilterForm">
+                                    <div class="form-group">
+                                        <label>选择学院</label>
+                                        <select class="form-control" v-model="filterCollegeId">
+                                            <option value="-1">所有学院</option>
+                                            <option v-for="collegeInfo in collegeInfoList" :key="collegeInfo.id"
+                                                    :value="collegeInfo.id">{{collegeInfo.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" v-if="filterCollegeId != -1">
+                                        <label>专业学院</label>
+                                        <select class="form-control" v-model="filterMajorId">
+                                            <option value="-1">所有专业</option>
+                                            <option v-for="majorInfo in majorInfoList" :key="majorInfo.id"
+                                                    :value="majorInfo.id">{{majorInfo.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="createCourseGroupModal" tabindex="-1" role="dialog"
+                     aria-labelledby="createCourseGroupModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="createCourseGroupModalLabel">
+                                    快速创建课群
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <p><b>提示：</b>该操作将把本班级中的所有学生加入到新建的课群当中。</p>
+                                <p class="text-red"><b>当前进行操作的班级为：</b>{{createCourseGroupInfo.classInfo}}</p>
+                                <hr/>
+                                <form id="createCourseGroupForm">
+                                    <div class="form-group">
+                                        <label for="courseGroupName">课群名称</label>
+                                        <input name="courseGroupName" type="text" class="form-control"
+                                               id="courseGroupName" v-model="createCourseGroupInfo.courseGroupName"
+                                               placeholder="请输入课群名称">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacherId">教师用户名</label>
+                                        <input name="teacherId" type="text" class="form-control"
+                                               id="teacherId" v-model="createCourseGroupInfo.teacherId"
+                                               placeholder="请输入教师用户名">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="createCourseGroupBtn" type="button" class="btn btn-primary">创建</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.row -->
         </section>
@@ -142,12 +214,20 @@
                 data: {
                     collegeInfoList: null,
                     majorInfoList: null,
-                    filterMajorId: null,
+                    filterCollegeId: -1,
+                    filterMajorId: -1,
+                    firstOpenUpdateClassModalFlag: false,
                     saveOneClassInfo: {
                         classId: null,
                         className: null,
                         collegeId: null,
                         majorId: null
+                    },
+                    createCourseGroupInfo: {
+                        classId: null,
+                        classInfo: '',
+                        courseGroupName: null,
+                        teacherId: null
                     }
                 },
                 methods: {
@@ -157,23 +237,43 @@
                         this.saveOneClassInfo.collegeId = null;
                         this.saveOneClassInfo.majorId = null;
                     },
+                    clearCreateCourseGroupInfo: function () {
+                        this.createCourseGroupInfo.classId = null;
+                        this.createCourseGroupInfo.classInfo = '';
+                        this.createCourseGroupInfo.courseGroupName = null;
+                        this.createCourseGroupInfo.teacherId = null;
+                    },
                     loadCollegeInfoList: function () {
                         NS.post("/teachingSecretary/collegeManagement/collegeInfoAllList", null, (res) => {
                             Main.collegeInfoList = res.data.colleges;
                         });
                     },
-                    loadMajorInfoList: function () {
-                        NS.post("/teachingSecretary/majorManagement/majorInfoListByCollege", {collegeId: this.saveOneClassInfo.collegeId}
-                            , (res) => {
-                                Main.majorInfoList = res.data.majors;
-                            });
+                    loadMajorInfoList: function (collegeId) {
+                        NS.post("/teachingSecretary/majorManagement/majorInfoListByCollege", {collegeId: collegeId}, (res) => {
+                            Main.majorInfoList = res.data.majors;
+                        });
                     }
                 },
                 watch: {
                     'saveOneClassInfo.collegeId': function (newV, oldV) {
-                        this.saveOneClassInfo.majorId = null;
-                        this.loadMajorInfoList();
+                        if (this.firstOpenUpdateClassModalFlag) {
+                            this.firstOpenUpdateClassModalFlag = false;
+                        } else {
+                            this.saveOneClassInfo.majorId = null;
+                        }
+                        this.loadMajorInfoList(this.saveOneClassInfo.collegeId);
                         destroyFormValidator();
+                    },
+                    filterCollegeId: function (newV, oldV) {
+                        if (newV === -1 || newV === '-1') {
+                            this.filterMajorId = -1;
+                        } else {
+                            this.loadMajorInfoList(this.filterCollegeId)
+                        }
+                        datatable.ajax.reload();
+                    },
+                    filterMajorId: function (newV, oldV) {
+                        datatable.ajax.reload();
                     }
                 }
             });
@@ -196,6 +296,7 @@
                         draw: data.draw,
                         start: data.start,
                         length: data.length,
+                        collegeId: Main.filterCollegeId,
                         majorId: Main.filterMajorId
                     }, (res) => {
                         callback(res.data);
@@ -217,6 +318,8 @@
                 ]
             });
             const saveClassModal = $('#saveClassModal');
+            const dataFilterModal = $('#dataFilterModal');
+            const createCourseGroupModal = $('#createCourseGroupModal');
             const saveOneClassInfoForm = $('#saveOneClassInfoForm');
 
             function loadFormValidator() {
@@ -299,18 +402,45 @@
             saveClassModal.on('hide.bs.modal', () => {
                 Main.clearSaveOneClassInfo();
             });
+            dataFilterModal.on('show.bs.modal', () => {
+                Main.loadCollegeInfoList();
+            });
             NS.deleteClassInfo = (row) => {
                 const clazz = datatable.row(row).data();
-                xtip.confirm('确定删除<br/><b>'+ clazz.collegeName + '&nbsp;' + clazz.majorName + '&nbsp;' + clazz.name +'</b>？', ()=> {
-                    NS.post();
-                }, {icon : 'w'});
+                xtip.confirm('确定删除<br/><b>' + clazz.collegeName + '&nbsp;' + clazz.majorName + '&nbsp;' + clazz.name + '</b>？', () => {
+                    NS.post('/teachingSecretary/classManagement/deleteClass', {classId: clazz.id}, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('删除成功！', {icon: 's'});
+                            datatable.ajax.reload();
+                        } else {
+                            xtip.msg('删除失败！', {icon: 'e'});
+                        }
+                    });
+                }, {icon: 'w'});
             };
             NS.updateClassInfo = (row) => {
                 const clazz = datatable.row(row).data();
+                Main.saveOneClassInfo.classId = clazz.id;
+                Main.saveOneClassInfo.className = clazz.name;
+                Main.saveOneClassInfo.collegeId = clazz.collegeId;
+                Main.saveOneClassInfo.majorId = clazz.majorId;
+                Main.loadMajorInfoList(clazz.collegeId);
+                Main.firstOpenUpdateClassModalFlag = true;
+                saveClassModal.modal('show');
             };
             NS.createCourseGroup = (row) => {
                 const clazz = datatable.row(row).data();
-            }
+                if (clazz.countStudent <= 0) {
+                    xtip.msg('该班级一个学生也没有，不允许的操作！', {icon: 'e'});
+                    return;
+                }
+                Main.createCourseGroupInfo.classId = clazz.id;
+                Main.createCourseGroupInfo.classInfo = clazz.collegeName + ' ' + clazz.majorName + ' ' + clazz.name;
+                createCourseGroupModal.modal('show');
+            };
+            createCourseGroupModal.on('hide.bs.modal', () => {
+                Main.clearCreateCourseGroupInfo();
+            });
         });
     </script>
 </#assign>

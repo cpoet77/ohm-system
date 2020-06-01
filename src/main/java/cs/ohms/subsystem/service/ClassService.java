@@ -12,12 +12,13 @@ public interface ClassService {
     /**
      * 分页获取班级信息
      *
+     * @param collegeId  学院id
      * @param majorId 专业id
      * @param start   开始位置
      * @param length  长度
      * @return ResponseResult
      */
-    ResponseResult getClassByMajorAndPage(Integer majorId, Integer start, Integer length);
+    ResponseResult getClassByCollegeAndMajorAndPage(Integer collegeId, Integer majorId, Integer start, Integer length);
 
 
     /**

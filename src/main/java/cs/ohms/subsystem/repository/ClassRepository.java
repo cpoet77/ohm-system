@@ -18,5 +18,9 @@ public interface ClassRepository extends JpaRepository<ClassEntity, Integer>, Jp
 
     long countByMajor_Id(Integer majorId);
 
+    long countByCollege_Id(Integer collegeId);
+
     Page<ClassEntity> findAllByMajor_Id(Integer majorId, Pageable pageable);
+
+    Page<ClassEntity> findAllByCollege_Id(Integer collegeId, Pageable pageable);
 }
