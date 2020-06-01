@@ -3,11 +3,11 @@
 <#assign pageTitle>我的资料</#assign>
 <#assign personalCenter = true />
 <#assign myProfile = true />
-<#include "../common/head.ftl" />
+<#include "../common/admin/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">
-    <#include "../common/header.ftl" />
-    <#include "../common/sidebar.ftl" />
+    <#include "../common/admin/header.ftl" />
+    <#include "../common/admin/sidebar.ftl" />
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -61,7 +61,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <#include "../common/copyright.ftl" />
+    <#include "../common/admin/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
 <#include "../common/footer.ftl" />

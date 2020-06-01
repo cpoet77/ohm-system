@@ -1,4 +1,4 @@
-package cs.ohms.subsystem.controller.teacher;
+package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.MajorService;
@@ -24,7 +24,7 @@ import java.io.InputStream;
  **/
 @Controller
 @RequestMapping("/teachingSecretary/majorManagement")
-@RequiresRoles(value = {"teachingSecretary"})
+@RequiresRoles(value = {"admin", "teachingSecretary"})
 @Slf4j
 public class MajorManagementController {
     private MajorService majorService;
@@ -41,7 +41,7 @@ public class MajorManagementController {
      */
     @GetMapping
     public String index() {
-        return "/pages/majorManagement";
+        return "pages/admin/majorManagement";
     }
 
     /**
@@ -60,6 +60,18 @@ public class MajorManagementController {
             , @RequestParam("length") @NotNull @Min(5) Integer length
             , @RequestParam("filterCollegeId") Integer filterCollegeId) {
         return majorService.getMajorByCollegeAndPage(filterCollegeId, start, length).add("draw", draw);
+    }
+
+    /**
+     * 获取专业信息列表
+     *
+     * @param collegeId 学院id
+     * @return ResponseResult
+     */
+    @PostMapping("/majorInfoListByCollege")
+    @ResponseBody
+    public ResponseResult majorInfoListByCollege(@RequestParam("collegeId") Integer collegeId) {
+        return ResponseResult.enSuccess().add("majors", majorService.findAllVoByCollege(collegeId));
     }
 
     /**

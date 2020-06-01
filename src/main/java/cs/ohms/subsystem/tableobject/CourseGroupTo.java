@@ -2,6 +2,7 @@ package cs.ohms.subsystem.tableobject;
 
 import com.github.liaochong.myexcel.core.annotation.ExcelColumn;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author LRC
  **/
 @Data
+@Accessors(chain = true)
 public class CourseGroupTo implements Serializable {
     @ExcelColumn(title = "教师", index = 0)
     private String teacher;

@@ -16,4 +16,6 @@ public interface StudentRepository extends JpaRepository<StudentEntity, String>,
     long countByCollege_id(Integer collegeId);
 
     long countByMajor_id(Integer majorId);
+
+    long countByClazz_id(Integer clzzId);
 }

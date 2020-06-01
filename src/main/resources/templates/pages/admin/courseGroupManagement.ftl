@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
     <link rel="stylesheet" href="/static/plugins/bootstrapvalidator/bootstrapValidator.min.css">
 </#assign>
-<#include "../common/head.ftl" />
+<#include "../../common/admin/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">
-    <#include "../common/header.ftl" />
-    <#include "../common/sidebar.ftl" />
+    <#include "../../common/admin/header.ftl" />
+    <#include "../../common/admin/sidebar.ftl" />
     <!-- Content Wrapper. Contains page content -->
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -22,7 +22,7 @@
                 <!--<small>advanced tables</small>-->
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
+                <li><a href="/teachingSecretary"><i class="fa fa-dashboard"></i>控制台</a></li>
                 <li><a href="#">课程管理</a></li>
                 <li class="active">课群管理</li>
             </ol>
@@ -135,7 +135,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <#include "../common/copyright.ftl" />
+    <#include "../../common/admin/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
 <#assign restFooter>
@@ -332,4 +332,4 @@
         });
     </script>
 </#assign>
-<#include "../common/footer.ftl" />
+<#include "../../common/footer.ftl" />

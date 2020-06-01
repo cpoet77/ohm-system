@@ -16,7 +16,8 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="header">菜单</li>
-            <li class="<#if isDashboard??>active</#if>"><a href="/"><i class="fa fa-dashboard"></i> <span>控制台</span></a>
+            <li class="<#if isDashboard??>active</#if>"><a href="/teachingSecretary"><i class="fa fa-dashboard"></i>
+                    <span>控制台</span></a>
             </li>
             <li class="treeview <#if isCourseManagement??>active</#if>">
                 <a href="#">
@@ -26,8 +27,11 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="<#if isCollegeManagement??>active</#if>"><a
-                                href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a></li>
+                    <#if isRoles("admin")>
+                        <li class="<#if isCollegeManagement??>active</#if>"><a
+                                    href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a>
+                        </li>
+                    </#if>
                     <li class="<#if isMajorManagement??>active</#if>"><a
                                 href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 专业管理</a></li>
                     <li class="<#if isClassManagement??>active</#if>"><a
@@ -53,7 +57,7 @@
                                     class="fa fa-circle-o"></i> 学生管理</a></li>
                 </ul>
             </li>
-            <li class="treeview <#if safetyManagement??>active</#if>">
+            <li class="treeview <#if isSafetyManagement??>active</#if>">
                 <a href="#">
                     <i class="fa fa-shield"></i> <span>安全管理</span>
                     <span class="pull-right-container">
@@ -61,22 +65,8 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="<#if loginLog??>active</#if>"><a href="/common/loginRecord"><i
+                    <li class="<#if isLoginLog??>active</#if>"><a href="#"><i
                                     class="fa fa-circle-o"></i> 登录日志</a></li>
-                </ul>
-            </li>
-            <li class="treeview <#if personalCenter??>active</#if>">
-                <a href="#">
-                    <i class="fa fa-user"></i> <span>个人中心</span>
-                    <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li class="<#if myProfile??>active</#if>"><a href="/user/myProfile"><i class="fa fa-circle-o"></i>
-                            我的资料</a></li>
-                    <li class="<#if themeCenter??>active</#if>"><a href="/user/interfaceThemeCenter"><i
-                                    class="fa fa-circle-o"></i> 主题管理</a></li>
                 </ul>
             </li>
             <li class="treeview">

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/static/plugins/xtiper-plugins/css/xtiper.css">
     <link rel="stylesheet" href="/static/plugins/slideunlock/slide-unlock.css">
 </#assign>
-<#include "common/head.ftl" />
+<#include "common/admin/head.ftl" />
 <div class="login-box">
     <div class="login-logo">
         <a href="/">${siteNameFormat!""}</a>
@@ -101,7 +101,7 @@
                     NS.post('/login/finishLogin', form.serializeArray(), (res) => {
                         if (res.code === 1000) {
                             xtip.msg('登录成功', {icon: 's'});
-                            NS.to('${backUrl}', 2000);
+                            NS.to('${backUrl}');
                         } else {
                             xtip.msg('登录失败！！', {icon: 'e'});
                         }

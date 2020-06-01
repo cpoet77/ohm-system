@@ -4,11 +4,11 @@
 <#assign pageTitle>更换主题</#assign>
 <#assign personalCenter = true />
 <#assign themeCenter = true />
-<#include "../common/head.ftl" />
+<#include "../../common/admin/head.ftl" />
 <!-- Site wrapper -->
 <div class="wrapper">
-    <#include "../common/header.ftl" />
-    <#include "../common/sidebar.ftl" />
+    <#include "../../common/admin/header.ftl" />
+    <#include "../../common/admin/sidebar.ftl" />
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -17,7 +17,7 @@
                 主题中心
             </h1>
             <ol class="breadcrumb">
-                <li><a href="/"><i class="fa fa-dashboard"></i>首页</a></li>
+                <li><a href="/teachingSecretary"><i class="fa fa-dashboard"></i>控制台</a></li>
                 <li><a href="#">个人中心</a></li>
                 <li class="active">主题中心</li>
             </ol>
@@ -198,7 +198,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <#include "../common/copyright.ftl" />
+    <#include "../../common/admin/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
 <#assign restFooter>
@@ -222,5 +222,5 @@
         });
     </script>
 </#assign>
-<#include "../common/footer.ftl" />
+<#include "../../common/footer.ftl" />
 

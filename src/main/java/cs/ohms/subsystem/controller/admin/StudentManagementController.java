@@ -1,4 +1,4 @@
-package cs.ohms.subsystem.controller.teacher;
+package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.StudentService;
@@ -22,8 +22,8 @@ import java.io.InputStream;
  */
 @Controller
 @RequestMapping("/teachingSecretary/studentManagement")
+@RequiresRoles(value = {"admin", "teachingSecretary"})
 @Slf4j
-@RequiresRoles(value = {"teachingSecretary"})
 public class StudentManagementController {
     private StudentService studentService;
 
@@ -39,7 +39,7 @@ public class StudentManagementController {
      */
     @GetMapping
     public ModelAndView index() {
-        ModelAndView view = new ModelAndView("pages/studentManagement");
+        ModelAndView view = new ModelAndView("pages/admin/studentManagement");
         return view.addObject("students", studentService.findVoAll());
     }
 

@@ -48,9 +48,13 @@ public class LoginController {
      * @return ModelAndView
      */
     @GetMapping
-    public ModelAndView index(@RequestParam(required = false, defaultValue = "/") String backUrl) {
+    public ModelAndView index(@RequestParam(required = false) String backUrl) {
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
+            if (NStringUtil.isEmpty(backUrl)) {
+                return (new ModelAndView(NStringUtil.joint("redirect:{}", subject.hasRole("admin")
+                        || subject.hasRole("teachingSecretary") ? "/teachingSecretary" : "/")));
+            }
             return (new ModelAndView(NStringUtil.joint("redirect:{}", backUrl)));
         }
         return (new ModelAndView("login").addObject("backUrl", backUrl));

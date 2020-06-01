@@ -1,4 +1,4 @@
-package cs.ohms.subsystem.controller.teacher;
+package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
@@ -23,7 +23,7 @@ import java.io.InputStream;
  **/
 @Controller
 @RequestMapping("/teachingSecretary/courseGroupManagement")
-@RequiresRoles(value = {"teachingSecretary"})
+@RequiresRoles(value = {"admin", "teachingSecretary"})
 @Slf4j
 public class CourseGroupManagementController {
     private CourseGroupService courseGroupService;
@@ -39,7 +39,7 @@ public class CourseGroupManagementController {
      */
     @GetMapping
     public String index(){
-       return "/pages/courseGroupManagement";
+       return "pages/admin/courseGroupManagement";
     }
 
     /**

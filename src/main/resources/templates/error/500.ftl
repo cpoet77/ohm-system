@@ -2,7 +2,7 @@
 <#assign activeIndex></#assign>
 <#assign pageTitle>500 Something went wrong</#assign>
 <#assign notUser></#assign>
-<#include "../common/head.ftl" />
+<#include "../common/admin/head.ftl" />
 <div class="wrapper">
     <!-- Full Width Column -->
     <div class="content-wrapper">
@@ -63,7 +63,7 @@
         <!-- /.container -->
     </div>
     <!-- /.content-wrapper -->
-    <#include "../common/copyright.ftl" />
+    <#include "../common/admin/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
 <#include "../common/footer.ftl" />

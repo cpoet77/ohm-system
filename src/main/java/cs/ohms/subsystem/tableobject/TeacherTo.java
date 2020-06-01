@@ -3,6 +3,7 @@ package cs.ohms.subsystem.tableobject;
 
 import com.github.liaochong.myexcel.core.annotation.ExcelColumn;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
 @Data
+@Accessors(chain = true)
 public class TeacherTo implements Serializable {
     @ExcelColumn(title = "教职工号", index = 0)
     private String teacherId;

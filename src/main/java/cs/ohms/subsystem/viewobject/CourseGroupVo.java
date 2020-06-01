@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Accessors(chain = true)
-public class CourseGroupVo {
+public class CourseGroupVo implements Serializable {
     private Integer id;//课程id;
 
     private Integer teacherId;//教师id

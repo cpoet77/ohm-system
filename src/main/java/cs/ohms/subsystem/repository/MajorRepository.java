@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Major Repository
  *
@@ -19,4 +21,6 @@ public interface MajorRepository extends JpaRepository<MajorEntity, Integer>, Jp
     long countByCollege_Id(Integer collegeId);
 
     Page<MajorEntity> findByCollege_Id(Integer collegeId, Pageable pageable);
+
+    List<MajorEntity> findAllByCollege_Id(Integer collegeId);
 }

@@ -2,6 +2,7 @@ package cs.ohms.subsystem.tableobject;
 
 import com.github.liaochong.myexcel.core.annotation.ExcelColumn;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author _Struggler
  */
 @Data
+@Accessors(chain = true)
 public class StudentTo implements Serializable {
     @ExcelColumn(title = "学号",index = 0)
     private String studentId;//学生id
@@ -29,6 +31,4 @@ public class StudentTo implements Serializable {
 
     @ExcelColumn(title = "专业名",index = 5)
     private String major;//学生所属专业
-
-
 }

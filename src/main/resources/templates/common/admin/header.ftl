@@ -53,7 +53,7 @@
                                  class="img-circle" alt="${u.name!"user"} avatar">
                             <p>
                                 ${u.realName!"获取姓名失败"}
-                                (<#if isRoles("admin")>超级管理员<#elseif isRoles("teachingSecretary")>教学秘书<#elseif isRoles("teacher")>教师<#else>学生</#if>
+                                (<#if isRoles("admin")>超级管理员<#else>教学秘书</#if>
                                 )
                                 <small>${u.name!"获取用户名失败"}</small>
                             </p>
@@ -61,7 +61,7 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="/user/myProfile" class="btn btn-default btn-flat">个人资料</a>
+                                <a href="#" class="btn btn-default btn-flat">个人资料</a>
                             </div>
                             <div class="pull-right">
                                 <a href="#" onclick="NS.logout()" class="btn btn-default btn-flat">注销登录</a>

@@ -4,19 +4,18 @@
 <#assign  pageTitle>教师管理</#assign>
 <#assign isUserManagement = true />
 <#assign isTeacherManagement = true />
-<#include "../common/head.ftl"/>
+<#include "../../common/admin/head.ftl"/>
 <div class="wrapper">
-    <#include "../common/header.ftl"/>
-    <#include "../common/sidebar.ftl"/>
+    <#include "../../common/admin/header.ftl"/>
+    <#include "../../common/admin/sidebar.ftl"/>
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
                 教师管理
-                <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                <li><a href="/teachingSecretary"><i class="fa fa-dashboard"></i> 控制台</a></li>
                 <li><a href="#">用户管理</a></li>
                 <li class="active">教师管理</li>
             </ol>
@@ -93,7 +92,7 @@
 
     </div>
     <!-- /.content -->
-    <#include "../common/copyright.ftl">
+    <#include "../../common/admin/copyright.ftl">
 </div>
 <#assign restFooter>
     <!-- DataTables -->
@@ -151,4 +150,4 @@
         });
     </script>
 </#assign>
-<#include "../common/footer.ftl">
+<#include "../../common/footer.ftl">

@@ -4,6 +4,8 @@ package cs.ohms.subsystem.viewobject;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * 2020/5/30 17:07
  *
@@ -11,7 +13,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class StudentVo {
+public class StudentVo implements Serializable {
     private Integer id;//用户id
 
     private String studentId;//学号

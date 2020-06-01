@@ -1,7 +1,7 @@
 <#-- 404 not found 页面 -->
 <#assign pageTitle>404 Not found</#assign>
 <#assign notUser></#assign>
-<#include "../common/head.ftl" />
+<#include "../common/admin/head.ftl" />
 <div class="wrapper">
     <!-- Full Width Column -->
     <!-- Content Wrapper. Contains page content -->
@@ -47,7 +47,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <#include "../common/copyright.ftl" />
+    <#include "../common/admin/copyright.ftl" />
 </div>
 <!-- ./wrapper -->
 <#include "../common/footer.ftl" />

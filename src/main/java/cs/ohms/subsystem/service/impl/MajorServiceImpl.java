@@ -56,6 +56,14 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    public List<MajorVo> findAllVoByCollege(Integer collegeId) {
+        List<MajorEntity> majorEntities = collegeId == null ? majorRepository.findAll() : majorRepository.findAllByCollege_Id(collegeId);
+        List<MajorVo> majorVos = new ArrayList<>();
+        majorEntities.forEach(majorEntity -> majorVos.add(new MajorVo().setId(majorEntity.getId()).setName(majorEntity.getName())));
+        return majorVos;
+    }
+
+    @Override
     public ResponseResult getMajorByCollegeAndPage(Integer collegeId, int start, int length) {
         int page = (int) Math.ceil((double) start / length);
         Pageable pageable = PageRequest.of(page, length, Sort.Direction.DESC, "datetime");
@@ -93,8 +101,7 @@ public class MajorServiceImpl implements MajorService {
             int success = count - fail;
             return (ResponseResult.enSuccess().add("count", count).add("success", success).add("fail", fail)
                     .add("errList", errorList));
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             log.warn("导入表格失败！", e);
         }
         return ResponseResult.enError();

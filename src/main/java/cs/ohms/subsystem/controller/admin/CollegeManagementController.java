@@ -1,4 +1,4 @@
-package cs.ohms.subsystem.controller.teacher;
+package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CollegeService;
@@ -41,7 +41,7 @@ public class CollegeManagementController {
      */
     @GetMapping
     public String index() {
-        return "pages/collegeManagement";
+        return "pages/admin/collegeManagement";
     }
 
     /**

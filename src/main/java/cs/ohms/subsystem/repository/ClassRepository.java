@@ -1,6 +1,8 @@
 package cs.ohms.subsystem.repository;
 
 import cs.ohms.subsystem.entity.ClassEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -8,9 +10,13 @@ import org.springframework.stereotype.Repository;
 /**
  * 2020/5/30 14:39
  *
- * @auther _Struggler
+ * @author _Struggler
  */
 @Repository
-public interface ClassRepository extends JpaRepository<ClassEntity,Integer>, JpaSpecificationExecutor<ClassEntity>{
+public interface ClassRepository extends JpaRepository<ClassEntity, Integer>, JpaSpecificationExecutor<ClassEntity> {
     ClassEntity findByName(String name);
+
+    long countByMajor_Id(Integer majorId);
+
+    Page<ClassEntity> findAllByMajor_Id(Integer majorId, Pageable pageable);
 }

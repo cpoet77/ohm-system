@@ -2,6 +2,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.MajorEntity;
+import cs.ohms.subsystem.viewobject.MajorVo;
 
 import java.io.InputStream;
 import java.util.List;
@@ -18,6 +19,14 @@ public interface MajorService {
      * @return MajorEntity for list
      */
     List<MajorEntity> findAll();
+
+    /**
+     * 根据学院获取其下所有专业的信息
+     *
+     * @param collegeId 学院id
+     * @return MajorVo for list
+     */
+    List<MajorVo> findAllVoByCollege(Integer collegeId);
 
     /**
      * 根据学院id分布获取专业列表
