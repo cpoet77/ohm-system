@@ -2,7 +2,7 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.MajorService;
-import cs.ohms.subsystem.utils.FileUtil;
+import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
@@ -28,10 +28,12 @@ import java.io.InputStream;
 @Slf4j
 public class MajorManagementController {
     private MajorService majorService;
+    private ResourceService resourceService;
 
     @Autowired
-    public MajorManagementController(MajorService majorService) {
+    public MajorManagementController(MajorService majorService, ResourceService resourceService) {
         this.majorService = majorService;
+        this.resourceService = resourceService;
     }
 
     /**
@@ -83,7 +85,7 @@ public class MajorManagementController {
     @PostMapping("/importMajorInfo")
     @ResponseBody
     public ResponseResult importMajorInfo(@RequestParam("majorXls") @NotNull MultipartFile majorXls) {
-        if (!majorXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(majorXls.getOriginalFilename()))) {
+        if (resourceService.isDemandXlsFile(majorXls)) {
             try (InputStream in = majorXls.getInputStream()) {
                 return majorService.importMajorInfo(in);
             } catch (IOException e) {

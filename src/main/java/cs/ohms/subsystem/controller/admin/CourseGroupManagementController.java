@@ -2,7 +2,7 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
-import cs.ohms.subsystem.utils.FileUtil;
+import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
@@ -27,9 +27,11 @@ import java.io.InputStream;
 @Slf4j
 public class CourseGroupManagementController {
     private CourseGroupService courseGroupService;
+    private ResourceService resourceService;
 
-    public CourseGroupManagementController(CourseGroupService courseGroupService) {
+    public CourseGroupManagementController(CourseGroupService courseGroupService, ResourceService resourceService) {
         this.courseGroupService = courseGroupService;
+        this.resourceService = resourceService;
     }
 
     /**
@@ -61,7 +63,7 @@ public class CourseGroupManagementController {
     @PostMapping("/importCourseGroupInfo")
     @ResponseBody
     public ResponseResult importCourseGroupInfo(@RequestParam("courseGroupXls")@NotNull MultipartFile courseGroupXls){
-        if (!courseGroupXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(courseGroupXls.getOriginalFilename()))) {
+        if (resourceService.isDemandXlsFile(courseGroupXls)) {
             try (InputStream in = courseGroupXls.getInputStream()) {
                 return courseGroupService.importCourseGroupInfo(in);
             } catch (IOException e) {

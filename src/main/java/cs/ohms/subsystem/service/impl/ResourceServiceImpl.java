@@ -6,9 +6,12 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.service.AppService;
 import cs.ohms.subsystem.service.ResourceService;
+import cs.ohms.subsystem.utils.FileUtil;
 import cs.ohms.subsystem.utils.NStringUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.InputStream;
@@ -68,6 +71,11 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public boolean isConfidentialFileFormat(String fix) {
         return CONFIDENTIAL_FILE_FORMAT_SET.contains(fix);
+    }
+
+    @Override
+    public boolean isDemandXlsFile(@NotNull MultipartFile file) {
+        return (!file.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(file.getOriginalFilename())));
     }
 
     @Override

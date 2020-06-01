@@ -2,7 +2,7 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CollegeService;
-import cs.ohms.subsystem.utils.FileUtil;
+import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
@@ -28,10 +28,12 @@ import java.io.InputStream;
 @Slf4j
 public class CollegeManagementController {
     private CollegeService collegeService;
+    private ResourceService resourceService;
 
     @Autowired
-    public CollegeManagementController(CollegeService collegeService) {
+    public CollegeManagementController(CollegeService collegeService, ResourceService resourceService) {
         this.collegeService = collegeService;
+        this.resourceService = resourceService;
     }
 
     /**
@@ -77,7 +79,7 @@ public class CollegeManagementController {
     @PostMapping("/importCollegeInfo")
     @ResponseBody
     public ResponseResult importCollegeInfo(@RequestParam("collegeXls") @NotNull MultipartFile collegeXls) {
-        if (!collegeXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(collegeXls.getOriginalFilename()))) {
+        if (resourceService.isDemandXlsFile(collegeXls)) {
             try (InputStream in = collegeXls.getInputStream()) {
                 return collegeService.importCollegeInfo(in);
             } catch (IOException e) {

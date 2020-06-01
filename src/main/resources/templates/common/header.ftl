@@ -18,6 +18,12 @@
                             <#if activeIndex??><span class="sr-only">(current)</span></#if>
                         </a>
                     </li>
+                    <li <#if activeCourseGroup??>class="active"</#if>>
+                        <a href="/">
+                            我的课群
+                            <#if activeCourseGroup??><span class="sr-only">(current)</span></#if>
+                        </a>
+                    </li>
                     <#if isRoles("admin", "teachingSecretary")>
                         <li>
                             <a href="/teachingSecretary">

@@ -3,6 +3,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.List;
@@ -31,9 +32,29 @@ public interface ResourceService {
      */
     <T> List<T> inputStreamToTable(Class<T> clazz, InputStream in) throws Exception;
 
+    /**
+     * 判断是否是支持的公共文件后缀
+     *
+     * @param fix 文件后缀
+     * @return true|false
+     */
     boolean isCommonFileFormat(String fix);
 
+    /**
+     * 判断是否是受保护的文件后缀
+     *
+     * @param fix 文件后缀
+     * @return true|false
+     */
     boolean isConfidentialFileFormat(String fix);
+
+    /**
+     * 判断上传的表格文件是否满足要求
+     *
+     * @param file MultipartFile
+     * @return true|false
+     */
+    boolean isDemandXlsFile(MultipartFile file);
 
     ResponseResult saveConfidentialResource(UserEntity attribute, String uuid, String name, String fix, String path, Boolean isPublic);
 }

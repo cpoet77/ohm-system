@@ -3,7 +3,7 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.ClassService;
-import cs.ohms.subsystem.utils.FileUtil;
+import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +25,12 @@ import java.io.InputStream;
 @Slf4j
 public class ClassManagementController {
     private ClassService classService;
+    private ResourceService resourceService;
 
     @Autowired
-    public ClassManagementController(ClassService classService) {
+    public ClassManagementController(ClassService classService, ResourceService resourceService) {
         this.classService = classService;
+        this.resourceService = resourceService;
     }
 
     /**
@@ -62,7 +64,7 @@ public class ClassManagementController {
     @PostMapping("/importClassInfo")
     @ResponseBody
     public ResponseResult importClassInfo(@RequestParam("classXls") @NotNull MultipartFile classXls) {
-        if (!classXls.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(classXls.getOriginalFilename()))) {
+        if (resourceService.isDemandXlsFile(classXls)) {
             try (InputStream in = classXls.getInputStream()) {
                 return classService.importMajorInfo(in);
             } catch (IOException e) {
