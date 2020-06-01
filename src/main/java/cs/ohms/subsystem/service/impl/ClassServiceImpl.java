@@ -91,6 +91,17 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public boolean deleteClass(Integer classId) {
+        try {
+            classRepository.deleteById(classId);
+            return true;
+        } catch (Exception e) {
+            log.warn("班级信息删除失败, classId : {}, msg : {}", classId, e.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    @Override
     @Cacheable(cacheNames = {"common"}, key = "#name")
     public ClassEntity findClassHashCacheByName(String name) {
         return classRepository.findByName(name);

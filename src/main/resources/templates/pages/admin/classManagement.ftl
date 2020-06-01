@@ -211,7 +211,7 @@
                     {
                         data: null,
                         render: (data, type, row, meta) => {
-                            return '<div class="btn-group-sm"><button onclick="NS.updateCollegeInfo(' + meta.row + ')" type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i></button> <button type="button" class="btn btn-danger btn-sm" onclick="NS.deleteCollegeInfo(' + data.id + ')"><i class="fa fa-trash-o"></i></button></div>';
+                            return '<div class="btn-group-sm"><button onclick="NS.createCourseGroup(' + meta.row + ')" type="button" class="btn bg-navy btn-sm"><i class="fa fa-plus-square-o"></i></button> <button onclick="NS.updateClassInfo(' + meta.row + ')" type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i></button> <button type="button" class="btn btn-danger btn-sm" onclick="NS.deleteClassInfo(' + meta.row + ')"><i class="fa fa-trash-o"></i></button></div>';
                         }
                     },
                 ]
@@ -299,6 +299,18 @@
             saveClassModal.on('hide.bs.modal', () => {
                 Main.clearSaveOneClassInfo();
             });
+            NS.deleteClassInfo = (row) => {
+                const clazz = datatable.row(row).data();
+                xtip.confirm('确定删除<br/><b>'+ clazz.collegeName + '&nbsp;' + clazz.majorName + '&nbsp;' + clazz.name +'</b>？', ()=> {
+                    NS.post();
+                }, {icon : 'w'});
+            };
+            NS.updateClassInfo = (row) => {
+                const clazz = datatable.row(row).data();
+            };
+            NS.createCourseGroup = (row) => {
+                const clazz = datatable.row(row).data();
+            }
         });
     </script>
 </#assign>

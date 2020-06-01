@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
  *
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
 @Data
 @Accessors(chain = true)
+@Entity
 @Table(name = "ohms_student_course_group")
 public class StudentCourseGroupEntity implements Serializable {
     @EmbeddedId
@@ -24,10 +24,10 @@ public class StudentCourseGroupEntity implements Serializable {
     @Column(name = "join_time", nullable = false, insertable = false, updatable = false)
     private LocalDateTime joinTime; // 加入时间
 
-    @Embeddable
-    @MappedSuperclass
     @Data
     @Accessors(chain = true)
+    @Embeddable
+    @MappedSuperclass
     public static class Key implements Serializable {
         @Column(name = "user_id", nullable = false)
         private Integer userId; // 用户id

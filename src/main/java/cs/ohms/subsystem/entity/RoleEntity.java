@@ -18,13 +18,13 @@ import java.util.Set;
  *
  * @author shc
  */
-@Entity
-@DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @Accessors(chain = true)
+@Entity
 @Table(name = "ohms_role")
+@DynamicInsert
+@DynamicUpdate
 public class RoleEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

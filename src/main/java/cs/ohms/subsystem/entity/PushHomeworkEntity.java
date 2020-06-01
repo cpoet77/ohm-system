@@ -16,13 +16,13 @@ import java.util.Set;
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
+@Getter
+@Setter
+@Accessors(chain = true)
 @Entity
 @Table(name = "ohms_push_homework")
 @DynamicInsert
 @DynamicUpdate
-@Getter
-@Setter
-@Accessors(chain = true)
 public class PushHomeworkEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

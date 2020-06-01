@@ -16,11 +16,11 @@ import java.util.Set;
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
-@Table(name = "ohms_homework")
 @Getter
 @Setter
 @Accessors(chain = true)
+@Entity
+@Table(name = "ohms_homework")
 @DynamicUpdate
 @DynamicInsert
 public class HomeworkEntity implements Serializable {

@@ -10,9 +10,9 @@ import java.io.Serializable;
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
 @Data
 @Accessors(chain = true)
+@Entity
 @Table(name = "ohms_user_messagebox")
 public class UserMessageBoxEntity implements Serializable {
     @EmbeddedId
@@ -21,10 +21,10 @@ public class UserMessageBoxEntity implements Serializable {
     @Column(name = "is_read")
     private Boolean isRead;
 
-    @Embeddable
-    @MappedSuperclass
     @Data
     @Accessors(chain = true)
+    @Embeddable
+    @MappedSuperclass
     public static class Key implements Serializable{
         @Column(name = "user_id")
         private Integer userId;

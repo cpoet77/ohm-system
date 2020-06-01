@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Min;
 @Controller
 @RequestMapping("/teachingSecretary/classManagement")
 @RequiresRoles(value = {"admin", "teachingSecretary"})
+@Validated
 @Slf4j
 public class ClassManagementController {
     private ClassService classService;
@@ -70,5 +72,17 @@ public class ClassManagementController {
             , @RequestParam("className") @NotNull @Length(min = 1, max = 10) String className
             , @RequestParam("majorId") @NotNull @Min(1) Integer majorId) {
         return classService.saveClass(classId, className, majorId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+    }
+
+    /**
+     * 删除班级
+     *
+     * @param classId 班级id
+     * @return ResponseResult
+     */
+    @PostMapping("/deleteClass")
+    @ResponseBody
+    public ResponseResult deleteClass(@RequestParam("classId") @NotNull @Min(1) Integer classId) {
+        return classService.deleteClass(classId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }
 }

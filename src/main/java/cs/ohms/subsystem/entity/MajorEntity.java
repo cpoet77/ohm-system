@@ -18,13 +18,13 @@ import java.util.Set;
  * @author shc
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
 @Getter
 @Setter
+@Accessors(chain = true)
+@Entity
+@Table(name = "ohms_major")
 @DynamicInsert
 @DynamicUpdate
-@Accessors(chain = true)
-@Table(name = "ohms_major")
 public class MajorEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
+@Getter
+@Setter
+@Accessors(chain = true)
 @Entity
 @Table(name = "ohms_resource")
 @DynamicInsert
 @DynamicUpdate
-@Getter
-@Setter
-@Accessors(chain = true)
 public class ResourceEntity implements Serializable {
     @Id
     @Column

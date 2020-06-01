@@ -7,6 +7,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
@@ -20,6 +21,7 @@ import javax.validation.constraints.NotEmpty;
 @Controller
 @RequestMapping("/teachingSecretary/courseGroupManagement")
 @RequiresRoles(value = {"admin", "teachingSecretary"})
+@Validated
 @Slf4j
 public class CourseGroupManagementController {
     private CourseGroupService courseGroupService;

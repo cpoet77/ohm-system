@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotEmpty;
 @Controller
 @RequestMapping("/teachingSecretary/majorManagement")
 @RequiresRoles(value = {"admin", "teachingSecretary"})
+@Validated
 @Slf4j
 public class MajorManagementController {
     private MajorService majorService;

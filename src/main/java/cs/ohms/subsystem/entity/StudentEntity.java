@@ -15,13 +15,13 @@ import java.util.Set;
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
-@DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @Accessors(chain = true)
+@Entity
 @Table(name = "ohms_view_student")
+@DynamicInsert
+@DynamicUpdate
 public class StudentEntity implements Serializable {
     @Id
     @Column(name = "student_id")

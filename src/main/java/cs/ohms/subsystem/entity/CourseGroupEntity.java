@@ -15,13 +15,13 @@ import java.util.Set;
 /**
  * @author LRC
  */
-@Entity
 @Getter
 @Setter
+@Accessors(chain = true)
+@Entity
+@Table(name = "ohms_course_group")
 @DynamicInsert
 @DynamicUpdate
-@Accessors(chain = true)
-@Table(name = "ohms_course_group")
 public class CourseGroupEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

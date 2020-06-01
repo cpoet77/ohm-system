@@ -18,13 +18,13 @@ import java.time.LocalDateTime;
  *
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
-@DynamicInsert
-@DynamicUpdate
 @Getter
 @Setter
 @Accessors(chain = true)
+@Entity
 @Table(name = "ohms_login_record")
+@DynamicInsert
+@DynamicUpdate
 public class LoginRecordEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

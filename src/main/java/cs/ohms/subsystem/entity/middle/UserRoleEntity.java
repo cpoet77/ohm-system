@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
  *
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
-@Entity
 @Data
 @Accessors(chain = true)
+@Entity
 @Table(name = "ohms_user_role")
 public class UserRoleEntity implements Serializable {
     @EmbeddedId
@@ -24,10 +24,10 @@ public class UserRoleEntity implements Serializable {
     @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime datetime; // 赋予角色的时间
 
-    @Embeddable
-    @MappedSuperclass
     @Data
     @Accessors(chain = true)
+    @Embeddable
+    @MappedSuperclass
     public static class Key implements Serializable {
         @Column(name = "user_id", nullable = false)
         private Integer userId;

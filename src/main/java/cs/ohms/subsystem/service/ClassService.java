@@ -39,6 +39,14 @@ public interface ClassService {
     boolean saveClass(Integer classId, String className, Integer majorId);
 
     /**
+     * 根据id删除班级信息
+     *
+     * @param classId 班级id
+     * @return true|false
+     */
+    boolean deleteClass(Integer classId);
+
+    /**
      * 据name 查询class
      * <p>在缓存有效期内，查找cache - database</p>
      *
