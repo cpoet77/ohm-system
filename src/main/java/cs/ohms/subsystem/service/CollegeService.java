@@ -5,7 +5,6 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CollegeEntity;
 import cs.ohms.subsystem.viewobject.CollegeVo;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -27,14 +26,6 @@ public interface CollegeService {
      * @return ResponseResult
      */
     ResponseResult getCollegesByPage(int start, int length);
-
-    /**
-     * 导入学院信息
-     *
-     * @param in InputStream
-     * @return ResponseResult
-     */
-    ResponseResult importCollegeInfo(InputStream in);
 
     /**
      * 保存学院信息

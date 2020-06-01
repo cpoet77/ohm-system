@@ -2,19 +2,15 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
-import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 教学秘书
@@ -27,11 +23,9 @@ import java.io.InputStream;
 @Slf4j
 public class CourseGroupManagementController {
     private CourseGroupService courseGroupService;
-    private ResourceService resourceService;
 
-    public CourseGroupManagementController(CourseGroupService courseGroupService, ResourceService resourceService) {
+    public CourseGroupManagementController(CourseGroupService courseGroupService) {
         this.courseGroupService = courseGroupService;
-        this.resourceService = resourceService;
     }
 
     /**
@@ -58,19 +52,6 @@ public class CourseGroupManagementController {
             ,@RequestParam("start") @NotNull @Min(0) Integer start
             ,@RequestParam("length") @NotNull @Min(5) Integer length){
         return courseGroupService.getCourseGroupByPage(start,length).add("draw",draw);
-    }
-
-    @PostMapping("/importCourseGroupInfo")
-    @ResponseBody
-    public ResponseResult importCourseGroupInfo(@RequestParam("courseGroupXls")@NotNull MultipartFile courseGroupXls){
-        if (resourceService.isDemandXlsFile(courseGroupXls)) {
-            try (InputStream in = courseGroupXls.getInputStream()) {
-                return courseGroupService.importCourseGroupInfo(in);
-            } catch (IOException e) {
-                log.warn("获取io流失败!", e);
-            }
-        }
-        return ResponseResult.enFail();
     }
 
     /**

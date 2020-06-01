@@ -55,6 +55,9 @@
                     <li class="<#if isStudentManagement??>active</#if>"><a
                                 href="/teachingSecretary/studentManagement"><i
                                     class="fa fa-circle-o"></i> 学生管理</a></li>
+                    <li class="<#if isImportData??>active</#if>"><a
+                                href="#"><i
+                                    class="fa fa-circle-o"></i> 导入数据</a></li>
                 </ul>
             </li>
             <li class="treeview <#if isSafetyManagement??>active</#if>">

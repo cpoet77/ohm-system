@@ -2,16 +2,12 @@ package cs.ohms.subsystem.service.impl;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CourseGroupEntity;
-import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.entity.TeacherEntity;
 import cs.ohms.subsystem.repository.CourseGroupRepository;
-import cs.ohms.subsystem.repository.TeacherRepository;
-import cs.ohms.subsystem.service.*;
-import cs.ohms.subsystem.tableobject.CourseGroupTo;
+import cs.ohms.subsystem.service.CourseGroupService;
+import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.viewobject.CourseGroupVo;
-import cs.ohms.subsystem.viewobject.MajorVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +29,11 @@ import java.util.Optional;
 public class CourseGroupServiceImpl implements CourseGroupService {
     private CourseGroupRepository courseGroupRepository;
     private TeacherService teacherService;
-    private ResourceService resourceService;
 
     @Autowired
-    public CourseGroupServiceImpl(CourseGroupRepository courseGroupRepository, TeacherService teacherService,
-                                  ResourceService resourceService) {
+    public CourseGroupServiceImpl(CourseGroupRepository courseGroupRepository, TeacherService teacherService) {
         this.courseGroupRepository = courseGroupRepository;
         this.teacherService = teacherService;
-        this.resourceService = resourceService;
     }
 
 
@@ -70,34 +62,6 @@ public class CourseGroupServiceImpl implements CourseGroupService {
         });
         long count = courseGroupRepository.count();
         return ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", count).add("data", courseGroupVos);
-    }
-
-    @Override
-    public ResponseResult importCourseGroupInfo(InputStream in) {
-        List<CourseGroupTo> errorList = new ArrayList<>();
-        try{
-            List<CourseGroupTo> courseGroupTos = resourceService.inputStreamToTable(CourseGroupTo.class, in);
-            courseGroupTos.forEach(courseGroupTo -> {
-                TeacherEntity teacher = teacherService.findTeacherHasCacheByName(courseGroupTo.getTeacher());
-                if(teacher != null){
-                    CourseGroupEntity courseGroup = new CourseGroupEntity().setName(courseGroupTo.getName()).
-                            setTeacher(teacher).setDescription(courseGroupTo.getDescription());
-                    if(!saveCourseGroup(courseGroup)){
-                        errorList.add(courseGroupTo);
-                    }
-                }else {
-                    errorList.add(courseGroupTo);
-                }
-            });
-            int count = courseGroupTos.size();
-            int fail = errorList.size();
-            int success = count - fail;
-            return (ResponseResult.enSuccess().add("count", count).add("success",success).add("fail", fail)
-                .add("errList", errorList));
-        } catch (Exception e){
-            log.warn("导入表格失败！", e);
-        }
-        return ResponseResult.enError();
     }
 
     @Override

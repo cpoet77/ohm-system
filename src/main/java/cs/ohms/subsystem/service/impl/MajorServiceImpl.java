@@ -6,10 +6,7 @@ import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.repository.CollegeRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
-import cs.ohms.subsystem.service.CollegeService;
 import cs.ohms.subsystem.service.MajorService;
-import cs.ohms.subsystem.service.ResourceService;
-import cs.ohms.subsystem.tableobject.MajorTo;
 import cs.ohms.subsystem.viewobject.MajorVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,17 +30,12 @@ import java.util.Optional;
 @Service("majorService")
 @Slf4j
 public class MajorServiceImpl implements MajorService {
-    private CollegeService collegeService;
-    private ResourceService resourceService;
     private MajorRepository majorRepository;
     private StudentRepository studentRepository;
     private CollegeRepository collegeRepository;
 
     @Autowired
-    public MajorServiceImpl(CollegeService collegeService, ResourceService resourceService, MajorRepository majorRepository
-            , StudentRepository studentRepository, CollegeRepository collegeRepository) {
-        this.collegeService = collegeService;
-        this.resourceService = resourceService;
+    public MajorServiceImpl(MajorRepository majorRepository, StudentRepository studentRepository, CollegeRepository collegeRepository) {
         this.majorRepository = majorRepository;
         this.studentRepository = studentRepository;
         this.collegeRepository = collegeRepository;
@@ -78,33 +69,6 @@ public class MajorServiceImpl implements MajorService {
         long count = majorRepository.count();
         return (ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", collegeId != null
                 ? majorRepository.countByCollege_Id(collegeId) : count).add("data", majorVos));
-    }
-
-    @Override
-    public ResponseResult importMajorInfo(InputStream in) {
-        List<MajorTo> errorList = new ArrayList<>();
-        try {
-            List<MajorTo> majorTos = resourceService.inputStreamToTable(MajorTo.class, in);
-            majorTos.forEach(majorTo -> {
-                CollegeEntity college = collegeService.findCollegeHasCacheByName(majorTo.getCollege());
-                if (college != null) {
-                    MajorEntity major = new MajorEntity().setName(majorTo.getName()).setCollege(college);
-                    if (!saveMajor(major)) {
-                        errorList.add(majorTo);
-                    }
-                } else {
-                    errorList.add(majorTo);
-                }
-            });
-            int count = majorTos.size();
-            int fail = errorList.size();
-            int success = count - fail;
-            return (ResponseResult.enSuccess().add("count", count).add("success", success).add("fail", fail)
-                    .add("errList", errorList));
-        } catch (Exception e) {
-            log.warn("导入表格失败！", e);
-        }
-        return ResponseResult.enError();
     }
 
     @Override

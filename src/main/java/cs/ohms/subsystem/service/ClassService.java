@@ -3,8 +3,6 @@ package cs.ohms.subsystem.service;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.ClassEntity;
 
-import java.io.InputStream;
-
 /**
  * 2020/5/30 14:18
  *
@@ -21,13 +19,6 @@ public interface ClassService {
      */
     ResponseResult getClassByMajorAndPage(Integer majorId, Integer start, Integer length);
 
-    /**
-     * 导入班级信息
-     *
-     * @param in InputStream
-     * @return ResponseResult
-     */
-    ResponseResult importMajorInfo(InputStream in);
 
     /**
      * 保存班级信息
@@ -36,6 +27,16 @@ public interface ClassService {
      * @return true|false
      */
     boolean saveClass(ClassEntity classEntity);
+
+    /**
+     * 保存班级信息, classId为null时为新增
+     *
+     * @param classId   班级id
+     * @param className 班级名
+     * @param majorId   专业id
+     * @return true|false
+     */
+    boolean saveClass(Integer classId, String className, Integer majorId);
 
     /**
      * 据name 查询class

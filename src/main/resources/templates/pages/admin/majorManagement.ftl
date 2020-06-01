@@ -36,7 +36,6 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveMajorModal">添加
                                 </button>
-                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
                                 <button type="button" class="btn bg-orange">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
@@ -45,17 +44,6 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div v-show="uploadMajorFileShow">
-                                <form id="importMajorForm" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label for="majorXlsFile">请选择专业信息的表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
-                                                    href="/static/docs/专业信息导入模板.xlsx">下载模板</a>】</label>
-                                        <input name="majorXls" accept=".xlsx" type="file" id="majorXlsFile">
-                                    </div>
-                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
-                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
-                                </form>
-                            </div>
                             <table id="majorList" class="table table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
@@ -170,7 +158,6 @@
             const Main = new Vue({
                 el: '#main',
                 data: {
-                    uploadMajorFileShow: false,
                     saveOneMajorInfo: {
                         id: null,
                         name: null,
@@ -288,39 +275,6 @@
                         xtip.close(saveLoad);
                     });
                 }
-            });
-            const importBtn = $('#importBtn');
-            importBtn.on('click', () => {
-                Main.uploadMajorFileShow = !Main.uploadMajorFileShow;
-            });
-            $('#closeImport').on('click', () => {
-                importBtn.click();
-            });
-            $('#submitImport').on('click', () => {
-                const importingMsg = xtip.load('导入中...');
-                NS.postFile('/teachingSecretary/majorManagement/importMajorInfo'
-                    , new FormData($('#importMajorForm')[0]), (res) => {
-                        if (res.code === 1000) {
-                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
-                            let tipIcon = 's';
-                            if (res.data.count !== res.data.success) {
-                                tips += '<br />错误列表：<br/><ol>';
-                                let errList = res.data.errList;
-                                for (let key in errList) {
-                                    tips += '<li><b>专业名：</b>' + errList[key].name + '</li>';
-                                }
-                                tips += '</ol>';
-                                tipIcon = 'w';
-                            }
-                            tips += '<br/><b>请点击确定重新加载数据！</b>';
-                            xtip.confirm(tips, () => {
-                                datatable.ajax.reload();
-                            }, {icon: tipIcon});
-                        } else {
-                            xtip.msg('导入失败！', {icon: 'e'})
-                        }
-                        xtip.close(importingMsg);
-                    });
             });
             saveMajorModal.on('show.bs.modal', () => {
                 Main.loadCollegeInfoList();

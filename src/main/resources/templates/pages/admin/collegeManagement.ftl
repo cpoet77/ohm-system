@@ -36,24 +36,11 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveCollegeModal">添加
                                 </button>
-                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
-                                <button type="button" class="btn btn-success">导出</button>
+                                <button type="button" class="btn bg-orange">导出</button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div v-show="uploadCollegeFileShow">
-                                <form id="importCollegeForm" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label for="collegeXlsFile">请选择学院信息的表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
-                                                    href="/static/docs/学院信息导入模板.xlsx">下载模板</a>】</label>
-                                        <input name="collegeXls" accept=".xlsx" type="file" id="collegeXlsFile">
-                                    </div>
-                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
-                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
-                                </form>
-                                <br/>
-                            </div>
                             <table id="collegeList" class="table table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
@@ -138,7 +125,6 @@
             const Main = new Vue({
                 el: '#main',
                 data: {
-                    uploadCollegeFileShow: false,
                     saveOneCollegeInfo: {
                         id: null,
                         name: null,
@@ -233,37 +219,6 @@
                         xtip.close(saveOneIng);
                     });
                 }
-            });
-            const importBtn = $('#importBtn');
-            importBtn.on('click', () => {
-                Main.uploadCollegeFileShow = !Main.uploadCollegeFileShow;
-            });
-            $('#closeImport').on('click', () => {
-                importBtn.click();
-            });
-            $('#submitImport').on('click', () => {
-                const importingMsg = xtip.load('导入中...');
-                NS.postFile('/teachingSecretary/collegeManagement/importCollegeInfo'
-                    , new FormData($('#importCollegeForm')[0]), (res) => {
-                        if (res.code === 1000) {
-                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
-                            let tipIcon = 's';
-                            if (res.data.fail !== 0) {
-                                tips += '<br />错误列表：<br/><ol>';
-                                let errList = res.data.errList;
-                                for (let key in errList) {
-                                    tips += '<li><b>学院名：</b>' + errList[key].name + '</li>';
-                                }
-                                tips += '</ol>';
-                                tipIcon = 'w';
-                            }
-                            res.data.success !== 0 && datatable.ajax.reload();
-                            xtip.alert(tips, tipIcon);
-                        } else {
-                            xtip.msg('导入失败！', {icon: 'e'})
-                        }
-                        xtip.close(importingMsg);
-                    });
             });
             NS.deleteCollegeInfo = ((id) => {/* 删除学院信息 */
                 if (NS.isNull(id)) {

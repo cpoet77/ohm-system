@@ -1,10 +1,8 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/22.
 package cs.ohms.subsystem.service;
 
-import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.TeacherEntity;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -25,13 +23,6 @@ public interface TeacherService {
      * @return TeacherEntity
      */
     TeacherEntity findTeacherByRealName(String realName);
-    /**
-     * 导入教师信息
-     *
-     * @param in InputStream
-     * @return ResponseResult
-     */
-    ResponseResult importTeacherInfo(InputStream in);
 
     /**
      * 保存教师

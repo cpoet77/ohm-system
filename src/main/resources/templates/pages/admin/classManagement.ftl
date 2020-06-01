@@ -36,7 +36,6 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveClassModal">添加
                                 </button>
-                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
                                 <button type="button" class="btn bg-orange">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
@@ -45,19 +44,7 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div v-show="uploadClassFileShow">
-                                <form id="importClassForm" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label for="classXlsFile">请选择班级信息的表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
-                                                    href="/static/docs/班级信息导入模板.xlsx">下载模板</a>】</label>
-                                        <input name="classXls" accept=".xlsx" type="file" id="classXlsFile">
-                                    </div>
-                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
-                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
-                                </form>
-                                <br/>
-                            </div>
-                            <table id="collegeList" class="table table-striped table-bordered table-hover">
+                            <table id="classList" class="table table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
@@ -153,7 +140,6 @@
             const Main = new Vue({
                 el: '#main',
                 data: {
-                    uploadClassFileShow: false,
                     collegeInfoList: null,
                     majorInfoList: null,
                     filterMajorId: null,
@@ -185,11 +171,13 @@
                 },
                 watch: {
                     'saveOneClassInfo.collegeId': function (newV, oldV) {
+                        this.saveOneClassInfo.majorId = null;
                         this.loadMajorInfoList();
+                        destroyFormValidator();
                     }
                 }
             });
-            const datatable = $('#collegeList').DataTable({
+            const datatable = $('#classList').DataTable({
                 language: {
                     url: '/static/plugins/datatables/zh.json'
                 },
@@ -230,100 +218,80 @@
             });
             const saveClassModal = $('#saveClassModal');
             const saveOneClassInfoForm = $('#saveOneClassInfoForm');
-            saveOneClassInfoForm.bootstrapValidator({
-                verbose: false,     /* 对field内的条件按顺序验证 */
-                message: '数据校验失败',
-                fields: {
-                    className: {
-                        validators: {
-                            notEmpty: {
-                                message: '班级名不能为空'
-                            },
-                            stringLength: {
-                                min: 1,
-                                max: 10,
-                                message: '班级名长度不符合规定'
-                            }
-                        }
-                    },
-                    collegeId: {
-                        validators: {
-                            callback: {
-                                message: '请选择本班级所属的学院',
-                                callback: function (value, validator) {
-                                    return !NS.isNull(Main.saveOneClassInfo.collegeId);
+
+            function loadFormValidator() {
+                saveOneClassInfoForm.bootstrapValidator({
+                    verbose: false,     /* 对field内的条件按顺序验证 */
+                    message: '数据校验失败',
+                    fields: {
+                        className: {
+                            validators: {
+                                notEmpty: {
+                                    message: '班级名不能为空'
+                                },
+                                stringLength: {
+                                    min: 1,
+                                    max: 10,
+                                    message: '班级名长度不符合规定'
                                 }
                             }
-                        }
-                    },
-                    majorId: {
-                        validators: {
-                            callback: {
-                                message: '请选择本班级所学专业',
-                                callback: function (value, validator) {
-                                    return !NS.isNull(Main.saveOneClassInfo.majorId);
+                        },
+                        collegeId: {
+                            validators: {
+                                callback: {
+                                    message: '请选择本班级所属的学院',
+                                    callback: function (value, validator) {
+                                        return !NS.isNull(Main.saveOneClassInfo.collegeId);
+                                    }
                                 }
                             }
-                        }
-                    },
+                        },
+                        majorId: {
+                            validators: {
+                                callback: {
+                                    message: '请选择本班级所学专业',
+                                    callback: function (value, validator) {
+                                        return !NS.isNull(Main.saveOneClassInfo.majorId);
+                                    }
+                                }
+                            }
+                        },
+                    }
+                });
+            }
+
+            function destroyFormValidator() {
+                try {
+                    saveOneClassInfoForm.data('bootstrapValidator').destroy();
+                    saveOneClassInfoForm.data('bootstrapValidator', null);
+                } catch (e) {
                 }
-            });
+            }
+
             $('#saveOneClassInfoSubmit').on('click', () => {
+                loadFormValidator();//加载验证器
                 const bootstrapValidator = saveOneClassInfoForm.data('bootstrapValidator');
                 if (bootstrapValidator.validate().isValid()) {
-                    const saveLoad = xtip.load(NS.isNull(Main.saveOneMajorInfo.id) ? '添加中...' : '更新中');
-                    NS.post("/teachingSecretary/majorManagement/saveOneMajorInfo", {
-                        id: Main.saveOneMajorInfo.id,
-                        majorName: Main.saveOneMajorInfo.name,
-                        collegeId: Main.saveOneMajorInfo.collegeId
+                    const saveLoad = xtip.load(NS.isNull(Main.saveOneClassInfo.classId) ? '添加中...' : '更新中');
+                    NS.post("/teachingSecretary/classManagement/saveOneClassInfo", {
+                        classId: Main.saveOneClassInfo.classId,
+                        className: Main.saveOneClassInfo.className,
+                        majorId: Main.saveOneClassInfo.majorId
                     }, (res) => {
                         if (res.code === 1000) {
-                            xtip.msg(NS.isNull(Main.saveOneMajorInfo.id) ? '添加成功' : '更新成功', {icon: 's'});
+                            xtip.msg(NS.isNull(Main.saveOneClassInfo.classId) ? '添加成功' : '更新成功', {icon: 's'});
                             datatable.ajax.reload();
-                            if (NS.isNull(Main.saveOneMajorInfo.id)) {
+                            if (NS.isNull(Main.saveOneClassInfo.classId)) {
                                 Main.clearSaveOneClassInfo();
                             } else {
                                 saveClassModal.modal('hide');
                             }
                         } else {
-                            xtip.msg(NS.isNull(Main.saveOneMajorInfo.id) ? '添加失败' : '更新失败', {icon: 'e'});
+                            xtip.msg(NS.isNull(Main.saveOneClassInfo.classId) ? '添加失败' : '更新失败', {icon: 'e'});
                         }
                         xtip.close(saveLoad);
                     });
                 }
-            });
-            const importBtn = $('#importBtn');
-            importBtn.on('click', () => {
-                Main.uploadClassFileShow = !Main.uploadClassFileShow;
-            });
-            $('#closeImport').on('click', () => {
-                importBtn.click();
-            });
-            $('#submitImport').on('click', () => {
-                const importingMsg = xtip.load('导入中...');
-                NS.postFile('/teachingSecretary/classManagement/importClassInfo'
-                    , new FormData($('#importClassForm')[0]), (res) => {
-                        if (res.code === 1000) {
-                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
-                            let tipIcon = 's';
-                            if (res.data.count !== res.data.success) {
-                                tips += '<br />错误列表：<br/><ol>';
-                                let errList = res.data.errList;
-                                for (let key in errList) {
-                                    tips += '<li><b>专业名：</b>' + errList[key].majorName + ' <b>班级名：</b>' + errList[key].name + '</li>';
-                                }
-                                tips += '</ol>';
-                                tipIcon = 'w';
-                            }
-                            tips += '<br/><b>请点击确定重新加载数据！</b>';
-                            xtip.confirm(tips, () => {
-                                datatable.ajax.reload();
-                            }, {icon: tipIcon});
-                        } else {
-                            xtip.msg('导入失败！', {icon: 'e'})
-                        }
-                        xtip.close(importingMsg);
-                    });
             });
             saveClassModal.on('show.bs.modal', () => {
                 Main.loadCollegeInfoList();

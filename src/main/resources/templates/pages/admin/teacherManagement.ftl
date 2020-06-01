@@ -28,24 +28,12 @@
                     <div class="box">
                         <div class="box-header">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-warning">添加</button>
-                                <button id="importBtn" type="button" class="btn btn-warning">导入</button>
-                                <button type="button" class="btn btn-success">导出</button>
+                                <button type="button" class="btn bg-purple">添加</button>
+                                <button type="button" class="btn bg-orange">导出</button>
                             </div>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <div v-show="uploadTeacherFileShow">
-                                <form id="importTeacherForm" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label for="teacherXlsFile">请选择教职工信息表格(仅支持后缀为.xlsx的文件)&nbsp;【<a
-                                                    href="/static/docs/教师信息导入模板.xlsx">下载模板</a>】</label>
-                                        <input name="teacherXls" accept=".xlsx" type="file" id="teacherXlsFile">
-                                    </div>
-                                    <button id="submitImport" type="button" class="btn btn-warning btn-sm">立即导入</button>
-                                    <button id="closeImport" type="button" class="btn btn-info btn-sm">取消导入</button>
-                                </form>
-                            </div>
                             <table id="teacherList" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
@@ -102,7 +90,7 @@
         const Main = new Vue({
             el: '#main',
             data: {
-                uploadTeacherFileShow: false
+
             }
         });
         $(function () {
@@ -114,39 +102,6 @@
                 "info": true,
                 "autoWidth": false
             });
-            const importBtn = $('#importBtn');
-            importBtn.on('click', () => {
-                Main.uploadTeacherFileShow = !Main.uploadTeacherFileShow;
-            });
-            $('#closeImport').on('click', () => {
-                importBtn.click();
-            });
-            $('#submitImport').on('click', () => {
-                const importingMsg = xtip.load('导入中...');
-                NS.postFile('/teachingSecretary/teacherManagement/importTeacherInfo'
-                    , new FormData($('#importTeacherForm')[0]), (res) => {
-                        if (res.code === 1000) {
-                            let tips = '总数：' + res.data.count + '<br/>成功：' + res.data.success + '<br/>失败：' + res.data.fail;
-                            let tipIcon = 's';
-                            if (res.data.count !== res.data.success) {
-                                tips += '<br />错误列表：<br/><ol>';
-                                let errList = res.data.errList;
-                                for (let key in errList) {
-                                    tips += '<li><b>职工号：</b>' + errList[key].teacherId + '</li>';
-                                }
-                                tips += '</ol>';
-                                tipIcon = 'w';
-                            }
-                            tips += '<br/><b>请点击确定重新加载数据！</b>';
-                            xtip.confirm(tips, () => {
-                                NS.reload();
-                            }, {icon: tipIcon});
-                        } else {
-                            xtip.msg('导入失败！', {icon: 'e'})
-                        }
-                        xtip.close(importingMsg);
-                    });
-            })
         });
     </script>
 </#assign>

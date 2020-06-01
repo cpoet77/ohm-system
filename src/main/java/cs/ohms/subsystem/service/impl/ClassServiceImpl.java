@@ -4,11 +4,9 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.ClassEntity;
 import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.repository.ClassRepository;
+import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.ClassService;
-import cs.ohms.subsystem.service.MajorService;
-import cs.ohms.subsystem.service.ResourceService;
-import cs.ohms.subsystem.tableobject.ClassTo;
 import cs.ohms.subsystem.viewobject.ClassVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 2020/5/30 14:29
@@ -33,15 +31,13 @@ import java.util.List;
 public class ClassServiceImpl implements ClassService {
     private ClassRepository classRepository;
     private StudentRepository studentRepository;
-    private ResourceService resourceService;
-    private MajorService majorService;
+    private MajorRepository majorRepository;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, ResourceService resourceService, MajorService majorService) {
+    public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, MajorRepository majorRepository) {
         this.classRepository = classRepository;
         this.studentRepository = studentRepository;
-        this.resourceService = resourceService;
-        this.majorService = majorService;
+        this.majorRepository = majorRepository;
     }
 
 
@@ -68,39 +64,28 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public ResponseResult importMajorInfo(InputStream in) {
-        List<ClassTo> errList = new ArrayList<>();
-        try {
-            List<ClassTo> classTos = resourceService.inputStreamToTable(ClassTo.class, in);
-            classTos.forEach(classTo -> {
-                MajorEntity major = majorService.findMajorHashCacheByName(classTo.getMajorName());
-                if (major != null) {
-                    ClassEntity clazz = new ClassEntity().setName(classTo.getName()).setMajor(major);
-                    if (!saveClass(clazz)) {
-                        errList.add(classTo);
-                    }
-                } else {
-                    errList.add(classTo);
-                }
-            });
-            int count = classTos.size();
-            int fail = errList.size();
-            int success = count - fail;
-            return (ResponseResult.enSuccess().add("count", count).add("success", success).add("fail", fail)
-                    .add("errList", errList));
-        } catch (Exception e) {
-            log.warn("导入表格失败！", e);
-        }
-        return ResponseResult.enError();
-    }
-
-    @Override
     public boolean saveClass(ClassEntity classEntity) {
         try {
             classRepository.save(classEntity);
             return true;
         } catch (Exception e) {
             log.warn("班级信息保存失败！msg : {}", e.getLocalizedMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean saveClass(Integer classId, String className, Integer majorId) {
+        Optional<MajorEntity> majorOpt = majorRepository.findById(majorId);
+        if (majorOpt.isPresent()) {
+            if (classId == null) {
+                return saveClass(new ClassEntity().setName(className).setMajor(majorOpt.get()));
+            } else {
+                Optional<ClassEntity> classOpt = classRepository.findById(classId);
+                if (classOpt.isPresent()) {
+                    return saveClass(classOpt.get().setName(className).setMajor(majorOpt.get()));
+                }
+            }
         }
         return false;
     }

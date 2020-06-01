@@ -2,7 +2,6 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CollegeService;
-import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
@@ -10,12 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 教学秘书
@@ -28,12 +24,10 @@ import java.io.InputStream;
 @Slf4j
 public class CollegeManagementController {
     private CollegeService collegeService;
-    private ResourceService resourceService;
 
     @Autowired
-    public CollegeManagementController(CollegeService collegeService, ResourceService resourceService) {
+    public CollegeManagementController(CollegeService collegeService) {
         this.collegeService = collegeService;
-        this.resourceService = resourceService;
     }
 
     /**
@@ -68,25 +62,6 @@ public class CollegeManagementController {
     @ResponseBody
     public ResponseResult collegeInfoAllList() {
         return ResponseResult.enSuccess().add("colleges", collegeService.findAll());
-    }
-
-    /**
-     * 导入学院信息
-     *
-     * @param collegeXls excel表格文件
-     * @return ResponseResult
-     */
-    @PostMapping("/importCollegeInfo")
-    @ResponseBody
-    public ResponseResult importCollegeInfo(@RequestParam("collegeXls") @NotNull MultipartFile collegeXls) {
-        if (resourceService.isDemandXlsFile(collegeXls)) {
-            try (InputStream in = collegeXls.getInputStream()) {
-                return collegeService.importCollegeInfo(in);
-            } catch (IOException e) {
-                log.warn("获取io流失败!", e);
-            }
-        }
-        return ResponseResult.enFail();
     }
 
     /**

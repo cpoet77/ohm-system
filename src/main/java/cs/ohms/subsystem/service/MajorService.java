@@ -4,7 +4,6 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.viewobject.MajorVo;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -37,14 +36,6 @@ public interface MajorService {
      * @return ResponseResult
      */
     ResponseResult getMajorByCollegeAndPage(Integer collegeId, int start, int length);
-
-    /**
-     * 导入专业信息
-     *
-     * @param in InputStream
-     * @return ResponseResult
-     */
-    ResponseResult importMajorInfo(InputStream in);
 
     /**
      * 保存专业信息

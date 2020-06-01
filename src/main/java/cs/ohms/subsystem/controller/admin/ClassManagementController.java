@@ -3,18 +3,15 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.ClassService;
-import cs.ohms.subsystem.service.ResourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -25,12 +22,10 @@ import java.io.InputStream;
 @Slf4j
 public class ClassManagementController {
     private ClassService classService;
-    private ResourceService resourceService;
 
     @Autowired
-    public ClassManagementController(ClassService classService, ResourceService resourceService) {
+    public ClassManagementController(ClassService classService) {
         this.classService = classService;
-        this.resourceService = resourceService;
     }
 
     /**
@@ -61,16 +56,19 @@ public class ClassManagementController {
         return (classService.getClassByMajorAndPage(majorId, start, length).add("draw", draw));
     }
 
-    @PostMapping("/importClassInfo")
+    /**
+     * 保存班级信息，当classId为null时为新增记录，否则为更新
+     *
+     * @param classId   班级id
+     * @param className 班级名
+     * @param majorId   所学专业id
+     * @return ResponseResult
+     */
+    @PostMapping("/saveOneClassInfo")
     @ResponseBody
-    public ResponseResult importClassInfo(@RequestParam("classXls") @NotNull MultipartFile classXls) {
-        if (resourceService.isDemandXlsFile(classXls)) {
-            try (InputStream in = classXls.getInputStream()) {
-                return classService.importMajorInfo(in);
-            } catch (IOException e) {
-                log.warn("获取io流失败!", e);
-            }
-        }
-        return ResponseResult.enFail();
+    public ResponseResult saveOneClassInfo(@RequestParam("classId") Integer classId
+            , @RequestParam("className") @NotNull @Length(min = 1, max = 10) String className
+            , @RequestParam("majorId") @NotNull @Min(1) Integer majorId) {
+        return classService.saveClass(classId, className, majorId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }
 }
