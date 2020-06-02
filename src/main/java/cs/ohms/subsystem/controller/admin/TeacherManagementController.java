@@ -110,4 +110,11 @@ public class TeacherManagementController {
         return (userService.deleteUserById(SecurityUtils.getSubject().hasRole(UserService.USER_ADMIN_ROLE), userId)
                 ? ResponseResult.enSuccess() : ResponseResult.enFail());
     }
+
+    @PostMapping("/changeTeachingSecretaryRole")
+    @ResponseBody
+    @RequiresRoles({"admin"})
+    public ResponseResult changeTeachingSecretaryRole(@RequestParam("userId") @NotNull @Min(1) Integer userId){
+        return (teacherService.changeTeachingSecretaryRole(userId) ? ResponseResult.enSuccess() : ResponseResult.enFail());
+    }
 }

@@ -338,6 +338,19 @@
                     Main.filterDataReloadFlag = false;
                 }
             });
+            saveTeacherModal.on('hide.bs.modal', () => {
+                Main.clearSaveTeacherInfo();
+            });
+            NS.updateTeacherInfo = (row) => {
+                const data = datatable.row(row).data();
+                Main.saveTeacherInfo.userId = data.id;
+                Main.saveTeacherInfo.teacherId = data.teacherId;
+                Main.saveTeacherInfo.realName = data.realName;
+                Main.saveTeacherInfo.sex = data.sex === '男' ? 'M' : 'F';
+                Main.saveTeacherInfo.phone = data.phone;
+                Main.saveTeacherInfo.email = data.email;
+                saveTeacherModal.modal('show');
+            };
             NS.deleteTeacher = (row) => {
                 const data = datatable.row(row).data();
                 xtip.confirm('你正在进行一个极度危险的操作！<br/>一旦执行，所有与该名教师相关的数据均会删除，是否确定删除？<br/><b>教职工号：</b>'
@@ -354,6 +367,23 @@
                     });
                 }, {icon: 'w'});
             };
+            <#if isRoles("admin")>
+            NS.changeTeacherRole = (row) => {
+                const data = datatable.row(row).data();
+                xtip.confirm((data.isTeachingSecretary ? '撤销' : '授予') + '教职工 ' + data.teacherId + ' 教学秘书权限？', () => {
+                    const ing = xtip.load('操作中...');
+                    NS.post('/teachingSecretary/teacherManagement/changeTeachingSecretaryRole', {userId: data.id}, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('操作成功！', {icon: 's'});
+                            datatable.ajax.reload();
+                        } else {
+                            xtip.msg('操作失败！', {icon: 'e'});
+                        }
+                        xtip.close(ing);
+                    });
+                }, {icon: 'w'});
+            }
+            </#if>
         });
     </script>
 </#assign>

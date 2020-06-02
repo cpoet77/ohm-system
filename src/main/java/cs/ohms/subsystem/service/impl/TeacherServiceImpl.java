@@ -6,11 +6,13 @@ import cs.ohms.subsystem.component.PasswordCMP;
 import cs.ohms.subsystem.entity.RoleEntity;
 import cs.ohms.subsystem.entity.TeacherEntity;
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.entity.middle.UserRoleEntity;
 import cs.ohms.subsystem.exception.NSRuntimePostException;
 import cs.ohms.subsystem.repository.CourseGroupRepository;
 import cs.ohms.subsystem.repository.RoleRepository;
 import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.repository.UserRepository;
+import cs.ohms.subsystem.repository.middle.UserRoleRepository;
 import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.service.UserService;
 import cs.ohms.subsystem.utils.NStringUtil;
@@ -36,16 +38,19 @@ public class TeacherServiceImpl implements TeacherService {
     private UserRepository userRepository;
     private CourseGroupRepository courseGroupRepository;
     private RoleRepository roleRepository;
+    private UserRoleRepository userRoleRepository;
     private PasswordCMP passwordCMP;
 
     @Autowired
     public TeacherServiceImpl(UserService userService, TeacherRepository teacherRepository, UserRepository userRepository
-            , CourseGroupRepository courseGroupRepository, RoleRepository roleRepository, PasswordCMP passwordCMP) {
+            , CourseGroupRepository courseGroupRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository
+            , PasswordCMP passwordCMP) {
         this.userService = userService;
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
         this.courseGroupRepository = courseGroupRepository;
         this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordCMP = passwordCMP;
     }
 
@@ -113,6 +118,24 @@ public class TeacherServiceImpl implements TeacherService {
             log.warn("新增教师失败！msg : {}", e.getLocalizedMessage());
             throw new NSRuntimePostException(e);
         }
+    }
+
+    @Override
+    public boolean changeTeachingSecretaryRole(Integer userId) {
+        RoleEntity teachingSecretaryRole = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
+        assert teachingSecretaryRole != null;
+        UserRoleEntity.Key userRoleKey = new UserRoleEntity.Key().setUserId(userId).setRoleId(teachingSecretaryRole.getId());
+        try {
+            if (userRoleRepository.existsById(userRoleKey)) {
+                userRoleRepository.deleteById(userRoleKey);
+            } else {
+                userRoleRepository.save(new UserRoleEntity().setId(userRoleKey));
+            }
+            return true;
+        } catch (Exception e) {
+            log.warn("清除或者添加教学秘书权限失败！msg : {}", e.getLocalizedMessage());
+        }
+        return false;
     }
 
     @Override

@@ -53,6 +53,14 @@ public interface TeacherService {
     boolean saveTeacher(Boolean currentUserIsAdmin, Integer userId, String teacherId, String realName, Character sex, String phone, String email);
 
     /**
+     * 添加/删除教学秘书角色
+     *
+     * @param userId 用户id
+     * @return true|false
+     */
+    boolean changeTeachingSecretaryRole(Integer userId);
+
+    /**
      * 根据name查询teacher
      * <p>在缓存有效期内，查找cache - database</p>
      *
