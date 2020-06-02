@@ -217,6 +217,7 @@
                     filterCollegeId: -1,
                     filterMajorId: -1,
                     firstOpenUpdateClassModalFlag: false,
+                    filterDataReloadFlag: false,
                     saveOneClassInfo: {
                         classId: null,
                         className: null,
@@ -270,10 +271,10 @@
                         } else {
                             this.loadMajorInfoList(this.filterCollegeId)
                         }
-                        datatable.ajax.reload();
+                        this.filterDataReloadFlag = true;
                     },
                     filterMajorId: function (newV, oldV) {
-                        datatable.ajax.reload();
+                        this.filterDataReloadFlag = true;
                     }
                 }
             });
@@ -299,7 +300,11 @@
                         collegeId: Main.filterCollegeId,
                         majorId: Main.filterMajorId
                     }, (res) => {
-                        callback(res.data);
+                        if (res.code === 1000) {
+                            callback(res.data);
+                        } else {
+                            xtip.msg('加载数据出错！', {icon: 'e'});
+                        }
                     });
                 },
                 columns: [
@@ -358,7 +363,7 @@
                                     }
                                 }
                             }
-                        },
+                        }
                     }
                 });
             }
@@ -404,6 +409,12 @@
             });
             dataFilterModal.on('show.bs.modal', () => {
                 Main.loadCollegeInfoList();
+            });
+            dataFilterModal.on('hide.bs.modal', () => {
+                if (Main.filterDataReloadFlag) {
+                    datatable.ajax.reload();
+                    Main.filterDataReloadFlag = false;
+                }
             });
             NS.deleteClassInfo = (row) => {
                 const clazz = datatable.row(row).data();

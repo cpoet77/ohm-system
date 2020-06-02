@@ -9,6 +9,7 @@ import cs.ohms.subsystem.validation.annotation.NSEmail;
 import cs.ohms.subsystem.validation.annotation.NSPhone;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ import javax.validation.constraints.NotEmpty;
  */
 @Controller
 @RequestMapping("/teachingSecretary/teacherManagement")
-@RequiresRoles(value = {"admin", "teachingSecretary"})
+@RequiresRoles(value = {"admin", "teachingSecretary"}, logical = Logical.OR)
 @Validated
 @Slf4j
 public class TeacherManagementController {

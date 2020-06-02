@@ -4,6 +4,7 @@ package cs.ohms.subsystem.controller.admin;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.ClassService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import javax.validation.constraints.Min;
  */
 @Controller
 @RequestMapping("/teachingSecretary/classManagement")
-@RequiresRoles(value = {"admin", "teachingSecretary"})
+@RequiresRoles(value = {"admin", "teachingSecretary"}, logical = Logical.OR)
 @Validated
 @Slf4j
 public class ClassManagementController {

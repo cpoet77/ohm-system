@@ -4,6 +4,7 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ import java.util.Set;
  **/
 @Controller
 @RequestMapping("/teachingSecretary/courseGroupManagement")
-@RequiresRoles(value = {"admin", "teachingSecretary"})
+@RequiresRoles(value = {"admin", "teachingSecretary"}, logical = Logical.OR)
 @Validated
 @Slf4j
 public class CourseGroupManagementController {
