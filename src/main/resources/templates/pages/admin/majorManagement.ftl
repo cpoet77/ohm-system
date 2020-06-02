@@ -164,11 +164,12 @@
                         collegeId: null
                     },
                     collegeInfoList: null,
-                    filterDataCollegeId: null
+                    filterDataCollegeId: null,
+                    filterDataReloadFlag: false
                 },
                 watch: {
                     filterDataCollegeId: function (newVal, oldVal) {
-                        datatable.ajax.reload();
+                        this.filterDataReloadFlag = true;
                     }
                 },
                 methods: {
@@ -205,7 +206,11 @@
                         length: data.length,
                         filterCollegeId: Main.filterDataCollegeId === 'null' ? null : Main.filterDataCollegeId,
                     }, (res) => {
-                        callback(res.data);
+                        if (res.code === 1000) {
+                            callback(res.data);
+                        } else {
+                            xtip.msg('加载数据出错！', {icon: 'e'});
+                        }
                     });
                 },
                 columns: [
@@ -223,6 +228,7 @@
                 ]
             });
             const saveMajorModal = $('#saveMajorModal');
+            const dataFilterModal = $('#dataFilterModal');
             const saveOneMajorInfoForm = $('#saveOneMajorInfo');
             saveOneMajorInfoForm.bootstrapValidator({
                 verbose: false,     /* 对field内的条件按顺序验证 */
@@ -279,11 +285,17 @@
             saveMajorModal.on('show.bs.modal', () => {
                 Main.loadCollegeInfoList();
             });
-            $('#dataFilterModal').on('show.bs.modal', () => {
+            dataFilterModal.on('show.bs.modal', () => {
                 Main.loadCollegeInfoList();
             });
             saveMajorModal.on('hide.bs.modal', () => {
                 Main.clearSaveOneMajorInfo();
+            });
+            dataFilterModal.on('hide.bs.modal', () => {
+                if (Main.filterDataReloadFlag) {
+                    datatable.ajax.reload();
+                    Main.filterDataReloadFlag = false;
+                }
             });
             NS.updateMajorInfo = (row) => {/* 更新专业信息 */
                 const data = datatable.row(row).data();

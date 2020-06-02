@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 2020/5/23 2:01
@@ -48,6 +50,24 @@ public class StudentServiceImpl implements StudentService {
             );
         });
         return studentVos;
+    }
+
+    @Override
+    public boolean testStudentId(String studentId) {
+        return Pattern.matches("^[1-9][0-9]{11}$", studentId);
+    }
+
+    @Override
+    public boolean testStudentId(Collection<String> studentIds) {
+        if (studentIds == null || studentIds.isEmpty()) {
+            return false;
+        }
+        for (String studentId : studentIds) {
+            if (!testStudentId(studentId)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

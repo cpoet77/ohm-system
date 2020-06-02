@@ -99,8 +99,7 @@
     <script>
         const Main = new Vue({
             el: '#main',
-            data: {
-            }
+            data: {}
         });
         $(function () {
             $('#studentList').DataTable({

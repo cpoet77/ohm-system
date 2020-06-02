@@ -1,7 +1,9 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/22.
 package cs.ohms.subsystem.service;
 
+import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.TeacherEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,20 +19,38 @@ public interface TeacherService {
     List<TeacherEntity> findAll();
 
     /**
-     * 根据教师真实姓名获得教师信息
+     * 分页获取用户信息，findTeacherName作为过滤条件
      *
-     * @param realName String
-     * @return TeacherEntity
+     * @param start           分页起点
+     * @param length          长度
+     * @param findTeacherName 过滤条件
+     * @return ResponseResult
      */
-    TeacherEntity findTeacherByRealName(String realName);
+    ResponseResult findTeacherByTeacherNameAndPage(Integer start, Integer length, String findTeacherName);
 
     /**
-     * 保存教师
+     * 分页获取教师信息
      *
-     * @param teacher TeacherEntity
+     * @param start  分页起点
+     * @param length 长度
+     * @return ResponseResult
+     */
+    ResponseResult findTeacherByPage(Integer start, Integer length);
+
+    /**
+     * 保存教师信息
+     *
+     * @param currentUserIsAdmin 是否是超级管理员
+     * @param userId             用户id,为null时为新增
+     * @param teacherId          教职工号
+     * @param realName           用户名
+     * @param sex                教师性别
+     * @param phone              手机号
+     * @param email              邮箱地址
      * @return true|false
      */
-    boolean saveTeacher(TeacherEntity teacher);
+    @Transactional
+    boolean saveTeacher(Boolean currentUserIsAdmin, Integer userId, String teacherId, String realName, Character sex, String phone, String email);
 
     /**
      * 根据name查询teacher

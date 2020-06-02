@@ -159,7 +159,11 @@
                         start: data.start,
                         length: data.length
                     }, (res) => {
-                        callback(res.data);
+                        if (res.code === 1000) {
+                            callback(res.data);
+                        } else {
+                            xtip.msg('加载数据出错！', {icon: 'e'});
+                        }
                     });
                 },
                 columns: [

@@ -3,6 +3,7 @@ package cs.ohms.subsystem.service;
 import cs.ohms.subsystem.entity.StudentEntity;
 import cs.ohms.subsystem.viewobject.StudentVo;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,6 +18,22 @@ public interface StudentService {
      * @return StudentVo for List
      */
     List<StudentVo> findVoAll();
+
+    /**
+     * 验证学号是否满足要求
+     *
+     * @param studentId 学号
+     * @return true|false
+     */
+    boolean testStudentId(String studentId);
+
+    /**
+     * 批量验证学号是否满足要求
+     *
+     * @param studentIds studentIds
+     * @return true|false
+     */
+    boolean testStudentId(Collection<String> studentIds);
 
     /**
      * @param student Student

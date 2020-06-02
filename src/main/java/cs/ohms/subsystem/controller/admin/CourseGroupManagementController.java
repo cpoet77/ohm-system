@@ -2,6 +2,7 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.CourseGroupService;
+import cs.ohms.subsystem.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 教学秘书
@@ -25,9 +29,11 @@ import javax.validation.constraints.NotEmpty;
 @Slf4j
 public class CourseGroupManagementController {
     private CourseGroupService courseGroupService;
+    private StudentService studentService;
 
-    public CourseGroupManagementController(CourseGroupService courseGroupService) {
+    public CourseGroupManagementController(CourseGroupService courseGroupService, StudentService studentService) {
         this.courseGroupService = courseGroupService;
+        this.studentService = studentService;
     }
 
     /**
@@ -36,8 +42,8 @@ public class CourseGroupManagementController {
      * @return view
      */
     @GetMapping
-    public String index(){
-       return "pages/admin/courseGroupManagement";
+    public String index() {
+        return "pages/admin/courseGroupManagement";
     }
 
     /**
@@ -51,29 +57,32 @@ public class CourseGroupManagementController {
     @PostMapping("/courseGroupInfoList")
     @ResponseBody
     public ResponseResult courseGoupList(@RequestParam("draw") @NotNull @Min(1) Integer draw
-            ,@RequestParam("start") @NotNull @Min(0) Integer start
-            ,@RequestParam("length") @NotNull @Min(5) Integer length){
-        return courseGroupService.getCourseGroupByPage(start,length).add("draw",draw);
+            , @RequestParam("start") @NotNull @Min(0) Integer start
+            , @RequestParam("length") @NotNull @Min(5) Integer length) {
+        return courseGroupService.getCourseGroupByPage(start, length).add("draw", draw);
     }
 
     /**
-     * 保存课群信息
+     * 添加课群
      *
-     * @param id        课群id，id为null时是添加操作，否则为更新操作
-     * @param courseGroupName 课程名
-     * @param teacherRealName 教师真实姓名
-     * @param description 课群描述
-     * @param state 课群状态
+     * @param courseGroupName 课群名
+     * @param teacherId       负责该课群的教师
+     * @param description     简介
+     * @param studentIdsStr   加入课群的学生
      * @return ResponseResult
      */
-    @PostMapping("/saveOneCourseGroupInfo")
+    @PostMapping("/addCourseGroup")
     @ResponseBody
-    public ResponseResult saveOneCourseGroupInfo(@RequestParam("id") @Min(1) Integer id
-            , @RequestParam("teacherRealName") @NotNull String teacherRealName
-            , @RequestParam("courseGroupName") @NotEmpty @Length(min = 2, max = 64) String courseGroupName
+    public ResponseResult addCourseGroup(@RequestParam("courseGroupName") @NotEmpty @Length(min = 5, max = 64) String courseGroupName
+            , @RequestParam("teacherId") @NotEmpty String teacherId
             , @RequestParam("description") String description
-            , @RequestParam("state") String state){
-        return courseGroupService.saveCourseGroup(id, teacherRealName, courseGroupName,  description, state) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+            , @RequestParam("studentIds") @NotNull @NotEmpty String studentIdsStr) {
+        Set<String> studentIds = new HashSet<>(Arrays.asList(studentIdsStr.split("\n")));
+        if (studentService.testStudentId(studentIds)) {
+            return ResponseResult.enFail();
+        }
+        return courseGroupService.addCourseGroup(courseGroupName, teacherId, description, studentIds)
+                ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }
 
     /**
@@ -84,7 +93,7 @@ public class CourseGroupManagementController {
      */
     @PostMapping("/deleteOneCourseGroupInfo")
     @ResponseBody
-    public ResponseResult deleteOneCourseGroupInfo(@RequestParam("id") @NotNull @Min(1) Integer id){
+    public ResponseResult deleteOneCourseGroupInfo(@RequestParam("id") @NotNull @Min(1) Integer id) {
         return courseGroupService.deleteCourseGroup(id) ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }
 

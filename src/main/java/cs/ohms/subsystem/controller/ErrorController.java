@@ -3,6 +3,7 @@ package cs.ohms.subsystem.controller;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.exception.NSRuntimeException;
+import cs.ohms.subsystem.exception.NSRuntimePostException;
 import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.utils.ValidatorMsgUtil;
 import org.apache.shiro.SecurityUtils;
@@ -51,8 +52,22 @@ public class ErrorController {
     @ExceptionHandler(NSRuntimeException.class)
     @GetMapping("/nsRuntimeException")
     public String nsRuntimeException(@NotNull NSRuntimeException e) {
-        log.info("Manually thrown exception caught : {}", e.getMessage());
+        log.info("Manually thrown exception caught : {}", e.getLocalizedMessage());
         return "error/404";
+    }
+
+    /**
+     * 捕获手动抛出的NSRuntimePostException
+     *
+     * @param e NSRuntimePostException
+     * @return 返回json数据格式
+     */
+    @ExceptionHandler(NSRuntimePostException.class)
+    @PostMapping("/nsRuntimeException")
+    @ResponseBody
+    public ResponseResult nsRuntimeException(@NotNull NSRuntimePostException e) {
+        log.info("Manually thrown exception caught : {}", e.getLocalizedMessage());
+        return ResponseResult.enFail();
     }
 
     /**

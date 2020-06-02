@@ -108,7 +108,7 @@
          * @returns {boolean} true|false
          */
         isNull: function (obj) {
-            return (obj == null || typeof (obj) == 'undefined' || obj === 'null');
+            return (obj == null || typeof (obj) == 'undefined');
         },
 
         /**

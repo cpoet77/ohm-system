@@ -36,9 +36,12 @@
                         <div class="box-header">
                             <div class="btn-group">
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
-                                data-target="#saveCourseGroupModal">添加
+                                        data-target="#addCourseGroupModal">添加
                                 </button>
                                 <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                        data-target="#dataFilterModal">过滤
+                                </button>
                             </div>
                         </div>
                         <!-- /.box-header -->
@@ -46,17 +49,16 @@
                             <table id="courseGroupList" class="table table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th>序号</th>
+                                    <th>ID</th>
+                                    <th>课群名</th>
                                     <th>教师</th>
-                                    <th>课程</th>
-                                    <th>介绍</th>
+                                    <th>学生数</th>
                                     <th>创建时间</th>
                                     <th>状态</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 </tbody>
                             </table>
                         </div>
@@ -69,51 +71,60 @@
             </div>
             <!-- /.row -->
             <!-- Modal -->
-            <div class="modal fade" id="saveCourseGroupModal" tabindex="-1" role="dialog"
-                 aria-labelledby="saveCourseGroupModalLabel">
+            <div class="modal fade" id="addCourseGroupModal" tabindex="-1" role="dialog"
+                 aria-labelledby="addCourseGroupModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="saveCourseGroupModalLabel"
-                                v-if="saveOneCourseGroupInfo.id !== null">
-                                更新课群信息
-                            </h4>
-                            <h4 class="modal-title" id="saveCourseGroupModalLabel" v-else>
-                                添加课群信息
+                            <h4 class="modal-title" id="addCourseGroupModalLabel">
+                                添加课群
                             </h4>
                         </div>
                         <div class="modal-body">
-                            <form id="saveOneCourseGroupInfo">
-                                <div class="form-group">
-                                    <label for="teacherRealName">教师</label>
-                                    <input name="teacherRealName" type="text" class="form-control" id="teacherRealName"
-                                           v-model="saveOneCourseGroupInfo.teacherRealName" placeholder="请输入教师">
-                                </div><div class="form-group">
+                            <form id="addCourseGroupForm">
                                 <div class="form-group">
                                     <label for="courseGroupName">课群名</label>
-                                    <input name="courseGroupName" type="text" class="form-control" id="courseGroupName"
-                                           v-model="saveOneCourseGroupInfo.courseGroupName" placeholder="请输入课群名">
+                                    <input name="courseGroupName" type="text" class="form-control"
+                                           id="courseGroupName"
+                                           v-model="addCourseGroupInfo.courseGroupName" placeholder="请输入课群名">
                                 </div>
-                                <div>
-                                    <label for="description">介绍</label>
-                                    <input name="description" type="text" class="form-control" id="description"
-                                           v-model="saveOneCourseGroupInfo.description" placeholder="请输入简要介绍">
+                                <div class="form-group">
+                                    <label for="teacherId">教职工号</label>
+                                    <input name="teacherId" type="text" class="form-control" id="teacherId"
+                                           v-model="addCourseGroupInfo.teacherId" placeholder="请输入课群教师的教职工号">
                                 </div>
-                                    <div>
-                                    <label for="state">状态</label>
-                                    <input name="state" type="text" class="form-control" id="state"
-                                           v-model="saveOneCourseGroupInfo.state" placeholder="请输入课程状态">
+                                <div class="form-group">
+                                    <label for="description">课群介绍</label>
+                                    <textarea name="description" id="description" class="form-control"
+                                              v-model="addCourseGroupInfo.description" rows="5"
+                                              placeholder="请输入课群介绍"></textarea>
                                 </div>
+                                <div class="form-group">
+                                    <label for="studentIds">加入课群的学生(<a
+                                                href="javascript:void(0)" onclick="NS.showLoadStudentIdsTxt()">#从txt文件加载#</a>)</label>
+                                    <div v-show="loadStudentIdsTxtFormShow">
+                                        <div class="form-group">
+                                            <input id="loadStudentIdsTxtIpt" type="file" accept=".txt"
+                                                   name="studentIdsTxtFile"
+                                                   id="studentIdsTxtFile"/>
+                                        </div>
+                                        <button id="loadStudentIdsTxtBtn" type="button" class="btn btn-warning btn-sm">
+                                            加载
+                                        </button>
+                                        <button id="closeStudentIdsTxtBtn" type="button" class="btn btn-danger btn-sm">
+                                            取消
+                                        </button>
+                                    </div>
+                                    <textarea name="studentIds" id="studentIds" class="form-control"
+                                              v-model="addCourseGroupInfo.studentIds" rows="5"
+                                              placeholder="填写学生学号，每行一个！" v-show="!loadStudentIdsTxtFormShow"></textarea>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button id="saveCourseGroupInfoSubmit" type="button" class="btn btn-primary"
-                                    v-if="saveOneCourseGroupInfo.id !== null">更新
-                            </button>
-                            <button id="saveCourseGroupInfoSubmit" type="button" class="btn btn-primary" v-else>添加
+                            <button id="addCourseGroupBtn" type="button" class="btn btn-primary">添加
                             </button>
                         </div>
                     </div>
@@ -133,31 +144,30 @@
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
-        /*const Main = new Vue({
-            el: '#main',
-            data: {
-                uploadCourseGroupFileShow: false
-            }
-        });*/
         $(function () {
             const Main = new Vue({
                 el: '#main',
                 data: {
-                    saveOneCourseGroupInfo: {
-                        id: null,
-                        teacherRealName: null,
+                    loadStudentIdsTxtFormShow: false,
+                    addCourseGroupInfo: {
                         courseGroupName: null,
-                        description:null,
-                        state:null
+                        teacherId: null,
+                        description: null,
+                        studentIds: null
                     }
                 },
                 methods: {
-                    clearSaveOneCourseGroupInfo: function () {
-                        Main.saveOneCourseGroupInfo.id = null;
-                        Main.saveOneCourseGroupInfo.teacherRealName = null;
-                        Main.saveOneCourseGroupInfo.courseGroupName = null;
-                        Main.saveOneCourseGroupInfo.description = null;
-                        Main.saveOneCourseGroupInfo.state = null;
+                    clearAddCourseGroupInfo: function () {
+                        this.addCourseGroupInfo.courseGroupId = null;
+                        this.addCourseGroupInfo.courseGroupName = null;
+                        this.addCourseGroupInfo.teacherId = null;
+                        this.addCourseGroupInfo.description = null;
+                        this.addCourseGroupInfo.studentIds = null;
+                        this.addCourseGroupInfo.state = false;
+                    },
+                    testStudentId: function (studentId) {
+                        let regexp = new RegExp('^[1-9][0-9]{11}$');
+                        return regexp.test(studentId);
                     }
                 }
             });
@@ -174,14 +184,18 @@
                 scrollX: true,
                 serverSide: true,
                 processing: true,
-                pageLength: 35,
+                pageLength: 50,
                 ajax: (data, callback, settings) => {
                     NS.post('/teachingSecretary/courseGroupManagement/courseGroupInfoList', {
                         draw: data.draw,
                         start: data.start,
                         length: data.length
                     }, (res) => {
-                        callback(res.data);
+                        if (res.code === 1000) {
+                            callback(res.data);
+                        } else {
+                            xtip.msg('加载数据出错！', {icon: 'e'});
+                        }
                     });
                 },
                 columns: [
@@ -199,90 +213,99 @@
                     }
                 ]
             });
-            const saveCourseGroupModal = $('#saveCourseGroupModal');
-            const saveOneCourseGroupInfoForm = $('#saveOneCourseGroupInfo');
-            saveOneCourseGroupInfoForm.bootstrapValidator({
+            $('#loadStudentIdsTxtBtn').on('click', () => {
+                const file = $('#loadStudentIdsTxtIpt')[0].files[0];
+                if (!window.FileReader) {
+                    xtip.msg('您的浏览器不支持文件读取！请更换浏览器重试。', {icon: 'e'});
+                    return;
+                }
+                if (NS.isNull(file)) {
+                    xtip.msg('未选择任何文件！', {icon: 'e'});
+                    return;
+                }
+                const loading = xtip.load('读取文件内容中...');
+                let reader = new FileReader();
+                reader.readAsText(file);
+                reader.onloadend = (e) => {
+                    if (e.target.readyState === FileReader.DONE) {
+                        Main.addCourseGroupInfo.studentIds = e.target.result;
+                        Main.loadStudentIdsTxtFormShow = false;
+                        xtip.close(loading);
+                    }
+                }
+            });
+            $('#closeStudentIdsTxtBtn').on('click', () => {
+                Main.loadStudentIdsTxtFormShow = false;
+            });
+            NS.showLoadStudentIdsTxt = () => {
+                Main.loadStudentIdsTxtFormShow = !Main.loadStudentIdsTxtFormShow;
+            };
+            const addCourseGroupForm = $('#addCourseGroupForm');
+            addCourseGroupForm.bootstrapValidator({
                 verbose: false,     /* 对field内的条件按顺序验证 */
                 message: '数据校验失败',
                 fields: {
-                    teacherRealName: {
-                        validators: {
-                            notEmpty: {
-                                message: '教师名不能为空'
-                            },
-                            stringLength: {
-                                min: 2,
-                                max: 5,
-                                message: '教师名不符合规定'
-                            }
-                        }
-                    },
                     courseGroupName: {
                         validators: {
                             notEmpty: {
-                                message: '课程名不能为空'
+                                message: '课群名不能为空'
                             },
                             stringLength: {
-                                min: 5,
+                                min: 6,
                                 max: 64,
-                                message: '课程名长度不符合规定'
+                                message: '课群名为6至64字符'
+                            }
+                        }
+                    },
+                    teacherId: {
+                        validators: {
+                            notEmpty: {
+                                message: '负责管理课群的教师不能为空'
+                            }
+                        }
+                    },
+                    studentIds: {
+                        validators: {
+                            callback: {
+                                message: '加入课群的学生信息填写不符合规定',
+                                callback: function (value, validator) {
+                                    let studentIds = new Set(value.split('\n'));
+                                    if (studentIds.size === 0) {
+                                        return false;
+                                    }
+                                    for (let val of studentIds.values()) {
+                                        if (!Main.testStudentId(val)) {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
                             }
                         }
                     }
                 }
             });
-            $('#saveCourseGroupInfoSubmit').on('click', () => {
-                const bootstrapValidator = saveOneCourseGroupInfoForm.data('bootstrapValidator');
+            $('#addCourseGroupBtn').on('click', () => {
+                const bootstrapValidator = addCourseGroupForm.data('bootstrapValidator');
                 if (bootstrapValidator.validate().isValid()) {
-                    const saveLoad = xtip.load(NS.isNull(Main.saveOneCourseGroupInfo.id) ? '添加中...' : '更新中');
-                    NS.post("/teachingSecretary/courseGroupManagement/saveOneCourseGroupInfo", {
-                        id: Main.saveOneCourseGroupInfo.id,
-                        teacherRealName: Main.saveOneCourseGroupInfo.teacherRealName,
-                        courseGroupName: Main.saveOneCourseGroupInfo.courseGroupName,
-                        description: Main.saveOneCourseGroupInfo.description,
-                        state:Main.saveOneCourseGroupInfo.state
+                    const adding = xtip.load('添加中...');
+                    NS.post('/teachingSecretary/courseGroupManagement/addCourseGroup', {
+                        courseGroupName: Main.addCourseGroupInfo.courseGroupName,
+                        teacherId: Main.addCourseGroupInfo.teacherId,
+                        description: Main.addCourseGroupInfo.description,
+                        studentIds: Main.addCourseGroupInfo.studentIds
                     }, (res) => {
                         if (res.code === 1000) {
-                            xtip.msg(NS.isNull(Main.saveOneCourseGroupInfo.id) ? '添加成功' : '更新成功', {icon: 's'});
+                            xtip.msg('添加成功！', {icon: 's'});
                             datatable.ajax.reload();
-                            if (NS.isNull(Main.saveOneCourseGroupInfo.id)) {
-                                Main.clearSaveOneCourseGroupInfo();
-                            } else {
-                                saveCourseGroupModal.modal('hide');
-                            }
+                            Main.clearAddCourseGroupInfo();
                         } else {
-                            xtip.msg(NS.isNull(Main.saveOneCourseGroupInfo.id) ? '添加失败' : '更新失败', {icon: 'e'});
+                            xtip.msg('添加失败！请检查输入是否正确。', {icon: 'e'});
                         }
-                        xtip.close(saveLoad);
+                        xtip.close(adding);
                     });
                 }
             });
-            saveCourseGroupModal.on('hide.bs.modal', () => {
-                Main.clearSaveOneCourseGroupInfo();
-            });
-            NS.updateCourseGroupInfo = (row) => {/* 更新课群信息信息 */
-                const data = datatable.row(row).data();
-                Main.saveOneCourseGroupInfo.id = data.id;
-                Main.saveOneCourseGroupInfo.teacherRealName = data.teacherRealName;
-                Main.saveOneCourseGroupInfo.courseGroupName = data.courseGroupName;
-                Main.saveOneCourseGroupInfo.description = data.description;
-                Main.saveOneCourseGroupInfo.state = data.state;
-                saveCourseGroupModal.modal('show');
-            };
-            NS.deleteCourseGroupInfo = (id) => {/*删除课群*/
-                xtip.confirm('你正在进行一个非常危险的操作！！<br/><b>确定删除吗？</b>', () => {
-                    const deleteLoad = xtip.load('删除中...');
-                    NS.post('/teachingSecretary/courseGroupManagement/deleteOneCourseGroupInfo', {id: id}, (res) => {
-                        if (res.code === 1000) {
-                            xtip.msg('删除成功！', {icon: 's'});
-                            datatable.ajax.reload();
-                        } else {
-                            xtip.msg('删除失败！', {icon: 'e'});
-                        }
-                        xtip.close(deleteLoad);
-                    });
-                }, {icon: 'w'})
-            }
         });
     </script>
 </#assign>

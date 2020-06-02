@@ -63,6 +63,28 @@ public interface UserService {
     UserEntity findUserByRealName(String realName);
 
     /**
+     * 根据用户id删除用户
+     *
+     * @param currentUserIsAdmin 当前操作的用户是否是超级管理员
+     * @param userId             用户id
+     * @return true|false
+     */
+    boolean deleteUserById(Boolean currentUserIsAdmin, Integer userId);
+
+    /**
+     * 更新用户的基本信息
+     *
+     * @param currentUserIsAdmin 当前操作的用户是否是超级管理员
+     * @param userId             用户id
+     * @param realName           姓名
+     * @param sex                用户性别
+     * @param email              邮箱地址
+     * @param phone              手机号
+     * @return true|false
+     */
+    boolean updateUserById(Boolean currentUserIsAdmin, Integer userId, String realName, Character sex, String email, String phone);
+
+    /**
      * 设置皮肤
      *
      * @param user     需要设置的用户

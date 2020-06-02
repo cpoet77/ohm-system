@@ -17,17 +17,18 @@ import java.time.LocalDateTime;
 public class CourseGroupVo implements Serializable {
     private Integer id;//课程id;
 
+    private String courseGroupName;//课群名
+
     private Integer teacherId;//教师id
 
-    private String teacherRealName;//教师名
-
-
-    private String courseGroupName;//课程名
+    private String teacherRealName;//教师姓名
 
     private String description;//课程描述
 
-    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
-    private LocalDateTime datetime;//创建课群时间
+    private Long countStudent;//统计学生数
 
-    private String state;//课群状态
+    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
+    private LocalDateTime datetime;//创建课群的时间
+
+    private Boolean state;//课群状态
 }

@@ -2,6 +2,8 @@
 package cs.ohms.subsystem.repository;
 
 import cs.ohms.subsystem.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -14,4 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaS
     UserEntity findByName(String name);
 
     UserEntity findByRealName(String realName);
+
+    Page<UserEntity> findByRealNameIsLikeAndTeacherIsNotNull(String realName, Pageable pageable);
 }

@@ -2,6 +2,7 @@
 package cs.ohms.subsystem.validation;
 
 
+import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.validation.annotation.NSPhone;
 
 import javax.validation.ConstraintValidator;
@@ -14,7 +15,7 @@ import javax.validation.ConstraintValidatorContext;
 public class NSPhoneValidation implements ConstraintValidator<NSPhone, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if(null == value){
+        if(NStringUtil.isEmpty(value)){
             return true;
         }
         String regex = "^((1[358][0-9])|(14[57])|(17[0678]))\\d{8}$";

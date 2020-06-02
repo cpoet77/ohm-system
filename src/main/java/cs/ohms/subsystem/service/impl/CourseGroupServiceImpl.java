@@ -2,10 +2,12 @@ package cs.ohms.subsystem.service.impl;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CourseGroupEntity;
+import cs.ohms.subsystem.entity.StudentEntity;
 import cs.ohms.subsystem.entity.TeacherEntity;
 import cs.ohms.subsystem.repository.CourseGroupRepository;
+import cs.ohms.subsystem.repository.StudentRepository;
+import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.service.CourseGroupService;
-import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.viewobject.CourseGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 2020/5/23 23:23
@@ -28,12 +31,15 @@ import java.util.Optional;
 @Slf4j
 public class CourseGroupServiceImpl implements CourseGroupService {
     private CourseGroupRepository courseGroupRepository;
-    private TeacherService teacherService;
+    private TeacherRepository teacherRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    public CourseGroupServiceImpl(CourseGroupRepository courseGroupRepository, TeacherService teacherService) {
+    public CourseGroupServiceImpl(CourseGroupRepository courseGroupRepository, TeacherRepository teacherRepository
+            , StudentRepository studentRepository) {
         this.courseGroupRepository = courseGroupRepository;
-        this.teacherService = teacherService;
+        this.teacherRepository = teacherRepository;
+        this.studentRepository = studentRepository;
     }
 
 
@@ -43,7 +49,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     }
 
     @Override
-    public ResponseResult getCourseGroupByPage (int start, int length) {
+    public ResponseResult getCourseGroupByPage(int start, int length) {
         int page = (int) Math.ceil((double) start / length);
         Page<CourseGroupEntity> courseGroups = courseGroupRepository
                 .findAll(PageRequest.of(page, length, Sort.Direction.ASC, "createTime"));
@@ -56,7 +62,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
                     .setDescription(courseGroup.getDescription())
                     .setId(courseGroup.getId())
                     .setTeacherId(courseGroup.getTeacher().getUser().getId())
-                    .setState(!courseGroup.getState() ? "已结束" : "正在进行中");
+                    .setState(courseGroup.getState());
             BeanUtils.copyProperties(courseGroup, courseGroupVo);
             courseGroupVos.add(courseGroupVo);
         });
@@ -65,40 +71,37 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     }
 
     @Override
+    public boolean addCourseGroup(String courseGroupName, String teacherId, String description, Set<String> studentIds) {
+        Optional<TeacherEntity> teacherOpt = teacherRepository.findById(teacherId);
+        if (!teacherOpt.isPresent()) {
+            return false;
+        }
+        List<StudentEntity> students = studentRepository.findAllById(studentIds);
+        if (students.size() != studentIds.size()) {/* 并非所有的学生都存在 */
+            log.info("添加课群出现未定义的学生");
+            return false;
+        }
+        CourseGroupEntity courseGroup = new CourseGroupEntity().setName(courseGroupName).setDescription(description)
+                .setTeacher(teacherOpt.get()).setState(true);
+        if (!courseGroup.getStudents().addAll(students)) {
+            return false;
+        }
+        return saveCourseGroup(courseGroup);
+    }
+
+    @Override
     public boolean saveCourseGroup(CourseGroupEntity courseGroup) {
-        try{
+        try {
             courseGroupRepository.save(courseGroup);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("保存课程信息失败,msg:{}", e.getLocalizedMessage());
         }
         return false;
     }
 
     @Override
-    public boolean saveCourseGroup (Integer id, String teacherRealName,String courseGroupName,  String description, String state) {
-        TeacherEntity teacher = teacherService.findTeacherByRealName(teacherRealName);
-        if(null == teacher){
-            return false;
-        }
-        if(id == null) {
-         return saveCourseGroup(new CourseGroupEntity()
-                    .setName(courseGroupName)
-                    .setTeacher(teacher)
-                    .setDescription(description)
-                    .setState(state.equals("正在进行中")));
-        }
-        Optional<CourseGroupEntity> optionalCourseGroup = courseGroupRepository.findById(id);
-        return optionalCourseGroup.filter(courseGroupEntity ->
-                saveCourseGroup(courseGroupEntity
-                        .setName(courseGroupName)
-                        .setTeacher(teacher)
-                        .setDescription(description)
-                        .setState(state.equals("正在进行中")))).isPresent();
-    }
-
-    @Override
-    public boolean deleteCourseGroup (Integer id) {
+    public boolean deleteCourseGroup(Integer id) {
         try {
             courseGroupRepository.deleteById(id);
             return true;
