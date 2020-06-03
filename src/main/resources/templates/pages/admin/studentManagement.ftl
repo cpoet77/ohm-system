@@ -444,7 +444,7 @@
                         email: {
                             validators: {
                                 regexp: {
-                                    regexp: /^[a-zA-Z][\w.]{1,30}@[a-zA-Z]\w{1,50}\.((cn)|(com)|(org))$/,
+                                    regexp: /^[0-9a-zA-Z][\w.]{1,30}@[a-zA-Z]\w{1,50}\.((cn)|(com)|(org))$/,
                                     message: '邮箱地址格式错误'
                                 }
                             }
