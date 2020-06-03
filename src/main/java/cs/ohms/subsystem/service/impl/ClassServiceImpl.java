@@ -64,6 +64,15 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public List<ClassVo> getAllClassByMajor(Integer majorId) {
+        List<ClassEntity> classEntities = classRepository.findAllByMajor_Id(majorId);
+        List<ClassVo> classVos = new ArrayList<>();
+        classEntities.forEach(clazz -> classVos.add(new ClassVo().setId(clazz.getId())
+                .setName(clazz.getName())));
+        return classVos;
+    }
+
+    @Override
     public boolean saveClass(ClassEntity classEntity) {
         try {
             classRepository.save(classEntity);

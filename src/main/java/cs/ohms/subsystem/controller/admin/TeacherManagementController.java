@@ -90,7 +90,7 @@ public class TeacherManagementController {
     public ResponseResult saveTeacher(@RequestParam("userId") @Min(1) Integer userId
             , @RequestParam("teacherId") @NotEmpty @Length(min = 6, max = 24) String teacherId
             , @RequestParam("realName") @NotEmpty @Length(min = 2, max = 5) String realName
-            , @RequestParam("sex") @NSCharCheck(value = {'M', 'F'}, message = "性别不正确") Character sex
+            , @RequestParam("sex") @NotNull @NSCharCheck(value = {'M', 'F'}, message = "性别不正确") Character sex
             , @RequestParam("phone") @NSPhone(message = "手机号格式错误") String phone
             , @RequestParam("email") @NSEmail(message = "邮箱格式错误") String email) {
         return (teacherService.saveTeacher(SecurityUtils.getSubject().hasRole(UserService.USER_ADMIN_ROLE), userId
@@ -114,7 +114,7 @@ public class TeacherManagementController {
     @PostMapping("/changeTeachingSecretaryRole")
     @ResponseBody
     @RequiresRoles({"admin"})
-    public ResponseResult changeTeachingSecretaryRole(@RequestParam("userId") @NotNull @Min(1) Integer userId){
+    public ResponseResult changeTeachingSecretaryRole(@RequestParam("userId") @NotNull @Min(1) Integer userId) {
         return (teacherService.changeTeachingSecretaryRole(userId) ? ResponseResult.enSuccess() : ResponseResult.enFail());
     }
 }

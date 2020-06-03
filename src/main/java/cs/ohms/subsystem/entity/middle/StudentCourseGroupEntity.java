@@ -29,8 +29,8 @@ public class StudentCourseGroupEntity implements Serializable {
     @Embeddable
     @MappedSuperclass
     public static class Key implements Serializable {
-        @Column(name = "user_id", nullable = false)
-        private Integer userId; // 用户id
+        @Column(name = "student_id", nullable = false)
+        private Integer studentId; // 学号
 
         @Column(name = "course_group_id", nullable = false)
         private String courseGroupId; // 课群id

@@ -24,9 +24,9 @@ public class StudentVo implements Serializable {
 
     private Character sex; //性别
 
-    private String className;//班级名
-
     private Integer classId;//班级id
+
+    private String className;//班级名
 
     private Integer collegeId;//学院id
 
@@ -36,4 +36,9 @@ public class StudentVo implements Serializable {
 
     private String majorName;//专业名
 
+    private String email;//邮箱
+
+    private String phone;//手机号
+
+    private Integer countJoinCourseGroup;//加入的课群数量
 }

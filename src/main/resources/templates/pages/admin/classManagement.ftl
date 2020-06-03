@@ -91,7 +91,7 @@
                                                v-model="saveOneClassInfo.className" placeholder="请输入班级名">
                                     </div>
                                     <div class="form-group">
-                                        <label>选择学院</label>
+                                        <label>学院</label>
                                         <select class="form-control" name="collegeId"
                                                 v-model="saveOneClassInfo.collegeId">
                                             <option v-for="collegeInfo in collegeInfoList" :key="collegeInfo.id"
@@ -100,7 +100,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label>选择专业</label>
+                                        <label>专业</label>
                                         <select class="form-control" name="majorId"
                                                 v-model="saveOneClassInfo.majorId">
                                             <option v-for="majorInfo in majorInfoList" :key="majorInfo.id"
@@ -143,7 +143,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group" v-if="filterCollegeId != -1">
-                                        <label>专业学院</label>
+                                        <label>选择专业</label>
                                         <select class="form-control" v-model="filterMajorId">
                                             <option value="-1">所有专业</option>
                                             <option v-for="majorInfo in majorInfoList" :key="majorInfo.id"

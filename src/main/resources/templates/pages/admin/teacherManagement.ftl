@@ -316,7 +316,7 @@
                 const bootstrapValidator = saveTeacherInfoForm.data('bootstrapValidator');
                 if (bootstrapValidator.validate().isValid()) {
                     const saveLoad = xtip.load(NS.isNull(Main.saveTeacherInfo.userId) ? '添加中...' : '更新中');
-                    NS.post("/teachingSecretary/teacherManagement/saveTeacher", Main.saveTeacherInfo, (res) => {
+                    NS.post('/teachingSecretary/teacherManagement/saveTeacher', Main.saveTeacherInfo, (res) => {
                         if (res.code === 1000) {
                             xtip.msg(NS.isNull(Main.saveTeacherInfo.userId) ? '添加成功' : '更新成功', {icon: 's'});
                             datatable.ajax.reload();

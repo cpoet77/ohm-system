@@ -90,7 +90,7 @@
                                                v-model="saveOneMajorInfo.name" placeholder="请输入专业名">
                                     </div>
                                     <div class="form-group">
-                                        <label>选择学院</label>
+                                        <label>学院</label>
                                         <select class="form-control" name="collegeId"
                                                 v-model="saveOneMajorInfo.collegeId">
                                             <option v-for="collegeInfo in collegeInfoList" :key="collegeInfo.id"

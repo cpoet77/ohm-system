@@ -2,6 +2,9 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.ClassEntity;
+import cs.ohms.subsystem.viewobject.ClassVo;
+
+import java.util.List;
 
 /**
  * 2020/5/30 14:18
@@ -12,14 +15,21 @@ public interface ClassService {
     /**
      * 分页获取班级信息
      *
-     * @param collegeId  学院id
-     * @param majorId 专业id
-     * @param start   开始位置
-     * @param length  长度
+     * @param collegeId 学院id
+     * @param majorId   专业id
+     * @param start     开始位置
+     * @param length    长度
      * @return ResponseResult
      */
     ResponseResult getClassByCollegeAndMajorAndPage(Integer collegeId, Integer majorId, Integer start, Integer length);
 
+    /**
+     * 根据专业获取班级信息
+     *
+     * @param majorId 专业id
+     * @return classVo for list
+     */
+    List<ClassVo> getAllClassByMajor(Integer majorId);
 
     /**
      * 保存班级信息

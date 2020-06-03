@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentCourseGroupRepository extends JpaRepository<StudentCourseGroupEntity, StudentCourseGroupEntity.Key>
         , JpaSpecificationExecutor<StudentCourseGroupEntity> {
+
 }
