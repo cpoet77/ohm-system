@@ -74,6 +74,11 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public int calculatePageNum(int start, int size) {
+        return ((int) Math.ceil((double) start / size));
+    }
+
+    @Override
     public boolean isDemandXlsFile(@NotNull MultipartFile file) {
         return (!file.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(file.getOriginalFilename())));
     }

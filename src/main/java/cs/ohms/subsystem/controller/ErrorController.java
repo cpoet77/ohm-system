@@ -107,11 +107,13 @@ public class ErrorController {
     public String unauthenticatedException(@NotNull UnauthenticatedException e, @NotNull HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
         String url = request.getRequestURL().toString();
+        String queryStr = request.getQueryString();
         log.info("{}, url : {}", e.getLocalizedMessage(), url);
         if (subject.isAuthenticated()) {
             return "error/404";
         } else {
-            return NStringUtil.joint("redirect:/login?backUrl={}", url);
+            return NStringUtil.joint("redirect:/login?backUrl={}", NStringUtil.isEmpty(queryStr) ? url
+                    : NStringUtil.joint("{}?{}", url, queryStr));
         }
     }
 }

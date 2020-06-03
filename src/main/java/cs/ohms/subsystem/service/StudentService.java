@@ -83,6 +83,51 @@ public interface StudentService {
     ResponseResult getStudentListByMajorAndPage(Integer majorId, Integer page, Integer size);
 
     /**
+     * 分页获取课群下的学生
+     *
+     * @param courseGroupId 课群id
+     * @param studentId     用于搜索的学号
+     * @param page          页号
+     * @param size          数量
+     * @return ResponseResult
+     */
+    ResponseResult getCourseGroupStudentListByStudentId(Integer courseGroupId, String studentId, Integer page, Integer size);
+
+    /**
+     * 分页获取课群下的学生
+     *
+     * @param courseGroupId 课群id
+     * @param studentName   用于搜索的学生姓名
+     * @param page          页号
+     * @param size          数量
+     * @return ResponseResult
+     */
+    ResponseResult getCourseGroupStudentListByName(Integer courseGroupId, String studentName, Integer page, Integer size);
+
+    /**
+     * 分页获取课群下的学生
+     *
+     * @param courseGroupId 课群id
+     * @param studentId     用于搜索的学号
+     * @param studentName   用于搜索的学生姓名
+     * @param isAnd         搜索条件关系,非and即or
+     * @param page          页号
+     * @param size          数量
+     * @return ResponseResult
+     */
+    ResponseResult getCourseGroupStudentList(Integer courseGroupId, String studentId, String studentName, Boolean isAnd, Integer page, Integer size);
+
+    /**
+     * 分页获取课群下的学生
+     *
+     * @param courseGroupId 课群id
+     * @param page          页号
+     * @param size          数量
+     * @return ResponseResult
+     */
+    ResponseResult getCourseGroupStudentList(Integer courseGroupId, Integer page, Integer size);
+
+    /**
      * 根据学院查询学生信息
      *
      * @param collegeId 学院id

@@ -89,7 +89,7 @@
                                 <form id="saveTeacherInfoForm">
                                     <div class="form-group">
                                         <label for="teacherId">教职工号</label>
-                                        <input name="teacherId" type="text" class="form-control" id="teacherId"
+                                        <input name="teacherId" type="number" class="form-control" id="teacherId"
                                                v-model="saveTeacherInfo.teacherId" placeholder="请输入教职工号"
                                                :disabled="saveTeacherInfo.userId !== null">
                                     </div>

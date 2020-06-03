@@ -85,8 +85,9 @@
                                 <form id="saveStudentFrom">
                                     <div class="form-group">
                                         <label for="studentId">学号</label>
-                                        <input name="studentId" type="text" class="form-control" id="studentId"
-                                               v-model="saveStudentInfo.studentId" placeholder="请输入学号">
+                                        <input name="studentId" type="number" class="form-control" id="studentId"
+                                               v-model="saveStudentInfo.studentId" placeholder="请输入学号"
+                                               :disabled="saveStudentInfo.userId !== null">
                                     </div>
                                     <div class="form-group">
                                         <label for="realName">姓名</label>

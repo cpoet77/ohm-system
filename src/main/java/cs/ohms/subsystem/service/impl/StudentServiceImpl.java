@@ -13,6 +13,7 @@ import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.repository.UserRepository;
 import cs.ohms.subsystem.service.StudentService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.StudentVo;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -144,6 +145,64 @@ public class StudentServiceImpl implements StudentService {
     public ResponseResult getStudentListByMajorAndPage(Integer majorId, Integer page, Integer size) {
         try {
             Page<StudentEntity> studentPage = studentRepository.findByMajor_Id(majorId, PageRequest.of(page, size));
+            List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+                    .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
+        } catch (Exception e) {
+            log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
+        }
+        return ResponseResult.enFail();
+    }
+
+    @Override
+    public ResponseResult getCourseGroupStudentListByStudentId(Integer courseGroupId, String studentId, Integer page, Integer size) {
+        try {
+            Page<StudentEntity> studentPage = studentRepository.findByCourseGroupIdAndStudentIdIsLike(courseGroupId
+                    , NStringUtil.joint("%{}%", studentId), PageRequest.of(page, size));
+            List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+                    .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
+        } catch (Exception e) {
+            log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
+        }
+        return ResponseResult.enFail();
+    }
+
+    @Override
+    public ResponseResult getCourseGroupStudentListByName(Integer courseGroupId, String studentName, Integer page, Integer size) {
+        try {
+            Page<StudentEntity> studentPage = studentRepository.findByCourseGroupIdAndUserRealNameLike(courseGroupId
+                    , NStringUtil.joint("%{}%", studentName), PageRequest.of(page, size));
+            List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+                    .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
+        } catch (Exception e) {
+            log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
+        }
+        return ResponseResult.enFail();
+    }
+
+    @Override
+    public ResponseResult getCourseGroupStudentList(Integer courseGroupId, String studentId, String studentName, Boolean isAnd, Integer page, Integer size) {
+        try {
+
+            Page<StudentEntity> studentPage = isAnd ? studentRepository.findByCourseGroupIdAndUserRealNameLikeAndStudentIdIsLike(courseGroupId
+                    , NStringUtil.joint("%{}%", studentId), NStringUtil.joint("%{}%", studentName), PageRequest.of(page, size))
+                    : studentRepository.findByCourseGroupIdAndUserRealNameLikeOrStudentIdIsLike(courseGroupId
+                    , NStringUtil.joint("%{}%", studentId), NStringUtil.joint("%{}%", studentName), PageRequest.of(page, size));
+            List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+                    .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
+        } catch (Exception e) {
+            log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
+        }
+        return ResponseResult.enFail();
+    }
+
+    @Override
+    public ResponseResult getCourseGroupStudentList(Integer courseGroupId, Integer page, Integer size) {
+        try {
+            Page<StudentEntity> studentPage = studentRepository.findByCourseGroupId(courseGroupId, PageRequest.of(page, size));
             List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
             return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
                     .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));

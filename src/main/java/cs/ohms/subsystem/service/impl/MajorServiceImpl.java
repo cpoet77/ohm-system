@@ -7,6 +7,7 @@ import cs.ohms.subsystem.repository.CollegeRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.MajorService;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.viewobject.MajorVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -33,12 +34,14 @@ public class MajorServiceImpl implements MajorService {
     private MajorRepository majorRepository;
     private StudentRepository studentRepository;
     private CollegeRepository collegeRepository;
+    private ResourceService resourceService;
 
     @Autowired
-    public MajorServiceImpl(MajorRepository majorRepository, StudentRepository studentRepository, CollegeRepository collegeRepository) {
+    public MajorServiceImpl(MajorRepository majorRepository, StudentRepository studentRepository, CollegeRepository collegeRepository, ResourceService resourceService) {
         this.majorRepository = majorRepository;
         this.studentRepository = studentRepository;
         this.collegeRepository = collegeRepository;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -56,8 +59,8 @@ public class MajorServiceImpl implements MajorService {
 
     @Override
     public ResponseResult getMajorByCollegeAndPage(Integer collegeId, int start, int length) {
-        int page = (int) Math.ceil((double) start / length);
-        Pageable pageable = PageRequest.of(page, length, Sort.Direction.DESC, "datetime");
+        Pageable pageable = PageRequest.of(resourceService.calculatePageNum(start, length), length, Sort.Direction.DESC
+                , "datetime");
         Page<MajorEntity> majors = (collegeId == null ? majorRepository.findAll(pageable) : majorRepository.findByCollege_Id(collegeId, pageable));
         List<MajorVo> majorVos = new ArrayList<>();
         majors.forEach(major -> {

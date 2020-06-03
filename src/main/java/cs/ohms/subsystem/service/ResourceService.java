@@ -49,6 +49,15 @@ public interface ResourceService {
     boolean isConfidentialFileFormat(String fix);
 
     /**
+     * 计算页码
+     *
+     * @param start 起点
+     * @param size  每一页的数量
+     * @return page num
+     */
+    int calculatePageNum(int start, int size);
+
+    /**
      * 判断上传的表格文件是否满足要求
      *
      * @param file MultipartFile

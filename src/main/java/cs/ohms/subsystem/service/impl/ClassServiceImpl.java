@@ -7,6 +7,7 @@ import cs.ohms.subsystem.repository.ClassRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.ClassService;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.viewobject.ClassVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +33,21 @@ public class ClassServiceImpl implements ClassService {
     private ClassRepository classRepository;
     private StudentRepository studentRepository;
     private MajorRepository majorRepository;
+    private ResourceService resourceService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, MajorRepository majorRepository) {
+    public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, MajorRepository majorRepository
+            , ResourceService resourceService) {
         this.classRepository = classRepository;
         this.studentRepository = studentRepository;
         this.majorRepository = majorRepository;
+        this.resourceService = resourceService;
     }
 
 
     @Override
     public ResponseResult getClassByCollegeAndMajorAndPage(Integer collegeId, Integer majorId, Integer start, Integer length) {
-        int page = (int) Math.ceil((double) start / length);
-        Pageable pageable = PageRequest.of(page, length, Sort.Direction.DESC, "datetime");
+        Pageable pageable = PageRequest.of(resourceService.calculatePageNum(start, length), length, Sort.Direction.DESC, "datetime");
         Page<ClassEntity> classEntities = (majorId == -1 ? (collegeId == -1 ? classRepository.findAll(pageable)
                 : classRepository.findAllByCollege_Id(collegeId, pageable)) : classRepository.findAllByMajor_Id(majorId, pageable));
         List<ClassVo> classVos = new ArrayList<>();

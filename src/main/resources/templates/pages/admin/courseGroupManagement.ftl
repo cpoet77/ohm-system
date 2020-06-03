@@ -19,7 +19,6 @@
         <section class="content-header">
             <h1>
                 课群管理
-                <!--<small>advanced tables</small>-->
             </h1>
             <ol class="breadcrumb">
                 <li><a href="/teachingSecretary"><i class="fa fa-dashboard"></i>控制台</a></li>
@@ -92,7 +91,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="teacherId">教职工号</label>
-                                    <input name="teacherId" type="text" class="form-control" id="teacherId"
+                                    <input name="teacherId" type="number" class="form-control" id="teacherId"
                                            v-model="addCourseGroupInfo.teacherId" placeholder="请输入课群教师的教职工号">
                                 </div>
                                 <div class="form-group">
@@ -200,15 +199,20 @@
                 },
                 columns: [
                     {data: 'id'},
-                    {data: 'teacherRealName'},
                     {data: 'courseGroupName'},
-                    {data: 'description'},
+                    {data: 'teacherRealName'},
+                    {data: 'countStudent'},
                     {data: 'datetime'},
-                    {data: 'state'},
                     {
                         data: null,
                         render: (data, type, row, meta) => {
-                            return '<div class="btn-group-sm"><button onclick="NS.updateCourseGroupInfo(' + meta.row + ')" type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i></button> <button type="button" class="btn btn-danger btn-sm" onclick="NS.deleteCourseGroupInfo(' + data.id + ')"><i class="fa fa-trash-o"></i></button></div>';
+                            return (data.state ? '已开启' : '已关闭');
+                        }
+                    },
+                    {
+                        data: null,
+                        render: (data, type, row, meta) => {
+                            return '<div class="btn-group-sm"><button onclick="NS.viewCourseGroupInfo(' + meta.row + ')" type="button" class="btn bg-navy btn-sm"><i class="fa  fa-eye"></i></button> <button onclick="NS.updateCourseGroupInfo(' + meta.row + ')" type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i></button> <button type="button" class="btn btn-danger btn-sm" onclick="NS.deleteCourseGroupInfo(' + data.id + ')"><i class="fa fa-trash-o"></i></button></div>';
                         }
                     }
                 ]
@@ -306,6 +310,10 @@
                     });
                 }
             });
+            NS.viewCourseGroupInfo = (row) => {
+                const courseGroup = datatable.row(row).data();
+                NS.to("/teachingSecretary/courseGroupManagement?courseGroup=" + courseGroup.id)
+            }
         });
     </script>
 </#assign>

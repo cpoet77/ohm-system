@@ -1,6 +1,8 @@
 package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
+import cs.ohms.subsystem.entity.CourseGroupEntity;
+import cs.ohms.subsystem.exception.NSRuntimeException;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -43,8 +46,15 @@ public class CourseGroupManagementController {
      * @return view
      */
     @GetMapping
-    public String index() {
-        return "pages/admin/courseGroupManagement";
+    public ModelAndView index(@RequestParam(value = "courseGroup", required = false) @Min(1) Integer courseGroupId) {
+        if (courseGroupId != null) {
+            CourseGroupEntity courseGroup = courseGroupService.findById(courseGroupId);
+            if (courseGroup == null) {
+                throw new NSRuntimeException("正在查看不存在的课群详情！");
+            }
+            return (new ModelAndView("pages/admin/courseGroupManagementInfo").addObject("courseGroup", courseGroup));
+        }
+        return new ModelAndView("pages/admin/courseGroupManagement");
     }
 
     /**
@@ -78,12 +88,47 @@ public class CourseGroupManagementController {
             , @RequestParam("teacherId") @NotEmpty String teacherId
             , @RequestParam("description") String description
             , @RequestParam("studentIds") @NotNull @NotEmpty String studentIdsStr) {
-        Set<String> studentIds = new HashSet<>(Arrays.asList(studentIdsStr.split("\n")));
-        if (studentService.testStudentId(studentIds)) {
+        Set<String> studentIds = new HashSet<>(Arrays.asList(studentIdsStr.split("\n|(\r\n)|\r")));
+        if (!studentService.testStudentId(studentIds)) {
             return ResponseResult.enFail();
         }
         return courseGroupService.addCourseGroup(courseGroupName, teacherId, description, studentIds)
                 ? ResponseResult.enSuccess() : ResponseResult.enFail();
+    }
+
+    /**
+     * 添加学生到指定的课群当中
+     *
+     * @param courseGroupId 课群id
+     * @param studentIdsStr 学号列表
+     * @return ResponseResult
+     */
+    @PostMapping("/addStudentToCourseGroup")
+    @ResponseBody
+    public ResponseResult addStudentToCourseGroup(@RequestParam("courseGroupId") @NotNull @Min(1) Integer courseGroupId
+            , @RequestParam("studentIds") @NotNull @NotEmpty String studentIdsStr) {
+        Set<String> studentIds = new HashSet<>(Arrays.asList(studentIdsStr.split("\n|(\r\n)|\r")));
+        if (!studentService.testStudentId(studentIds)) {
+            return ResponseResult.enFail();
+        }
+        return courseGroupService.addStudent2CourseGroup(courseGroupId, studentIds) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+    }
+
+    /**
+     * 将学生从指定课群中移除
+     *
+     * @param courseGroupId 课群id
+     * @param studentId     学号
+     * @return ResponseResult
+     */
+    @PostMapping("/removeStudentForCourseGroup")
+    @ResponseBody
+    public ResponseResult removeStudentForCourseGroup(@RequestParam("courseGroupId") @NotNull @Min(1) Integer courseGroupId
+            , @RequestParam("studentId") @NotNull @Length(min = 12, max = 12) String studentId) {
+        if (studentService.testStudentId(studentId)) {
+            return courseGroupService.removeStudentByStudentId(courseGroupId, studentId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+        }
+        return ResponseResult.enFail();
     }
 
     /**

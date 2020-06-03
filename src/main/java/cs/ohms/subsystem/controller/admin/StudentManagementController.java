@@ -1,8 +1,10 @@
 package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.StudentService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.validation.annotation.NSCharCheck;
 import cs.ohms.subsystem.validation.annotation.NSEmail;
 import cs.ohms.subsystem.validation.annotation.NSPhone;
@@ -33,11 +35,13 @@ import javax.validation.constraints.NotEmpty;
 public class StudentManagementController {
     private StudentService studentService;
     private UserService userService;
+    private ResourceService resourceService;
 
     @Autowired
-    public StudentManagementController(StudentService studentService, UserService userService) {
+    public StudentManagementController(StudentService studentService, UserService userService, ResourceService resourceService) {
         this.studentService = studentService;
         this.userService = userService;
+        this.resourceService = resourceService;
     }
 
     /**
@@ -69,7 +73,7 @@ public class StudentManagementController {
             , @RequestParam("collegeId") @NotNull @Min(-1) Integer collegeId
             , @RequestParam("majorId") @NotNull @Min(-1) Integer majorId
             , @RequestParam("classId") @NotNull @Min(-1) Integer classId) {
-        int page = (int) Math.ceil((double) start / length);
+        int page = resourceService.calculatePageNum(start, length);
         if (classId > 0) {
             return studentService.getStudentListByClassAndPage(classId, page, length).add("draw", draw);
         } else if (majorId > 0) {
@@ -78,6 +82,42 @@ public class StudentManagementController {
             return studentService.getStudentListByCollegeAndPage(collegeId, page, length).add("draw", draw);
         }
         return studentService.getStudentListByPage(page, length).add("draw", draw);
+    }
+
+    /**
+     * 获取指定课群下的学生
+     * <p>支持通过学号和学生的姓名进行过滤</p>
+     *
+     * @param draw              获取次数
+     * @param start             起点位置
+     * @param length            数量
+     * @param courseGroupId     课群id
+     * @param filterStudentId   过滤学号
+     * @param filterStudentName 过滤学生姓名
+     * @param filterLogical     过滤关系，学号和姓名同时设置时有效
+     * @return ResponseResult
+     */
+    @PostMapping("/courseGroupStudentList")
+    @ResponseBody
+    public ResponseResult courseGroupStudentList(@RequestParam("draw") @NotNull @Min(1) Integer draw
+            , @RequestParam("start") @NotNull @Min(0) Integer start
+            , @RequestParam("length") @NotNull @Min(5) Integer length
+            , @RequestParam("courseGroupId") @NotNull @Min(1) Integer courseGroupId
+            , @RequestParam("filterStudentId") @Length(max = 12) String filterStudentId
+            , @RequestParam("filterStudentName") @Length(max = 5) String filterStudentName
+            , @RequestParam("filterLogical") @NotNull Integer filterLogical) {
+        int page = resourceService.calculatePageNum(start, length);
+        if (NStringUtil.isEmpty(filterStudentId)) {
+            if (NStringUtil.isEmpty(filterStudentName)) {
+                return studentService.getCourseGroupStudentList(courseGroupId, page, length).add("draw", draw);
+            }
+            return studentService.getCourseGroupStudentListByName(courseGroupId, filterStudentName, page, length).add("draw", draw);
+        }
+        if (!NStringUtil.isEmpty(filterStudentName)) {
+            return studentService.getCourseGroupStudentList(courseGroupId, filterStudentId, filterStudentName
+                    , filterLogical == 0, page, length).add("draw", draw);
+        }
+        return studentService.getCourseGroupStudentListByStudentId(courseGroupId, filterStudentId, page, length).add("draw", draw);
     }
 
     /**

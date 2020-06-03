@@ -13,6 +13,7 @@ import cs.ohms.subsystem.repository.RoleRepository;
 import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.repository.UserRepository;
 import cs.ohms.subsystem.repository.middle.UserRoleRepository;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.service.UserService;
 import cs.ohms.subsystem.utils.NStringUtil;
@@ -40,11 +41,12 @@ public class TeacherServiceImpl implements TeacherService {
     private RoleRepository roleRepository;
     private UserRoleRepository userRoleRepository;
     private PasswordCMP passwordCMP;
+    private ResourceService resourceService;
 
     @Autowired
     public TeacherServiceImpl(UserService userService, TeacherRepository teacherRepository, UserRepository userRepository
             , CourseGroupRepository courseGroupRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository
-            , PasswordCMP passwordCMP) {
+            , PasswordCMP passwordCMP, ResourceService resourceService) {
         this.userService = userService;
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
@@ -52,6 +54,7 @@ public class TeacherServiceImpl implements TeacherService {
         this.roleRepository = roleRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordCMP = passwordCMP;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -61,9 +64,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public ResponseResult findTeacherByTeacherNameAndPage(Integer start, Integer length, String findTeacherName) {
-        int page = (int) Math.ceil((double) start / length);
         Page<UserEntity> users = userRepository.findByRealNameIsLikeAndTeacherIsNotNull(NStringUtil.joint("%{}%", findTeacherName)
-                , PageRequest.of(page, length));
+                , PageRequest.of(resourceService.calculatePageNum(start, length), length));
         List<TeacherVo> teacherVos = new ArrayList<>();
         RoleEntity teacherRole = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert teacherRole != null;/* 永远成立的断言 */
@@ -80,8 +82,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public ResponseResult findTeacherByPage(Integer start, Integer length) {
-        int page = (int) Math.ceil((double) start / length);
-        Page<TeacherEntity> teachers = teacherRepository.findAll(PageRequest.of(page, length));
+        Page<TeacherEntity> teachers = teacherRepository.findAll(PageRequest.of(resourceService.calculatePageNum(start, length), length));
         List<TeacherVo> teacherVos = new ArrayList<>();
         RoleEntity role = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert role != null;
