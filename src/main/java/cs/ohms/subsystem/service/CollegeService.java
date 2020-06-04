@@ -55,11 +55,11 @@ public interface CollegeService {
     boolean deleteCollege(Integer id);
 
     /**
-     * 根据name查询college
-     * <p>在缓存有效期内，查找cache - database</p>
+     * 存在则返回，不存在则创建，失败返回null
      *
-     * @param name 学院名
-     * @return CollegeEntity
+     * @param identity 是否是管理员
+     * @param name    学院名
+     * @return CollegeEntity|null
      */
-    CollegeEntity findCollegeHasCacheByName(String name);
+    CollegeEntity addCollege(String identity, String name);
 }

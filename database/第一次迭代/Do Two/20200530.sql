@@ -263,5 +263,4 @@ INSERT INTO ohms_teacher(teacher_id, user_id)
 VALUES ('201742010122', 1);
 
 INSERT INTO ohms_user_role(user_id, role_id)
-VALUES (1, 1),
-       (1, 2);
+VALUES (1, 1);

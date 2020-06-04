@@ -1,12 +1,16 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/25.
 package cs.ohms.subsystem.service.impl;
 
-import cs.ohms.subsystem.entity.RoleEntity;
-import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.component.PasswordCMP;
+import cs.ohms.subsystem.entity.*;
 import cs.ohms.subsystem.repository.RoleRepository;
+import cs.ohms.subsystem.repository.StudentRepository;
+import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.repository.UserRepository;
 import cs.ohms.subsystem.service.AppService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.tableobject.StudentInfoTo;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
 import cs.ohms.subsystem.utils.NStringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +34,19 @@ public class UserServiceImpl implements UserService {
     private AppService appService;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private StudentRepository studentRepository;
+    private TeacherRepository teacherRepository;
+    private PasswordCMP passwordCMP;
 
     @Autowired
-    public UserServiceImpl(AppService appService, UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(AppService appService, UserRepository userRepository, RoleRepository roleRepository
+            , StudentRepository studentRepository, TeacherRepository teacherRepository, PasswordCMP passwordCMP) {
         this.appService = appService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
+        this.passwordCMP = passwordCMP;
     }
 
     @PostConstruct
@@ -65,6 +76,39 @@ public class UserServiceImpl implements UserService {
             log.warn("保存用户信息失败, msg : {}", e.getLocalizedMessage());
         }
         return false;
+    }
+
+    @Override
+    public void saveUserIsStudent(ClassEntity clazz, RoleEntity studentRole, StudentInfoTo studentInfoTo) {
+        try {
+            String salt = passwordCMP.produceSalt();
+            UserEntity user = new UserEntity().setName(createDefaultName(studentInfoTo.getStudentId()))
+                    .setRealName(studentInfoTo.getRealName()).setSex(studentInfoTo.getSex().equals("男") ? 'M' : 'F')
+                    .setSalt(salt).setPassword(passwordCMP.encryptPassword(studentInfoTo.getStudentId(), salt))
+                    .setEmail(studentInfoTo.getEmail()).setPhone(studentInfoTo.getPhone());
+            user.getRoles().add(studentRole);
+            studentRepository.save(new StudentEntity().setStudentId(studentInfoTo.getStudentId())
+                    .setUser(userRepository.save(user)).setClazz(clazz));
+        } catch (Exception e) {
+            log.warn("新增学生失败，studentInfoTo : {}, msg : {}", studentInfoTo.toString(), e.getLocalizedMessage());
+            throw new RuntimeException(e);/* 抛出运行时异常，实现回滚 */
+        }
+    }
+
+    @Override
+    public void saveUserIsTeacher(RoleEntity teacherRole, TeacherInfoTo teacherInfoTo) {
+        try {
+            String salt = passwordCMP.produceSalt();
+            UserEntity user = new UserEntity().setName(createDefaultName(teacherInfoTo.getTeacherId()))
+                    .setRealName(teacherInfoTo.getRealName()).setSex(teacherInfoTo.getSex().equals("男") ? 'M' : 'F')
+                    .setSalt(salt).setPassword(passwordCMP.encryptPassword(teacherInfoTo.getTeacherId(), salt))
+                    .setPhone(teacherInfoTo.getPhone()).setEmail(teacherInfoTo.getEmail());
+            user.getRoles().add(teacherRole);
+            teacherRepository.save(new TeacherEntity().setTeacherId(teacherInfoTo.getTeacherId()).setUser(userRepository.save(user)));
+        } catch (Exception e) {
+            log.warn("保存教师信息失败！teacher:{}, msg : {}", teacherInfoTo.toString(), e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

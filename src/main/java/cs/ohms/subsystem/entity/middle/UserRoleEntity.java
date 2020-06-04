@@ -33,6 +33,6 @@ public class UserRoleEntity implements Serializable {
         private Integer userId;
 
         @Column(name = "role_id", nullable = false)
-        private Byte roleId;
+        private Integer roleId;
     }
 }

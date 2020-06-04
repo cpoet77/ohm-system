@@ -6,13 +6,17 @@ import cs.ohms.subsystem.component.PasswordCMP;
 import cs.ohms.subsystem.entity.RoleEntity;
 import cs.ohms.subsystem.entity.TeacherEntity;
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.entity.middle.UserRoleEntity;
 import cs.ohms.subsystem.exception.NSRuntimePostException;
 import cs.ohms.subsystem.repository.CourseGroupRepository;
 import cs.ohms.subsystem.repository.RoleRepository;
 import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.repository.UserRepository;
+import cs.ohms.subsystem.repository.middle.UserRoleRepository;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
 import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.TeacherVo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,17 +41,22 @@ public class TeacherServiceImpl implements TeacherService {
     private UserRepository userRepository;
     private CourseGroupRepository courseGroupRepository;
     private RoleRepository roleRepository;
+    private UserRoleRepository userRoleRepository;
     private PasswordCMP passwordCMP;
+    private ResourceService resourceService;
 
     @Autowired
     public TeacherServiceImpl(UserService userService, TeacherRepository teacherRepository, UserRepository userRepository
-            , CourseGroupRepository courseGroupRepository, RoleRepository roleRepository, PasswordCMP passwordCMP) {
+            , CourseGroupRepository courseGroupRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository
+            , PasswordCMP passwordCMP, ResourceService resourceService) {
         this.userService = userService;
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
         this.courseGroupRepository = courseGroupRepository;
         this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
         this.passwordCMP = passwordCMP;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -56,9 +66,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public ResponseResult findTeacherByTeacherNameAndPage(Integer start, Integer length, String findTeacherName) {
-        int page = (int) Math.ceil((double) start / length);
         Page<UserEntity> users = userRepository.findByRealNameIsLikeAndTeacherIsNotNull(NStringUtil.joint("%{}%", findTeacherName)
-                , PageRequest.of(page, length));
+                , PageRequest.of(resourceService.calculatePageNum(start, length), length));
         List<TeacherVo> teacherVos = new ArrayList<>();
         RoleEntity teacherRole = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert teacherRole != null;/* 永远成立的断言 */
@@ -75,8 +84,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public ResponseResult findTeacherByPage(Integer start, Integer length) {
-        int page = (int) Math.ceil((double) start / length);
-        Page<TeacherEntity> teachers = teacherRepository.findAll(PageRequest.of(page, length));
+        Page<TeacherEntity> teachers = teacherRepository.findAll(PageRequest.of(resourceService.calculatePageNum(start, length), length));
         List<TeacherVo> teacherVos = new ArrayList<>();
         RoleEntity role = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert role != null;
@@ -113,6 +121,48 @@ public class TeacherServiceImpl implements TeacherService {
             log.warn("新增教师失败！msg : {}", e.getLocalizedMessage());
             throw new NSRuntimePostException(e);
         }
+    }
+
+    @Override
+    public List<TeacherInfoTo> importTeacherInfoForTable(InputStream in) {
+        try {
+            List<TeacherInfoTo> failList = new ArrayList<>();
+            RoleEntity teacherRole = roleRepository.findByName(UserService.USER_TEACHER_ROLE);
+            assert teacherRole != null;
+            List<TeacherInfoTo> teacherInfoTos = resourceService.inputStreamToTable(TeacherInfoTo.class, in);
+            if (teacherInfoTos.isEmpty()) {
+                return null;
+            }
+            teacherInfoTos.forEach(t -> {
+                try {
+                    userService.saveUserIsTeacher(teacherRole, t);
+                } catch (Exception e) {
+                    failList.add(t);/* 添加失败 */
+                }
+            });
+            return failList;
+        } catch (Exception e) {
+            log.warn("教师信息导入失败！", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean changeTeachingSecretaryRole(Integer userId) {
+        RoleEntity teachingSecretaryRole = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
+        assert teachingSecretaryRole != null;
+        UserRoleEntity.Key userRoleKey = new UserRoleEntity.Key().setUserId(userId).setRoleId(teachingSecretaryRole.getId());
+        try {
+            if (userRoleRepository.existsById(userRoleKey)) {
+                userRoleRepository.deleteById(userRoleKey);
+            } else {
+                userRoleRepository.save(new UserRoleEntity().setId(userRoleKey));
+            }
+            return true;
+        } catch (Exception e) {
+            log.warn("清除或者添加教学秘书权限失败！msg : {}", e.getLocalizedMessage());
+        }
+        return false;
     }
 
     @Override

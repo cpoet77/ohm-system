@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 2020/5/30 14:39
  *
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ClassRepository extends JpaRepository<ClassEntity, Integer>, JpaSpecificationExecutor<ClassEntity> {
+    boolean existsByName(String name);
+
     ClassEntity findByName(String name);
 
     long countByMajor_Id(Integer majorId);
@@ -23,4 +27,6 @@ public interface ClassRepository extends JpaRepository<ClassEntity, Integer>, Jp
     Page<ClassEntity> findAllByMajor_Id(Integer majorId, Pageable pageable);
 
     Page<ClassEntity> findAllByCollege_Id(Integer collegeId, Pageable pageable);
+
+    List<ClassEntity> findAllByMajor_Id(Integer majorId);
 }

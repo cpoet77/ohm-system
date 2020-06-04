@@ -1,5 +1,4 @@
 <#-- 后台首页 -->
-<#assign activeIndex></#assign>
 <#assign pageTitle>OHMS控制台</#assign>
 <#assign isDashboard = true />
 <#include "../../common/admin/head.ftl" />

@@ -39,19 +39,19 @@
             /**
              * 上传普通文件地址
              */
-            uploadCommonFileUrl: '/user/file/upload/common',
+            uploadCommonFileUrl: '/file/upload/common',
             /**
              * 上传受保护的文件地址
              */
-            uploadSentinelResourceUrl: '/user/file/upload/sentinel',
+            uploadSentinelResourceUrl: '/file/upload/sentinel',
             /**
              * 普通文件访问基地址
              */
-            baseCommonFileUrl: '/user/file/common',
+            baseCommonFileUrl: '/file/common',
             /**
              * 受保护的文件访问基地址
              */
-            baseSentinelResourceUrl: '/user/file/resource',
+            baseSentinelResourceUrl: '/file/resource'
         },
         /**
          * 发起post请求
@@ -99,6 +99,23 @@
                     xtip.closeAll();
                     xtip.msg(NS.message.tips.operationFailed, {times: 3000, icon: 'e'});
                 }
+            });
+        },
+
+        /**
+         * 生成具有唯一性的uuid
+         *
+         * @returns {string}
+         */
+        uuid: function () {
+            let d = new Date().getTime();
+            if (window.performance && typeof window.performance.now === "function") {
+                d += performance.now();
+            }
+            return 'xxxxxxxxxxxx943xyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                const r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
             });
         },
 

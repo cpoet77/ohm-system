@@ -5,6 +5,8 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -33,6 +35,17 @@ public interface ResourceService {
     <T> List<T> inputStreamToTable(Class<T> clazz, InputStream in) throws Exception;
 
     /**
+     * 将数据导出到表格文件
+     *
+     * @param data  数据
+     * @param clazz class
+     * @param file  目标文件
+     * @param <T>   class 类型
+     * @return 目标文件对象
+     */
+    <T> File dataExportToTableFile(List<T> data, Class<T> clazz, File file) throws IOException;
+
+    /**
      * 判断是否是支持的公共文件后缀
      *
      * @param fix 文件后缀
@@ -47,6 +60,15 @@ public interface ResourceService {
      * @return true|false
      */
     boolean isConfidentialFileFormat(String fix);
+
+    /**
+     * 计算页码
+     *
+     * @param start 起点
+     * @param size  每一页的数量
+     * @return page num
+     */
+    int calculatePageNum(int start, int size);
 
     /**
      * 判断上传的表格文件是否满足要求

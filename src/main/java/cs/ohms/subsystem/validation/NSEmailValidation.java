@@ -19,7 +19,7 @@ public class NSEmailValidation implements ConstraintValidator<NSEmail, String> {
         if (NStringUtil.isEmpty(value)) {
             return true;
         }
-        String regex = "^[a-zA-Z][\\w.]{1,30}@[a-zA-Z]\\w{1,50}\\.((cn)|(com)|(org))$";
+        String regex = "^[0-9a-zA-Z][\\w.]{1,30}@[a-zA-Z]\\w{1,50}\\.((cn)|(com)|(org))$";
         return value.matches(regex);
     }
 }

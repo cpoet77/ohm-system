@@ -19,16 +19,16 @@ public class CourseGroupVo implements Serializable {
 
     private String courseGroupName;//课群名
 
-    private Integer teacherId;//教师id
+    private String teacherId;//教职工号
 
     private String teacherRealName;//教师姓名
-
-    private String description;//课程描述
 
     private Long countStudent;//统计学生数
 
     @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     private LocalDateTime datetime;//创建课群的时间
+
+    private String description;//课群介绍
 
     private Boolean state;//课群状态
 }

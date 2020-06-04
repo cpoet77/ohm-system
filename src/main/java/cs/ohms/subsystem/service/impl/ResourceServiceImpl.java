@@ -1,7 +1,9 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/22.
 package cs.ohms.subsystem.service.impl;
 
+import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
 import com.github.liaochong.myexcel.core.DefaultExcelReader;
+import com.github.liaochong.myexcel.utils.FileExportUtil;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.service.AppService;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +68,18 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public <T> File dataExportToTableFile(List<T> data, Class<T> clazz, @NotNull File file) throws IOException {
+        File fileDir = file.getParentFile();
+        if(!fileDir.exists()){
+            if (!fileDir.mkdirs()) {
+                throw new IOException("创建目录失败！");
+            }
+        }
+        FileExportUtil.export(DefaultExcelBuilder.of(clazz).build(data), file);
+        return file;
+    }
+
+    @Override
     public boolean isCommonFileFormat(String fix) {
         return COMMON_FILE_FORMAT_SET.contains(fix);
     }
@@ -71,6 +87,11 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public boolean isConfidentialFileFormat(String fix) {
         return CONFIDENTIAL_FILE_FORMAT_SET.contains(fix);
+    }
+
+    @Override
+    public int calculatePageNum(int start, int size) {
+        return ((int) Math.ceil((double) start / size));
     }
 
     @Override

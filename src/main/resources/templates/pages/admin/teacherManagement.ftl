@@ -35,7 +35,7 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveTeacherModal">添加
                                 </button>
-                                <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn bg-orange" id="exportXlsxBtn">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
                                 </button>
@@ -89,7 +89,7 @@
                                 <form id="saveTeacherInfoForm">
                                     <div class="form-group">
                                         <label for="teacherId">教职工号</label>
-                                        <input name="teacherId" type="text" class="form-control" id="teacherId"
+                                        <input name="teacherId" type="number" class="form-control" id="teacherId"
                                                v-model="saveTeacherInfo.teacherId" placeholder="请输入教职工号"
                                                :disabled="saveTeacherInfo.userId !== null">
                                     </div>
@@ -171,6 +171,9 @@
     <!-- DataTables -->
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/plugins/datatables/jszip.min.js"></script>
+    <script src="/static/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
@@ -219,6 +222,19 @@
                 serverSide: true,
                 processing: true,
                 pageLength: 30,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'export-Vice button',
+                        filename: '教师信息-${siteTitle}-' + NS.uuid(),
+                        title: '教师信息-${siteTitle}',
+                        className: 'hidden',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        }
+                    }
+                ],
                 ajax: (data, callback, settings) => {
                     NS.post("/teachingSecretary/teacherManagement/teacherList", {
                         draw: data.draw,
@@ -256,6 +272,10 @@
                     },
                 ]
             });
+            $('#exportXlsxBtn').on('click', () => {
+                $('.dt-buttons .buttons-excel').click();
+            });
+
             const dataFilterModal = $('#dataFilterModal');
             const saveTeacherInfoForm = $('#saveTeacherInfoForm');
             const saveTeacherModal = $('#saveTeacherModal');
@@ -305,7 +325,7 @@
                     email: {
                         validators: {
                             regexp: {
-                                regexp: /^[a-zA-Z][\w.]{1,30}@[a-zA-Z]\w{1,50}\.((cn)|(com)|(org))$/,
+                                regexp: /^[0-9a-zA-Z][\w.]{1,30}@[a-zA-Z]\w{1,50}\.((cn)|(com)|(org))$/,
                                 message: '邮箱地址格式错误'
                             }
                         }
@@ -316,7 +336,7 @@
                 const bootstrapValidator = saveTeacherInfoForm.data('bootstrapValidator');
                 if (bootstrapValidator.validate().isValid()) {
                     const saveLoad = xtip.load(NS.isNull(Main.saveTeacherInfo.userId) ? '添加中...' : '更新中');
-                    NS.post("/teachingSecretary/teacherManagement/saveTeacher", Main.saveTeacherInfo, (res) => {
+                    NS.post('/teachingSecretary/teacherManagement/saveTeacher', Main.saveTeacherInfo, (res) => {
                         if (res.code === 1000) {
                             xtip.msg(NS.isNull(Main.saveTeacherInfo.userId) ? '添加成功' : '更新成功', {icon: 's'});
                             datatable.ajax.reload();
@@ -338,6 +358,19 @@
                     Main.filterDataReloadFlag = false;
                 }
             });
+            saveTeacherModal.on('hide.bs.modal', () => {
+                Main.clearSaveTeacherInfo();
+            });
+            NS.updateTeacherInfo = (row) => {
+                const data = datatable.row(row).data();
+                Main.saveTeacherInfo.userId = data.id;
+                Main.saveTeacherInfo.teacherId = data.teacherId;
+                Main.saveTeacherInfo.realName = data.realName;
+                Main.saveTeacherInfo.sex = data.sex === '男' ? 'M' : 'F';
+                Main.saveTeacherInfo.phone = data.phone;
+                Main.saveTeacherInfo.email = data.email;
+                saveTeacherModal.modal('show');
+            };
             NS.deleteTeacher = (row) => {
                 const data = datatable.row(row).data();
                 xtip.confirm('你正在进行一个极度危险的操作！<br/>一旦执行，所有与该名教师相关的数据均会删除，是否确定删除？<br/><b>教职工号：</b>'
@@ -354,6 +387,23 @@
                     });
                 }, {icon: 'w'});
             };
+            <#if isRoles("admin")>
+            NS.changeTeacherRole = (row) => {
+                const data = datatable.row(row).data();
+                xtip.confirm((data.isTeachingSecretary ? '撤销' : '授予') + '教职工 ' + data.teacherId + ' 教学秘书权限？', () => {
+                    const ing = xtip.load('操作中...');
+                    NS.post('/teachingSecretary/teacherManagement/changeTeachingSecretaryRole', {userId: data.id}, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('操作成功！', {icon: 's'});
+                            datatable.ajax.reload();
+                        } else {
+                            xtip.msg('操作失败！', {icon: 'e'});
+                        }
+                        xtip.close(ing);
+                    });
+                }, {icon: 'w'});
+            }
+            </#if>
         });
     </script>
 </#assign>

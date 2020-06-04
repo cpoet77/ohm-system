@@ -36,7 +36,7 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveClassModal">添加
                                 </button>
-                                <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn bg-orange" id="exportXlsxBtn">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
                                 </button>
@@ -91,7 +91,7 @@
                                                v-model="saveOneClassInfo.className" placeholder="请输入班级名">
                                     </div>
                                     <div class="form-group">
-                                        <label>选择学院</label>
+                                        <label>学院</label>
                                         <select class="form-control" name="collegeId"
                                                 v-model="saveOneClassInfo.collegeId">
                                             <option v-for="collegeInfo in collegeInfoList" :key="collegeInfo.id"
@@ -100,7 +100,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label>选择专业</label>
+                                        <label>专业</label>
                                         <select class="form-control" name="majorId"
                                                 v-model="saveOneClassInfo.majorId">
                                             <option v-for="majorInfo in majorInfoList" :key="majorInfo.id"
@@ -143,7 +143,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group" v-if="filterCollegeId != -1">
-                                        <label>专业学院</label>
+                                        <label>选择专业</label>
                                         <select class="form-control" v-model="filterMajorId">
                                             <option value="-1">所有专业</option>
                                             <option v-for="majorInfo in majorInfoList" :key="majorInfo.id"
@@ -174,15 +174,21 @@
                                 <form id="createCourseGroupForm">
                                     <div class="form-group">
                                         <label for="courseGroupName">课群名称</label>
-                                        <input name="courseGroupName" type="text" class="form-control"
+                                        <input name="courseGroupName" maxlength="64" type="text" class="form-control"
                                                id="courseGroupName" v-model="createCourseGroupInfo.courseGroupName"
                                                placeholder="请输入课群名称">
                                     </div>
                                     <div class="form-group">
-                                        <label for="teacherId">教师用户名</label>
-                                        <input name="teacherId" type="text" class="form-control"
+                                        <label for="teacherId">教职工号</label>
+                                        <input name="teacherId" maxlength="24" type="number" class="form-control"
                                                id="teacherId" v-model="createCourseGroupInfo.teacherId"
-                                               placeholder="请输入教师用户名">
+                                               placeholder="请输入教职工号">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">课群介绍</label>
+                                        <textarea name="description" id="description" class="form-control"
+                                                  v-model="createCourseGroupInfo.description" rows="5"
+                                                  placeholder="请输入课群介绍"></textarea>
                                     </div>
                                 </form>
                             </div>
@@ -205,6 +211,9 @@
     <!-- DataTables -->
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/plugins/datatables/jszip.min.js"></script>
+    <script src="/static/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
@@ -228,7 +237,8 @@
                         classId: null,
                         classInfo: '',
                         courseGroupName: null,
-                        teacherId: null
+                        teacherId: null,
+                        description: null
                     }
                 },
                 methods: {
@@ -243,6 +253,7 @@
                         this.createCourseGroupInfo.classInfo = '';
                         this.createCourseGroupInfo.courseGroupName = null;
                         this.createCourseGroupInfo.teacherId = null;
+                        this.createCourseGroupInfo.description = null;
                     },
                     loadCollegeInfoList: function () {
                         NS.post("/teachingSecretary/collegeManagement/collegeInfoAllList", null, (res) => {
@@ -292,6 +303,19 @@
                 serverSide: true,
                 processing: true,
                 pageLength: 45,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'export-Vice button',
+                        filename: '班级信息-${siteTitle}-' + NS.uuid(),
+                        title: '班级信息-${siteTitle}',
+                        className: 'hidden',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    }
+                ],
                 ajax: (data, callback, settings) => {
                     NS.post("/teachingSecretary/classManagement/classInfoList", {
                         draw: data.draw,
@@ -322,10 +346,14 @@
                     },
                 ]
             });
+            $('#exportXlsxBtn').on('click', () => {
+                $('.dt-buttons .buttons-excel').click();
+            });
             const saveClassModal = $('#saveClassModal');
             const dataFilterModal = $('#dataFilterModal');
             const createCourseGroupModal = $('#createCourseGroupModal');
             const saveOneClassInfoForm = $('#saveOneClassInfoForm');
+            const createCourseGroupForm = $('#createCourseGroupForm');
 
             function loadFormValidator() {
                 saveOneClassInfoForm.bootstrapValidator({
@@ -367,6 +395,32 @@
                     }
                 });
             }
+
+            createCourseGroupForm.bootstrapValidator({
+                verbose: false,     /* 对field内的条件按顺序验证 */
+                message: '数据校验失败',
+                fields: {
+                    courseGroupName: {
+                        validators: {
+                            notEmpty: {
+                                message: '课群名不能为空'
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 64,
+                                message: '课群名为6至64字符'
+                            }
+                        }
+                    },
+                    teacherId: {
+                        validators: {
+                            notEmpty: {
+                                message: '负责管理课群的教师不能为空'
+                            }
+                        }
+                    }
+                }
+            });
 
             function destroyFormValidator() {
                 try {
@@ -451,6 +505,26 @@
             };
             createCourseGroupModal.on('hide.bs.modal', () => {
                 Main.clearCreateCourseGroupInfo();
+            });
+            $('#createCourseGroupBtn').on('click', () => {
+                const bootstrapValidator = createCourseGroupForm.data('bootstrapValidator');
+                if (bootstrapValidator.validate().isValid()) {
+                    const adding = xtip.load('创建中...');
+                    NS.post('/teachingSecretary/courseGroupManagement/addCourseGroupForClass', {
+                        classId: Main.createCourseGroupInfo.classId,
+                        courseGroupName: Main.createCourseGroupInfo.courseGroupName,
+                        teacherId: Main.createCourseGroupInfo.teacherId,
+                        description: Main.createCourseGroupInfo.description
+                    }, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('创建成功！', {icon: 's'});
+                            createCourseGroupModal.modal('hide');
+                        } else {
+                            xtip.msg('创建失败', {icon: 'e'});
+                        }
+                        xtip.close(adding);
+                    });
+                }
             });
         });
     </script>

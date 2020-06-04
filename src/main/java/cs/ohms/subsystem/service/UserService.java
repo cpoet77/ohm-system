@@ -1,7 +1,12 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/24.
 package cs.ohms.subsystem.service;
 
+import cs.ohms.subsystem.entity.ClassEntity;
+import cs.ohms.subsystem.entity.RoleEntity;
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.tableobject.StudentInfoTo;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * UserService
@@ -55,6 +60,26 @@ public interface UserService {
      * @return true|false
      */
     boolean saveUser(UserEntity user);
+
+    /**
+     * 添加学生
+     * <p><b>由于spring在同一server里面不能实现非事务方法触发事务方法回滚，因此将保存入库添加到userServer中</b></p>
+     *
+     * @param clazz         班级
+     * @param studentRole   学生角色
+     * @param studentInfoTo StudentInfoTo
+     */
+    @Transactional
+    void saveUserIsStudent(ClassEntity clazz, RoleEntity studentRole, StudentInfoTo studentInfoTo);
+
+    /**
+     * 保存教师信息
+     *
+     * @param teacherRole   教师角色
+     * @param teacherInfoTo 教师to对象
+     */
+    @Transactional
+    void saveUserIsTeacher(RoleEntity teacherRole, TeacherInfoTo teacherInfoTo);
 
     /**
      * @param realName 真实姓名
