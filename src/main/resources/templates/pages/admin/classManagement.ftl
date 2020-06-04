@@ -174,15 +174,21 @@
                                 <form id="createCourseGroupForm">
                                     <div class="form-group">
                                         <label for="courseGroupName">课群名称</label>
-                                        <input name="courseGroupName" type="text" class="form-control"
+                                        <input name="courseGroupName" maxlength="64" type="text" class="form-control"
                                                id="courseGroupName" v-model="createCourseGroupInfo.courseGroupName"
                                                placeholder="请输入课群名称">
                                     </div>
                                     <div class="form-group">
-                                        <label for="teacherId">教师用户名</label>
-                                        <input name="teacherId" type="text" class="form-control"
+                                        <label for="teacherId">教职工号</label>
+                                        <input name="teacherId" maxlength="24" type="number" class="form-control"
                                                id="teacherId" v-model="createCourseGroupInfo.teacherId"
-                                               placeholder="请输入教师用户名">
+                                               placeholder="请输入教职工号">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">课群介绍</label>
+                                        <textarea name="description" id="description" class="form-control"
+                                                  v-model="createCourseGroupInfo.description" rows="5"
+                                                  placeholder="请输入课群介绍"></textarea>
                                     </div>
                                 </form>
                             </div>
@@ -231,7 +237,8 @@
                         classId: null,
                         classInfo: '',
                         courseGroupName: null,
-                        teacherId: null
+                        teacherId: null,
+                        description: null
                     }
                 },
                 methods: {
@@ -243,9 +250,9 @@
                     },
                     clearCreateCourseGroupInfo: function () {
                         this.createCourseGroupInfo.classId = null;
-                        this.createCourseGroupInfo.classInfo = '';
                         this.createCourseGroupInfo.courseGroupName = null;
                         this.createCourseGroupInfo.teacherId = null;
+                        this.createCourseGroupInfo.description = null;
                     },
                     loadCollegeInfoList: function () {
                         NS.post("/teachingSecretary/collegeManagement/collegeInfoAllList", null, (res) => {
@@ -345,6 +352,7 @@
             const dataFilterModal = $('#dataFilterModal');
             const createCourseGroupModal = $('#createCourseGroupModal');
             const saveOneClassInfoForm = $('#saveOneClassInfoForm');
+            const createCourseGroupForm = $('#createCourseGroupForm');
 
             function loadFormValidator() {
                 saveOneClassInfoForm.bootstrapValidator({
@@ -386,6 +394,32 @@
                     }
                 });
             }
+
+            createCourseGroupForm.bootstrapValidator({
+                verbose: false,     /* 对field内的条件按顺序验证 */
+                message: '数据校验失败',
+                fields: {
+                    courseGroupName: {
+                        validators: {
+                            notEmpty: {
+                                message: '课群名不能为空'
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 64,
+                                message: '课群名为6至64字符'
+                            }
+                        }
+                    },
+                    teacherId: {
+                        validators: {
+                            notEmpty: {
+                                message: '负责管理课群的教师不能为空'
+                            }
+                        }
+                    }
+                }
+            });
 
             function destroyFormValidator() {
                 try {
@@ -470,6 +504,26 @@
             };
             createCourseGroupModal.on('hide.bs.modal', () => {
                 Main.clearCreateCourseGroupInfo();
+            });
+            $('#createCourseGroupBtn').on('click', () => {
+                const bootstrapValidator = createCourseGroupForm.data('bootstrapValidator');
+                if (bootstrapValidator.validate().isValid()) {
+                    const adding = xtip.load('创建中...');
+                    NS.post('/teachingSecretary/courseGroupManagement/addCourseGroupForClass', {
+                        classId: Main.createCourseGroupInfo.classId,
+                        courseGroupName: Main.createCourseGroupInfo.courseGroupName,
+                        teacherId: Main.createCourseGroupInfo.teacherId,
+                        description: Main.createCourseGroupInfo.description
+                    }, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('创建成功！', {icon: 's'});
+                            createCourseGroupModal.modal('hide');
+                        } else {
+                            xtip.msg('创建失败', {icon: 'e'});
+                        }
+                        xtip.close(adding);
+                    });
+                }
             });
         });
     </script>

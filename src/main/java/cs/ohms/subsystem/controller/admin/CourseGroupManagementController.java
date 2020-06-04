@@ -4,12 +4,15 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CourseGroupEntity;
 import cs.ohms.subsystem.exception.NSRuntimeException;
 import cs.ohms.subsystem.service.CourseGroupService;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.StudentService;
+import cs.ohms.subsystem.utils.NStringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +37,14 @@ import java.util.Set;
 public class CourseGroupManagementController {
     private CourseGroupService courseGroupService;
     private StudentService studentService;
+    private ResourceService resourceService;
 
-    public CourseGroupManagementController(CourseGroupService courseGroupService, StudentService studentService) {
+    @Autowired
+    public CourseGroupManagementController(CourseGroupService courseGroupService, StudentService studentService
+            , ResourceService resourceService) {
         this.courseGroupService = courseGroupService;
         this.studentService = studentService;
+        this.resourceService = resourceService;
     }
 
     /**
@@ -67,10 +74,25 @@ public class CourseGroupManagementController {
      */
     @PostMapping("/courseGroupInfoList")
     @ResponseBody
-    public ResponseResult courseGoupList(@RequestParam("draw") @NotNull @Min(1) Integer draw
+    public ResponseResult courseGroupList(@RequestParam("draw") @NotNull @Min(1) Integer draw
             , @RequestParam("start") @NotNull @Min(0) Integer start
-            , @RequestParam("length") @NotNull @Min(5) Integer length) {
-        return courseGroupService.getCourseGroupByPage(start, length).add("draw", draw);
+            , @RequestParam("length") @NotNull @Min(5) Integer length
+            , @RequestParam("filterCourseGroupName") @Length(max = 64) String filterCourseGroupName
+            , @RequestParam("filterTeacherId") @Length(max = 24) String filterTeacherId
+            , @RequestParam("filterLogical") @NotNull Integer filterLogical) {
+        int page = resourceService.calculatePageNum(start, length);
+        if (NStringUtil.isEmpty(filterTeacherId)) {
+            if (NStringUtil.isEmpty(filterCourseGroupName)) {
+                return courseGroupService.getCourseGroupForPage(page, length).add("draw", draw);
+            }
+            return courseGroupService.getCourseGroupByNameForPage(filterCourseGroupName, page, length).add("draw", draw);
+        }
+        if (!NStringUtil.isEmpty(filterCourseGroupName)) {
+            return (filterLogical == 0 ? courseGroupService.getCourseGroupByTeacherAndNameForPage(filterTeacherId, filterCourseGroupName, page, length)
+                    : courseGroupService.getCourseGroupByTeacherOrNameForPage(filterTeacherId, filterCourseGroupName, page, length))
+                    .add("draw", draw);
+        }
+        return courseGroupService.getCourseGroupByTeacherForPage(filterTeacherId, page, length).add("draw", draw);
     }
 
     /**
@@ -94,6 +116,44 @@ public class CourseGroupManagementController {
         }
         return courseGroupService.addCourseGroup(courseGroupName, teacherId, description, studentIds)
                 ? ResponseResult.enSuccess() : ResponseResult.enFail();
+    }
+
+    /**
+     * 由班级快速创建课群
+     *
+     * @param classId         班级id
+     * @param courseGroupName 课群名
+     * @param teacherId       教职工号
+     * @param description     课群介绍
+     * @return ResponseResult
+     */
+    @PostMapping("/addCourseGroupForClass")
+    @ResponseBody
+    public ResponseResult addCourseGroupForClass(@RequestParam("classId") @NotNull @Min(1) Integer classId
+            , @RequestParam("courseGroupName") @NotEmpty @Length(min = 5, max = 64) String courseGroupName
+            , @RequestParam("teacherId") @NotEmpty @Length(min = 5, max = 24) String teacherId
+            , @RequestParam("description") String description) {
+        return (courseGroupService.addCourseGroupForClass(classId, courseGroupName, teacherId, description)
+                ? ResponseResult.enSuccess() : ResponseResult.enFail());
+    }
+
+    /**
+     * 更新课群信息
+     *
+     * @param courseGroupId   课群id
+     * @param courseGroupName 课群名
+     * @param teacherId       教职工号
+     * @param description     课群介绍
+     * @return ResponseResult
+     */
+    @PostMapping("/updateCourseGroup")
+    @ResponseBody
+    public ResponseResult updateCourseGroup(@RequestParam("courseGroupId") @NotNull @Min(1) Integer courseGroupId
+            , @RequestParam("courseGroupName") @NotEmpty @Length(min = 5, max = 64) String courseGroupName
+            , @RequestParam("teacherId") @NotEmpty String teacherId
+            , @RequestParam("description") String description) {
+        return (courseGroupService.updateCourseGroup(courseGroupId, courseGroupName, teacherId, description)
+                ? ResponseResult.enSuccess() : ResponseResult.enFail());
     }
 
     /**
@@ -134,13 +194,12 @@ public class CourseGroupManagementController {
     /**
      * 根据删除一条课群信息
      *
-     * @param id 课群id
+     * @param courseGroupId 课群id
      * @return ResponseResult
      */
     @PostMapping("/deleteOneCourseGroupInfo")
     @ResponseBody
-    public ResponseResult deleteOneCourseGroupInfo(@RequestParam("id") @NotNull @Min(1) Integer id) {
-        return courseGroupService.deleteCourseGroup(id) ? ResponseResult.enSuccess() : ResponseResult.enFail();
+    public ResponseResult deleteOneCourseGroupInfo(@RequestParam("courseGroupId") @NotNull @Min(1) Integer courseGroupId) {
+        return courseGroupService.deleteCourseGroup(courseGroupId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }
-
 }

@@ -138,7 +138,7 @@
                                         <label for="filterStudentName">按姓名( <= 5个字符)</label>
                                         <input name="filterStudentName" maxlength="5" type="text" class="form-control"
                                                id="filterStudentName" v-model="filterData.studentName"
-                                               placeholder="例如：张科">
+                                               placeholder="例如：南山">
                                     </div>
                                     <div class="form-group">
                                         <label for="logicalRadios">过滤关系</label>

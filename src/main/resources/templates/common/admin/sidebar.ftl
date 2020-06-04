@@ -72,7 +72,7 @@
                                     class="fa fa-circle-o"></i> 登录日志</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="treeview <#if isSystemRelated??>active</#if>">
                 <a href="#">
                     <i class="fa fa-wrench"></i> <span>系统相关</span>
                     <span class="pull-right-container">
@@ -80,6 +80,10 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
+                    <#if isRoles("admin")>
+                        <li class="<#if isRunLog??>active</#if>"><a href="#"><i
+                                        class="fa fa-circle-o"></i> 运行日志</a></li>
+                    </#if>
                     <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> 使用手册</a></li>
                     <li><a href="../tables/data.html"><i class="fa fa-circle-o"></i> 关于应用</a></li>
                 </ul>
