@@ -30,11 +30,11 @@
                 <div class="col-xs-12">
                     <div class="box">
                         <div class="box-header">
-                            <div class="btn-group">
+                            <div class="btn-group" id="operateButtons">
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveStudentModal">添加
                                 </button>
-                                <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn bg-orange" id="exportXlsxBtn">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
                                 </button>
@@ -214,6 +214,9 @@
     <!-- DataTables -->
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/plugins/datatables/jszip.min.js"></script>
+    <script src="/static/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
@@ -325,6 +328,19 @@
                 serverSide: true,
                 processing: true,
                 pageLength: 50,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'export-Vice button',
+                        filename: '学生信息-${siteTitle}-' + NS.uuid(),
+                        title: '学生信息-${siteTitle}',
+                        className: 'hidden',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8]
+                        }
+                    }
+                ],
                 ajax: (data, callback, settings) => {
                     NS.post("/teachingSecretary/studentManagement/studentList", {
                         draw: data.draw,
@@ -363,6 +379,9 @@
                         }
                     },
                 ]
+            });
+            $('#exportXlsxBtn').on('click', () => {
+                $('.dt-buttons .buttons-excel').click();
             });
             const dataFilterModal = $('#dataFilterModal');
             const saveStudentModal = $('#saveStudentModal');

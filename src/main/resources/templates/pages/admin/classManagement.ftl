@@ -36,7 +36,7 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveClassModal">添加
                                 </button>
-                                <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn bg-orange" id="exportXlsxBtn">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
                                 </button>
@@ -205,6 +205,9 @@
     <!-- DataTables -->
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/plugins/datatables/jszip.min.js"></script>
+    <script src="/static/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
@@ -292,6 +295,19 @@
                 serverSide: true,
                 processing: true,
                 pageLength: 45,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'export-Vice button',
+                        filename: '班级信息-${siteTitle}-' + NS.uuid(),
+                        title: '班级信息-${siteTitle}',
+                        className: 'hidden',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5, 6]
+                        }
+                    }
+                ],
                 ajax: (data, callback, settings) => {
                     NS.post("/teachingSecretary/classManagement/classInfoList", {
                         draw: data.draw,
@@ -321,6 +337,9 @@
                         }
                     },
                 ]
+            });
+            $('#exportXlsxBtn').on('click', () => {
+                $('.dt-buttons .buttons-excel').click();
             });
             const saveClassModal = $('#saveClassModal');
             const dataFilterModal = $('#dataFilterModal');
