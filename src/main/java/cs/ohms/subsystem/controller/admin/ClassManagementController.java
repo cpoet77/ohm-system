@@ -83,7 +83,7 @@ public class ClassManagementController {
     @PostMapping("/saveOneClassInfo")
     @ResponseBody
     public ResponseResult saveOneClassInfo(@RequestParam("classId") Integer classId
-            , @RequestParam("className") @NotNull @Length(min = 1, max = 10) String className
+            , @RequestParam("className") @NotNull @Length(min = 1, max = 45) String className
             , @RequestParam("majorId") @NotNull @Min(1) Integer majorId) {
         return classService.saveClass(classId, className, majorId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }

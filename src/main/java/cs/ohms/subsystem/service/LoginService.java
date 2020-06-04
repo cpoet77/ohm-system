@@ -23,12 +23,29 @@ public interface LoginService {
     void loginRecord(HttpServletRequest request, UserEntity user, String userAgent);
 
     /**
-     * 获取用户登录记录
+     * 根据Like用户名分页查询登录记录
      *
-     * @param user UserEntity
-     * @param page 页码
+     * @param userName 用户名
+     * @param page     页号
+     * @param size     数量
+     * @return ResponseResult
+     */
+    ResponseResult getLoginRecordListByUserNameIsLikeFoPage(String userName, int page, int size);
+
+    /**
+     * 获取登录日志
+     *
+     * @param page 页号
      * @param size 数量
      * @return ResponseResult
      */
-    ResponseResult getLoginInfoListByPage(UserEntity user, Integer page, Integer size);
+    ResponseResult getLoginRecordListForPage(int page, int size);
+
+    /**
+     * 根据id删除登录记录
+     *
+     * @param loginRecordId 登录记录id
+     * @return true|false
+     */
+    boolean deleteLoginRecord(Long loginRecordId);
 }

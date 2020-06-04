@@ -1,5 +1,4 @@
 <#-- 专业管理 -->
-<#assign activeIndex></#assign>
 <#assign pageTitle>专业管理</#assign>
 <#assign isCourseManagement = true />
 <#assign isMajorManagement = true />

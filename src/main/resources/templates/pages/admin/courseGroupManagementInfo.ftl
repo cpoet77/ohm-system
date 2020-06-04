@@ -1,5 +1,4 @@
 <#-- 课群详情管理页面 -->
-<#assign activeIndex></#assign>
 <#assign pageTitle>${courseGroup.name!""}|课群管理</#assign>
 <#assign isCourseManagement = true />
 <#assign isCourseGroupManagement = true />

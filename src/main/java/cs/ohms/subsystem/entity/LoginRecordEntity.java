@@ -1,7 +1,6 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/5/13.
 package cs.ohms.subsystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +38,6 @@ public class LoginRecordEntity implements Serializable {
     @Column(name = "login_ip", nullable = false)
     private String loginIp; // 登录的ip
 
-    @JsonFormat(pattern = "yyyy年MM月dd日 HH:mm:ss")
     @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime datetime;//登录时间
 

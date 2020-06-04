@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
  * @author _Struggler
  */
 @Repository
-public interface LoginRecordRepository extends JpaRepository<LoginRecordEntity, String>, JpaSpecificationExecutor<LoginRecordEntity> {
+public interface LoginRecordRepository extends JpaRepository<LoginRecordEntity, Long>, JpaSpecificationExecutor<LoginRecordEntity> {
     Page<LoginRecordEntity> findByUser(UserEntity user, Pageable pageable);
+
+    Page<LoginRecordEntity> findByUser_NameIsLike(String user_name, Pageable pageable);
 }

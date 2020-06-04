@@ -66,7 +66,7 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="<#if isLoginLog??>active</#if>"><a href="#"><i
+                    <li class="<#if isLoginLog??>active</#if>"><a href="/teachingSecretary/loginRecord"><i
                                     class="fa fa-circle-o"></i> 登录日志</a></li>
                 </ul>
             </li>
