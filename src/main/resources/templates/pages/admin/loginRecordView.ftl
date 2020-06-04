@@ -4,7 +4,6 @@
 <#assign isLoginLog = true />
 <#assign restHead>
     <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
-    <link rel="stylesheet" href="/static/plugins/bootstrapvalidator/bootstrapValidator.min.css">
 </#assign>
 <#include "../../common/admin/head.ftl" />
 <!-- Site wrapper -->

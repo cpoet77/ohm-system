@@ -1,5 +1,4 @@
 <#-- 学院管理 -->
-<#assign activeIndex></#assign>
 <#assign pageTitle>班级管理</#assign>
 <#assign isCourseManagement = true />
 <#assign isClassManagement = true />
@@ -367,7 +366,7 @@
                                 },
                                 stringLength: {
                                     min: 1,
-                                    max: 10,
+                                    max: 45,
                                     message: '班级名长度不符合规定'
                                 }
                             }
