@@ -23,7 +23,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, String>,
 
     long countByClazz_id(Integer clzzId);
 
-    @Query(value = "SELECT COUNT(*) count FROM ohms_view_student WHERE student_id IN (SELECT student_id FROM ohms_student_course_group WHERE course_group_id = :courseGroupId)", nativeQuery = true)
+    @Query(value = "SELECT COUNT(student_id) count FROM ohms_view_student WHERE student_id IN (SELECT student_id FROM ohms_student_course_group WHERE course_group_id = :courseGroupId)", nativeQuery = true)
     long countByCourseGroup_Id(@Param("courseGroupId") Integer courseGroupId);
 
     Page<StudentEntity> findByCollege_Id(Integer collegeId, Pageable pageable);
