@@ -158,8 +158,12 @@ public class CourseGroupServiceImpl implements CourseGroupService {
             return false;
         }
         Optional<TeacherEntity> teacherOpt = teacherRepository.findById(teacherId);
-        return teacherOpt.filter(teacherEntity -> saveCourseGroup(new CourseGroupEntity().setName(courseGroupName)
-                .setDescription(description).setTeacher(teacherEntity).setStudents(students))).isPresent();
+        return teacherOpt.filter(teacherEntity -> {
+            CourseGroupEntity courseGroup = new CourseGroupEntity().setName(courseGroupName)
+                    .setDescription(description).setTeacher(teacherEntity);
+            courseGroup.getStudents().addAll(students);
+            return saveCourseGroup(courseGroup);
+        }).isPresent();
     }
 
     @Override

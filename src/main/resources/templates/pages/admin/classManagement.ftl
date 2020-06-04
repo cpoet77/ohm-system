@@ -250,6 +250,7 @@
                     },
                     clearCreateCourseGroupInfo: function () {
                         this.createCourseGroupInfo.classId = null;
+                        this.createCourseGroupInfo.classInfo = '';
                         this.createCourseGroupInfo.courseGroupName = null;
                         this.createCourseGroupInfo.teacherId = null;
                         this.createCourseGroupInfo.description = null;
