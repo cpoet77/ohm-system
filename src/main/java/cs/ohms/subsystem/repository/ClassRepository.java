@@ -16,6 +16,8 @@ import java.util.List;
  */
 @Repository
 public interface ClassRepository extends JpaRepository<ClassEntity, Integer>, JpaSpecificationExecutor<ClassEntity> {
+    boolean existsByName(String name);
+
     ClassEntity findByName(String name);
 
     long countByMajor_Id(Integer majorId);

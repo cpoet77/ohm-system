@@ -64,11 +64,12 @@ public interface MajorService {
     boolean deleteMajor(Integer majorId);
 
     /**
-     * 据name 查询major
-     * <p>在缓存有效期内，查找cache - database</p>
+     * 添加专业
      *
-     * @param name 专业名
-     * @return MajorEntity
+     * @param identity     是否是管理员
+     * @param collegeName 学院名
+     * @param majorName   专业名
+     * @return MajorEntity|null
      */
-    MajorEntity findMajorHashCacheByName(String name);
+    MajorEntity addMajor(String identity, String collegeName, String majorName);
 }

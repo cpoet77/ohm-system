@@ -6,6 +6,7 @@ import cs.ohms.subsystem.entity.MajorEntity;
 import cs.ohms.subsystem.repository.CollegeRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
+import cs.ohms.subsystem.service.CollegeService;
 import cs.ohms.subsystem.service.MajorService;
 import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.viewobject.MajorVo;
@@ -35,13 +36,16 @@ public class MajorServiceImpl implements MajorService {
     private StudentRepository studentRepository;
     private CollegeRepository collegeRepository;
     private ResourceService resourceService;
+    private CollegeService collegeService;
 
     @Autowired
-    public MajorServiceImpl(MajorRepository majorRepository, StudentRepository studentRepository, CollegeRepository collegeRepository, ResourceService resourceService) {
+    public MajorServiceImpl(MajorRepository majorRepository, StudentRepository studentRepository, CollegeRepository collegeRepository
+            , ResourceService resourceService, CollegeService collegeService) {
         this.majorRepository = majorRepository;
         this.studentRepository = studentRepository;
         this.collegeRepository = collegeRepository;
         this.resourceService = resourceService;
+        this.collegeService = collegeService;
     }
 
     @Override
@@ -110,8 +114,19 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public MajorEntity findMajorHashCacheByName(String name) {
-        return majorRepository.findByName(name);
+    @Cacheable(cacheNames = {"user", "common"}, key = "#identity + '_' + #collegeName + '_' +#majorName")
+    public MajorEntity addMajor(String identity, String collegeName, String majorName) {
+        if (majorRepository.existsByName(majorName)) {
+            return majorRepository.findByName(majorName);
+        }
+        CollegeEntity college = collegeService.addCollege(identity, collegeName);
+        if (college != null) {
+            try {
+                return majorRepository.save(new MajorEntity().setName(majorName).setCollege(college));
+            } catch (Exception e) {
+                log.warn("添加专业失败！{}", majorName);
+            }
+        }
+        return null;
     }
 }

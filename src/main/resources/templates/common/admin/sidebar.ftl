@@ -27,11 +27,9 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <#if isRoles("admin")>
-                        <li class="<#if isCollegeManagement??>active</#if>"><a
-                                    href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a>
-                        </li>
-                    </#if>
+                    <li class="<#if isCollegeManagement??>active</#if>"><a
+                                href="/teachingSecretary/collegeManagement"><i class="fa fa-circle-o"></i> 学院管理</a>
+                    </li>
                     <li class="<#if isMajorManagement??>active</#if>"><a
                                 href="/teachingSecretary/majorManagement"><i class="fa fa-circle-o"></i> 专业管理</a></li>
                     <li class="<#if isClassManagement??>active</#if>"><a
@@ -55,8 +53,8 @@
                     <li class="<#if isStudentManagement??>active</#if>"><a
                                 href="/teachingSecretary/studentManagement"><i
                                     class="fa fa-circle-o"></i> 学生管理</a></li>
-                    <li class="<#if isImportData??>active</#if>"><a
-                                href="#"><i
+                    <li class="<#if isUserImportData??>active</#if>"><a
+                                href="/teachingSecretary/importUserData"><i
                                     class="fa fa-circle-o"></i> 导入数据</a></li>
                 </ul>
             </li>

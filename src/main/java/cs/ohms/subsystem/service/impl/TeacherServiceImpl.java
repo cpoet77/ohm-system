@@ -16,6 +16,7 @@ import cs.ohms.subsystem.repository.middle.UserRoleRepository;
 import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
 import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.TeacherVo;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,6 +121,30 @@ public class TeacherServiceImpl implements TeacherService {
             log.warn("新增教师失败！msg : {}", e.getLocalizedMessage());
             throw new NSRuntimePostException(e);
         }
+    }
+
+    @Override
+    public List<TeacherInfoTo> importTeacherInfoForTable(InputStream in) {
+        try {
+            List<TeacherInfoTo> failList = new ArrayList<>();
+            RoleEntity teacherRole = roleRepository.findByName(UserService.USER_TEACHER_ROLE);
+            assert teacherRole != null;
+            List<TeacherInfoTo> teacherInfoTos = resourceService.inputStreamToTable(TeacherInfoTo.class, in);
+            if (teacherInfoTos.isEmpty()) {
+                return null;
+            }
+            teacherInfoTos.forEach(t -> {
+                try {
+                    userService.saveUserIsTeacher(teacherRole, t);
+                } catch (Exception e) {
+                    failList.add(t);/* 添加失败 */
+                }
+            });
+            return failList;
+        } catch (Exception e) {
+            log.warn("教师信息导入失败！", e);
+        }
+        return null;
     }
 
     @Override

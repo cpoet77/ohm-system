@@ -99,8 +99,18 @@ public class CollegeServiceImpl implements CollegeService {
     }
 
     @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public CollegeEntity findCollegeHasCacheByName(String name) {
-        return collegeRepository.findByName(name);
+    @Cacheable(cacheNames = {"user", "common"}, key = "#identity + '_' + #name")
+    public CollegeEntity addCollege(String identity, String name) {
+        if (collegeRepository.existsByName(name)) {
+            return collegeRepository.findByName(name);
+        }
+        if (identity.equals("admin")) {
+            try {
+                return collegeRepository.save(new CollegeEntity().setName(name));
+            } catch (Exception e) {
+                log.warn("创建学院失败！name : {}", name);
+            }
+        }
+        return null;
     }
 }

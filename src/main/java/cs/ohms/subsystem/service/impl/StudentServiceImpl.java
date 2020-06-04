@@ -11,8 +11,11 @@ import cs.ohms.subsystem.repository.ClassRepository;
 import cs.ohms.subsystem.repository.RoleRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.repository.UserRepository;
+import cs.ohms.subsystem.service.ClassService;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.StudentService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.tableobject.StudentInfoTo;
 import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.StudentVo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,16 +45,21 @@ public class StudentServiceImpl implements StudentService {
     private RoleRepository roleRepository;
     private ClassRepository classRepository;
     private UserService userService;
+    private ResourceService resourceService;
+    private ClassService classService;
     private PasswordCMP passwordCMP;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository, UserRepository userRepository, RoleRepository roleRepository
-            , ClassRepository classRepository, UserService userService, PasswordCMP passwordCMP) {
+            , ClassRepository classRepository, UserService userService, ResourceService resourceService, ClassService classService
+            , PasswordCMP passwordCMP) {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.classRepository = classRepository;
         this.userService = userService;
+        this.resourceService = resourceService;
+        this.classService = classService;
         this.passwordCMP = passwordCMP;
     }
 
@@ -96,6 +105,36 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<StudentInfoTo> importStudentInfoForTable(Boolean isAdmin, InputStream in) {
+        try {
+            RoleEntity studentRole = roleRepository.findByName(UserService.USER_STUDENT_ROLE);
+            assert studentRole != null;
+            List<StudentInfoTo> failList = new ArrayList<>();
+            List<StudentInfoTo> studentInfoTos = resourceService.inputStreamToTable(StudentInfoTo.class, in);
+            if (studentInfoTos.isEmpty()) {
+                return null;
+            }
+            studentInfoTos.forEach(s -> {
+                ClassEntity clazz = classService.addClass(isAdmin ? "admin" : "noAdmin", s.getCollegeName()
+                        , s.getMajorName(), s.getClassName());
+                if (clazz == null) {
+                    failList.add(s);
+                    return;
+                }
+                try {
+                    userService.saveUserIsStudent(clazz, studentRole, s);
+                } catch (Exception e) {
+                    failList.add(s);
+                }
+            });
+            return failList;
+        } catch (Exception e) {
+            log.warn("导入学生信息失败！", e);
+        }
+        return null;
+    }
+
+    @Override
     public boolean updateStudent(Integer userId, String realName, Character sex, String email, String phone, Integer classId) {
         Optional<ClassEntity> classOpt = classRepository.findById(classId);
         if (!classOpt.isPresent()) {
@@ -113,17 +152,6 @@ public class StudentServiceImpl implements StudentService {
             return true;
         } catch (Exception e) {
             log.warn("更新学生信息失败！ userId : {}, msg : {}", userId, e.getLocalizedMessage());
-        }
-        return false;
-    }
-
-    @Override
-    public boolean saveStudent(StudentEntity student) {
-        try {
-            studentRepository.save(student);
-            return true;
-        } catch (Exception e) {
-            log.error("保存学生信息失败！msg : {}", e.getLocalizedMessage());
         }
         return false;
     }

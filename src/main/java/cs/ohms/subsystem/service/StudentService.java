@@ -1,10 +1,12 @@
 package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
-import cs.ohms.subsystem.entity.StudentEntity;
+import cs.ohms.subsystem.tableobject.StudentInfoTo;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 2020/5/23 1:15
@@ -43,6 +45,15 @@ public interface StudentService {
     boolean insertStudent(String studentId, String realName, Character sex, String email, String phone, Integer classId);
 
     /**
+     * 导入学生信息
+     *
+     * @param isAdmin 是否是管理员在进行操作
+     * @param in      InputStream
+     * @return studentInfoTo 失败的信息列表
+     */
+    List<StudentInfoTo> importStudentInfoForTable(Boolean isAdmin, InputStream in);
+
+    /**
      * 更新学生信息
      *
      * @param userId   用户id
@@ -54,12 +65,6 @@ public interface StudentService {
      * @return true|false
      */
     boolean updateStudent(Integer userId, String realName, Character sex, String email, String phone, Integer classId);
-
-    /**
-     * @param student Student
-     * @return true or false
-     */
-    boolean saveStudent(StudentEntity student);
 
 
     /**

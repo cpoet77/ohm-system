@@ -32,6 +32,17 @@ public interface ClassService {
     List<ClassVo> getAllClassByMajor(Integer majorId);
 
     /**
+     * 新增班级
+     *
+     * @param identity     是否是管理员
+     * @param collegeName 学院名
+     * @param majorName   专业名
+     * @param className   班级名
+     * @return null|ClassEntity
+     */
+    ClassEntity addClass(String identity, String collegeName, String majorName, String className);
+
+    /**
      * 保存班级信息
      *
      * @param classEntity ClassEntity
@@ -56,13 +67,4 @@ public interface ClassService {
      * @return true|false
      */
     boolean deleteClass(Integer classId);
-
-    /**
-     * 据name 查询class
-     * <p>在缓存有效期内，查找cache - database</p>
-     *
-     * @param name 班级名
-     * @return ClassEntity
-     */
-    ClassEntity findClassHashCacheByName(String name);
 }

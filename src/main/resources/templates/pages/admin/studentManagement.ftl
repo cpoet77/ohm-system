@@ -54,6 +54,8 @@
                                     <th>专业</th>
                                     <th>班级</th>
                                     <th>加入的课群数</th>
+                                    <th>邮箱</th>
+                                    <th>手机号</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -372,6 +374,8 @@
                     {data: 'majorName'},
                     {data: 'className'},
                     {data: 'countJoinCourseGroup'},
+                    {data: 'email'},
+                    {data: 'phone'},
                     {
                         data: null,
                         render: (data, type, row, meta) => {

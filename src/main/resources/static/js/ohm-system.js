@@ -39,19 +39,19 @@
             /**
              * 上传普通文件地址
              */
-            uploadCommonFileUrl: '/user/file/upload/common',
+            uploadCommonFileUrl: '/file/upload/common',
             /**
              * 上传受保护的文件地址
              */
-            uploadSentinelResourceUrl: '/user/file/upload/sentinel',
+            uploadSentinelResourceUrl: '/file/upload/sentinel',
             /**
              * 普通文件访问基地址
              */
-            baseCommonFileUrl: '/user/file/common',
+            baseCommonFileUrl: '/file/common',
             /**
              * 受保护的文件访问基地址
              */
-            baseSentinelResourceUrl: '/user/file/resource',
+            baseSentinelResourceUrl: '/file/resource'
         },
         /**
          * 发起post请求

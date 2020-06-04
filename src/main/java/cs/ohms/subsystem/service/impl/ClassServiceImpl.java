@@ -7,6 +7,7 @@ import cs.ohms.subsystem.repository.ClassRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.ClassService;
+import cs.ohms.subsystem.service.MajorService;
 import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.viewobject.ClassVo;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +35,16 @@ public class ClassServiceImpl implements ClassService {
     private StudentRepository studentRepository;
     private MajorRepository majorRepository;
     private ResourceService resourceService;
+    private MajorService majorService;
 
     @Autowired
     public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, MajorRepository majorRepository
-            , ResourceService resourceService) {
+            , ResourceService resourceService, MajorService majorService) {
         this.classRepository = classRepository;
         this.studentRepository = studentRepository;
         this.majorRepository = majorRepository;
         this.resourceService = resourceService;
+        this.majorService = majorService;
     }
 
 
@@ -73,6 +76,23 @@ public class ClassServiceImpl implements ClassService {
         classEntities.forEach(clazz -> classVos.add(new ClassVo().setId(clazz.getId())
                 .setName(clazz.getName())));
         return classVos;
+    }
+
+    @Override
+    @Cacheable(cacheNames = {"user", "common"}, key = "#identity+ '_' +#collegeName + '_' +#majorName+ '_' +#className")
+    public ClassEntity addClass(String identity, String collegeName, String majorName, String className) {
+        if (classRepository.existsByName(className)) {
+            return classRepository.findByName(className);
+        }
+        MajorEntity major = majorService.addMajor(identity, collegeName, majorName);
+        if (major != null) {
+            try {
+                return classRepository.save(new ClassEntity().setName(className).setMajor(major));
+            } catch (Exception e) {
+                log.warn("添加班级失败!{}", className);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -111,11 +131,5 @@ public class ClassServiceImpl implements ClassService {
             log.warn("班级信息删除失败, classId : {}, msg : {}", classId, e.getLocalizedMessage());
         }
         return false;
-    }
-
-    @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public ClassEntity findClassHashCacheByName(String name) {
-        return classRepository.findByName(name);
     }
 }
