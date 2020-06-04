@@ -160,7 +160,7 @@ public class StudentServiceImpl implements StudentService {
             Page<StudentEntity> studentPage = studentRepository.findByCourseGroupIdAndStudentIdIsLike(courseGroupId
                     , NStringUtil.joint("%{}%", studentId), PageRequest.of(page, size));
             List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
-            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.countByCourseGroup_Id(courseGroupId))
                     .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
         } catch (Exception e) {
             log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
@@ -174,7 +174,7 @@ public class StudentServiceImpl implements StudentService {
             Page<StudentEntity> studentPage = studentRepository.findByCourseGroupIdAndUserRealNameLike(courseGroupId
                     , NStringUtil.joint("%{}%", studentName), PageRequest.of(page, size));
             List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
-            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.countByCourseGroup_Id(courseGroupId))
                     .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
         } catch (Exception e) {
             log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
@@ -191,7 +191,7 @@ public class StudentServiceImpl implements StudentService {
                     : studentRepository.findByCourseGroupIdAndUserRealNameLikeOrStudentIdIsLike(courseGroupId
                     , NStringUtil.joint("%{}%", studentId), NStringUtil.joint("%{}%", studentName), PageRequest.of(page, size));
             List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
-            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.countByCourseGroup_Id(courseGroupId))
                     .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
         } catch (Exception e) {
             log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
@@ -204,7 +204,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             Page<StudentEntity> studentPage = studentRepository.findByCourseGroupId(courseGroupId, PageRequest.of(page, size));
             List<StudentVo> studentVos = student2StudentVo(studentPage.getContent());
-            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.count())
+            return (ResponseResult.enSuccess().add("recordsTotal", studentRepository.countByCourseGroup_Id(courseGroupId))
                     .add("recordsFiltered", studentPage.getTotalElements()).add("data", studentVos));
         } catch (Exception e) {
             log.warn("学生信息查询失败！ msg : {}", e.getLocalizedMessage());
