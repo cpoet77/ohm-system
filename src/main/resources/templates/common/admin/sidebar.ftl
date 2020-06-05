@@ -79,7 +79,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <#if isRoles("admin")>
-                        <li class="<#if isRunLog??>active</#if>"><a href="#"><i
+                        <li class="<#if isRunLog??>active</#if>"><a href="/admin/systemRunLog"><i
                                         class="fa fa-circle-o"></i> 运行日志</a></li>
                     </#if>
                     <li><a href="../tables/simple.html"><i class="fa fa-circle-o"></i> 使用手册</a></li>
