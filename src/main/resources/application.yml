@@ -30,6 +30,8 @@ spring:
     show-sql: false
     open-in-view: true
     database: mysql
+  application:
+    name: ohms-subsystem
 
 # 日志配置
 logging:

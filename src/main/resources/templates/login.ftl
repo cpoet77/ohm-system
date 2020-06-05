@@ -4,7 +4,6 @@
 <#assign restHead>
     <link rel="stylesheet" href="/static/plugins/bootstrapvalidator/bootstrapValidator.min.css">
     <link rel="stylesheet" href="/static/plugins/xtiper-plugins/css/xtiper.css">
-    <link rel="stylesheet" href="/static/plugins/slideunlock/slide-unlock.css">
 </#assign>
 <#include "common/admin/head.ftl" />
 <div class="login-box">
@@ -50,7 +49,6 @@
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/xtiper-plugins/js/xtiper.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
-    <script src="/static/plugins/slideunlock/slideunlock.js"></script>
     <script>
         /***********************************************************/
         /*********** nsleaf www.nsleaf.cn 2020.05.05 **************/
@@ -86,16 +84,9 @@
                     }
                 }
             });
-            const sliderUnlock = new SliderUnlock('#slider', {successLabelTip: '验证通过'}, () => {
-            });
-            sliderUnlock.init();
             /* 绑定点击事件 */
             $('#submitBtn').on('click', () => {
                 const bootstrapValidator = form.data('bootstrapValidator');
-                if (!sliderUnlock.isOk) {
-                    xtip.msg("请先拖动滑块在进行登录！");
-                    return;
-                }
                 if (bootstrapValidator.validate().isValid()) {
                     const loginLoad = xtip.load('登录中...');
                     NS.post('/login/finishLogin', form.serializeArray(), (res) => {
