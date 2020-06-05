@@ -25,17 +25,10 @@
                        placeholder="密码">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
             </div>
-            <div class="row form-group has-feedback">
-                <div id="slider">
-                    <div id="slider_bg"></div>
-                    <span id="label">>></span>
-                    <span id="labelTip">拖动滑块验证</span>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-xs-12">
                     <button id="submitBtn" type="button"
-                            class="btn btn-primary btn-block btn-flat">登&nbsp;&nbsp;录
+                            class="btn bg-orange btn-block btn-flat">登&nbsp;&nbsp;录
                     </button>
                 </div>
             </div>
