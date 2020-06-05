@@ -21,7 +21,6 @@ import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.TeacherVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -163,15 +162,5 @@ public class TeacherServiceImpl implements TeacherService {
             log.warn("清除或者添加教学秘书权限失败！msg : {}", e.getLocalizedMessage());
         }
         return false;
-    }
-
-    @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public TeacherEntity findTeacherHasCacheByName(String name) {
-        UserEntity user = userService.findUserByRealName(name);
-        if (user == null) {
-            return null;
-        }
-        return user.getTeacher();
     }
 }

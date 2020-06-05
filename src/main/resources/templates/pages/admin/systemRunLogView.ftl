@@ -1,4 +1,4 @@
-<#-- 登录日志 -->
+<#-- 系统运行日志 -->
 <#assign pageTitle>系统运行日志</#assign>
 <#assign isSystemRelated = true />
 <#assign isRunLog = true />

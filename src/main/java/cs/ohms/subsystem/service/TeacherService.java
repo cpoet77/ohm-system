@@ -69,13 +69,4 @@ public interface TeacherService {
      * @return true|false
      */
     boolean changeTeachingSecretaryRole(Integer userId);
-
-    /**
-     * 根据name查询teacher
-     * <p>在缓存有效期内，查找cache - database</p>
-     *
-     * @param name 教师名
-     * @return TeacherEntity
-     */
-    TeacherEntity findTeacherHasCacheByName(String name);
 }

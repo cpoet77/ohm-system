@@ -92,6 +92,17 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    public List<LoginRecordVo> getLoginRecordByUserForPage(Integer userId, int page, int size) {
+        try {
+            Page<LoginRecordEntity> loginRecordPage = loginRecordRepository.findByUser_Id(userId, PageRequest.of(page, size, Sort.Direction.DESC, "datetime"));
+            return loginRecordEntity2Vo(loginRecordPage.getContent());
+        } catch (Exception e) {
+            log.warn("获取登录记录失败！msg {} ", e.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    @Override
     public boolean deleteLoginRecord(Long loginRecordId) {
         try {
             loginRecordRepository.deleteById(loginRecordId);

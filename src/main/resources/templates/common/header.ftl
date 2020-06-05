@@ -24,6 +24,12 @@
                             <#if activeCourseGroup??><span class="sr-only">(current)</span></#if>
                         </a>
                     </li>
+                    <li <#if activePersonalCenter??>class="active"</#if>>
+                        <a href="/personalCenter">
+                            个人中心
+                            <#if activePersonalCenter??><span class="sr-only">(current)</span></#if>
+                        </a>
+                    </li>
                     <#if isRoles("admin", "teachingSecretary")>
                         <li>
                             <a href="/teachingSecretary">
@@ -103,8 +109,8 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#"
-                                           class="btn btn-default btn-flat">个人资料</a>
+                                        <a href="/personalCenter"
+                                           class="btn btn-default btn-flat">个人中心</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" onclick="NS.logout()"

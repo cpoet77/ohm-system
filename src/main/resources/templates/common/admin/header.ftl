@@ -60,7 +60,7 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">个人资料</a>
+                                <a href="/personalCenter" class="btn btn-default btn-flat">个人中心</a>
                             </div>
                             <div class="pull-right">
                                 <a href="#" onclick="NS.logout()" class="btn btn-default btn-flat">注销登录</a>

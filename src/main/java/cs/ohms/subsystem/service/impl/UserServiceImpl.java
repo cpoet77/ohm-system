@@ -1,6 +1,7 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/25.
 package cs.ohms.subsystem.service.impl;
 
+import cn.nsleaf.utils.NSimpleHttp;
 import cs.ohms.subsystem.component.PasswordCMP;
 import cs.ohms.subsystem.entity.*;
 import cs.ohms.subsystem.repository.RoleRepository;
@@ -11,12 +12,16 @@ import cs.ohms.subsystem.service.AppService;
 import cs.ohms.subsystem.service.UserService;
 import cs.ohms.subsystem.tableobject.StudentInfoTo;
 import cs.ohms.subsystem.tableobject.TeacherInfoTo;
+import cs.ohms.subsystem.utils.JsonUtil;
 import cs.ohms.subsystem.utils.NStringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,6 +36,9 @@ public class UserServiceImpl implements UserService {
      * 生成用户名前缀
      */
     private static String USER_NAME_PREFIX = "";
+
+    private final static String ONE_SENTENCE_PER_DAY_API = "http://open.iciba.com/dsapi";
+
     private AppService appService;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -112,11 +120,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findUserByRealName(String realName) {
-        return userRepository.findByRealName(realName);
-    }
-
-    @Override
     public boolean deleteUserById(Boolean currentUserIsAdmin, Integer userId) {
         try {
             RoleEntity adminRole = roleRepository.findByName(UserService.USER_ADMIN_ROLE);
@@ -157,6 +160,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean updateUser(@NotNull UserEntity user, String email, String phone, Character sex) {
+        return saveUser(user.setEmail(email).setPhone(phone).setSex(sex));
+    }
+
+    @Override
     public boolean saveSkin(UserEntity user, String skinName) {
         try {
             user.setSkin(skinName);
@@ -166,5 +174,48 @@ public class UserServiceImpl implements UserService {
             log.warn("用户主题设置失败！");
         }
         return false;
+    }
+
+    @Override
+    public boolean saveAvatar(UserEntity user, String avatarUrl) {
+        try {
+            user.setAvatar(avatarUrl);
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            log.warn("用户设置头像失败！userId : {}", user.getId());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean changePassword(@NotNull UserEntity user, String password, String newPassword) {
+        if (!user.getPassword().equals(passwordCMP.encryptPassword(password, user.getSalt()))) {/* 原密码不正确 */
+            return false;
+        }
+        String newPass = passwordCMP.encryptPassword(newPassword, user.getSalt());
+        if (newPass.equals(user.getPassword())) {/* 没有任何更改！ */
+            return false;
+        }
+        try {
+            userRepository.save(user.setPassword(newPass));
+            return true;
+        } catch (Exception e) {
+            log.warn("用户密码更新失败！userId : {}", user.getId());
+        }
+        return false;
+    }
+
+    @Override
+    @Cacheable(cacheNames = {"common"})
+    public String listenToMyGoodWords() {
+        try {
+            String json = NSimpleHttp.GET(ONE_SENTENCE_PER_DAY_API);
+            Map<String, Object> data = JsonUtil.decode(json, JsonUtil.mapTypeReferenceObj());
+            return String.valueOf(data.get("note"));
+        } catch (Exception e) {
+            log.info("获取每日一句失败！msg : {}", e.getLocalizedMessage());
+        }
+        return null;
     }
 }

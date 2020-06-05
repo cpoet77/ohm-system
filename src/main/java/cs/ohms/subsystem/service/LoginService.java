@@ -3,9 +3,11 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.viewobject.LoginRecordVo;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -40,6 +42,16 @@ public interface LoginService {
      * @return ResponseResult
      */
     ResponseResult getLoginRecordListForPage(int page, int size);
+
+    /**
+     * 获取指定用户的登录记录
+     *
+     * @param userId 用户id
+     * @param page   页号
+     * @param size   数量
+     * @return LoginRecordVo for List
+     */
+    List<LoginRecordVo> getLoginRecordByUserForPage(Integer userId, int page, int size);
 
     /**
      * 根据id删除登录记录
