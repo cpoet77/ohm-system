@@ -256,11 +256,27 @@ VALUES ('admin', '超级管理员'),
        ('teacher', '教师'),
        ('student', '学生');
 
-INSERT INTO ohms_user(name, real_name, password, salt)
-VALUES ('gzmu-201742010122', '王国富', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da');
+-- 注意：默认密码为12345678
+INSERT INTO ohms_user(name, real_name, password, salt, sex)
+VALUES ('admin12340', '王国富', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da', 'M'),
+       ('admin12341', '徐旭峰', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da', 'M'),
+       ('admin12342', '汪海浪', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da', 'M'),
+       ('admin12343', '程桥凤', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da', 'F'),
+       ('admin12344', '李仁材', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da', 'M'),
+       ('admin12345', '尚宏程', '3a9b59d90b4c3a62aa12bcb1a495de17', '48bcaffd039640b4aa63a86a6d0883da', 'M');
 
 INSERT INTO ohms_teacher(teacher_id, user_id)
-VALUES ('201742010122', 1);
+VALUES ('110110110110', 1),
+       ('110110110111', 2),
+       ('110110110112', 3),
+       ('110110110113', 4),
+       ('110110110114', 5),
+       ('110110110115', 6);
 
 INSERT INTO ohms_user_role(user_id, role_id)
-VALUES (1, 1);
+VALUES (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 1),
+       (5, 1),
+       (6, 1);
