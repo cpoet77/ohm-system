@@ -13,9 +13,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/seeCourseGroup")
 public class SeeCourseGroupController {
 
+    /**
+     * 我的课群界面显示demo
+     *
+     * @return
+     */
     @GetMapping
-    public String index(){
-
+    public String seeCourseGroupIndex(){
         return "pages/seeCourseGroup";
+    }
+
+    /**
+     * 创建作业界面显示demo
+     *
+     * @return
+     */
+    @GetMapping("/createHomework")
+    public String createHomeworkIndex(){
+        return "pages/createHomework";
+    }
+
+    /**
+     * 提交作业视图显示demo
+     *
+     * @return
+     */
+    @GetMapping("/createHomework/pushHomework")
+    public String pushHomeworkIndex(){
+        return "pages/pushHomework";
     }
 }

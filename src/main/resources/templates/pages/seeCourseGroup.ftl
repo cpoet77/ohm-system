@@ -1,7 +1,6 @@
 <#assign activeIndex = true />
 <#assign pageTitle>我的课群</#assign>
 <#include "../common/head.ftl" />
-<body class="hold-transition skin-blue layout-top-nav">
 <div class="wrapper">
     <#include "../common/header.ftl">
     <!-- Full Width Column -->
@@ -73,11 +72,13 @@
                                 <div class="box-header">
                                     <h4 class="box-title">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#"><span
-                                                    style="vertical-align: inherit;"><span style="vertical-align: inherit;">
+                                                    style="vertical-align: inherit;"><span
+                                                        style="vertical-align: inherit;">
                                                     我加入的
                                                 </span></span></a>
                                         <a data-toggle="collapse" data-parent="#accordion" href="#"><span
-                                                    style="vertical-align: inherit;"><span style="vertical-align: inherit;">
+                                                    style="vertical-align: inherit;"><span
+                                                        style="vertical-align: inherit;">
                                                     我创建的
                                                 </span></span></a>
                                     </h4>
@@ -98,7 +99,8 @@
                                                             style="vertical-align: inherit;">网页设计者</span></span></h5>
                                         </div>
                                         <div class="widget-user-image">
-                                            <img class="img-circle" src="../static/dist/img/user1-128x128.jpg" alt="用户头像">
+                                            <img class="img-circle" src="../static/dist/img/user1-128x128.jpg"
+                                                 alt="用户头像">
                                         </div>
                                         <div class="box-footer">
                                             <div class="row">
@@ -106,7 +108,8 @@
                                                     <div class="description-block">
                                                         <h5 class="description-header"><span
                                                                     style="vertical-align: inherit;"><span
-                                                                        style="vertical-align: inherit;">软件工程</span></span></h5>
+                                                                        style="vertical-align: inherit;">软件工程</span></span>
+                                                        </h5>
                                                         <span class="description-text"><span
                                                                     style="vertical-align: inherit;"><span
                                                                         style="vertical-align: inherit;">销售</span></span></span>
@@ -138,7 +141,8 @@
 
                                         </div>
                                         <div class="widget-user-image">
-                                            <img class="img-circle" src="../static/dist/img/user3-128x128.jpg" alt="用户头像">
+                                            <img class="img-circle" src="../static/dist/img/user3-128x128.jpg"
+                                                 alt="用户头像">
                                         </div>
                                         <div class="box-footer">
                                             <h3 class="profile-username text-center">多媒体技术</h3>
@@ -162,7 +166,8 @@
 
                                         </div>
                                         <div class="widget-user-image">
-                                            <img class="img-circle" src="../static/dist/img/user2-160x160.jpg" alt="用户头像">
+                                            <img class="img-circle" src="../static/dist/img/user2-160x160.jpg"
+                                                 alt="用户头像">
                                         </div>
                                         <div class="box-footer">
                                             <h3 class="profile-username text-center">数据库</h3>
@@ -185,7 +190,8 @@
 
                                         </div>
                                         <div class="widget-user-image">
-                                            <img class="img-circle" src="../static/dist/img/user4-128x128.jpg" alt="用户头像">
+                                            <img class="img-circle" src="../static/dist/img/user4-128x128.jpg"
+                                                 alt="用户头像">
                                         </div>
                                         <div class="box-footer">
                                             <h3 class="profile-username text-center">Java程序设计</h3>
@@ -210,7 +216,7 @@
         </div>
         <!-- /.container -->
     </div>
-    <#include "../common/copyright.ftl">
 </div>
+<#include "../common/copyright.ftl">
 <!-- /.content-wrapper -->
 <#include "../common/footer.ftl">
