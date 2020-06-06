@@ -12,185 +12,111 @@
     <#include "../common/header.ftl"/>
     <div class="content-wrapper">
         <div class="container">
-            <div class="col-md-12">
+            <section class="content-header">
+                <h1>
+                    作业管理
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
+                    <li><a href="#">我的课群</a></li>
+                    <li class="active">作业管理</li>
+                </ol>
+            </section>
+            <div class="box-header with-border">
+                <div class="info-box bg-blue">
+                    <span class="info-box-icon"><i class="ion ion-ios-heart-outline"></i></span>
+                    <div class="info-box-content">
+                        <h3>计科2班</h3>
+                        <h6>软件工程</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
                 <div class="box box-solid">
-                    <section class="content-header">
-                        <h1>
-                            作业管理
-                        </h1>
-                        <ol class="breadcrumb">
-                            <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
-                            <li><a href="#">我的课群</a></li>
-                            <li class="active">作业管理</li>
-                        </ol>
-                    </section>
                     <div class="box-header with-border">
-                        <div class="info-box bg-green">
-                            <span class="info-box-icon"><i class="ion ion-ios-heart-outline"></i></span>
-                            <div class="info-box-content">
-                                <h3>计科2班</h3>
-                                <h6>软件工程</h6>
-                            </div>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" placeholder="按作业名搜索">
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-info btn-flat">
+                                <span style="vertical-align: inherit;">
+                                    <span class="fa fa-search" style="vertical-align: inherit;"></span>
+                                </span>
+                            </button>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label><span style="vertical-align: inherit;"><span
+                                            style="vertical-align: inherit;">选择状态</span></span></label>
+                            <select class="form-control">
+                                <option><span style="vertical-align: inherit;"><span style="vertical-align: inherit;">全部作业</span></span></option>
+                                <option><span style="vertical-align: inherit;"><span style="vertical-align: inherit;">进行中</span></span></option>
+                                <option><span style="vertical-align: inherit;"><span style="vertical-align: inherit;">已结束</span></span></option>
+                            </select>
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="col-md-12">
-                            <div class="box box-solid">
-                                <div class="box-header with-border">
-                                    <div class="box-header">
-                                        <h3 class="box-title">
-                                    <span style="vertical-align: inherit;">
-                                    <span style="vertical-align: inherit;">作业列表</span></span>
-                                        </h3>
-                                        <div class="box-tools">
-                                            <div class="input-group input-group-sm" style="width: 150px;">
-                                                <input type="text" name="table_search" class="form-control pull-right"
-                                                       placeholder="搜索">
-                                                <div class="input-group-btn">
-                                                    <button type="submit" class="btn btn-default"><i
-                                                                class="fa fa-search"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div>
+                            <button type="button" class="btn btn-block btn-social btn-default btn-lg">
+                                <i class="fa fa-file-text-o" style="width: 60px"></i>
+                                <div>
+                                    <span class="box box-info box-solid" style="font-size: 15px; color: #00b3ee">进行中</span>
+                                    <span style="font-size: 15px;">作业3</span>
                                 </div>
 
-                                <div class="box-body">
-                                    <div>
-                                        <button type="button" class="btn btn-block btn-social btn-default btn-lg">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="box box-success box-solid">进行中</span>
-                                            作业6
-                                            <div class="" style="width:822px;">
-                                                <div class="" style="float:left;">
-                                                    <span>共 </span>
-                                                    <span>1</span>
-                                                    <span>人参与</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span>2020-06-03</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span style="color: #cc0000">10 经验</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span class="fa fa-hourglass-half"
-                                                          style="color: #cc0000; vertical-align:middle;">剩余 9 天 7 小时 </span>
-                                                </div>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="btn btn-block btn-social btn-default btn-lg">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="box box-success box-solid">进行中</span>
-                                            作业5
-                                            <div class="" style="width:822px;">
-                                                <div class="" style="float:left;">
-                                                    <span>共 </span>
-                                                    <span>1</span>
-                                                    <span>人参与</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span>2020-06-03</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span style="color: #cc0000">10 经验</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span class="fa fa-hourglass-half"
-                                                          style="color: #cc0000; vertical-align:middle;">剩余 9 天 7 小时 </span>
-                                                </div>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="btn btn-block btn-social btn-default btn-lg">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="box box-success box-solid">进行中</span>
-                                            作业4
-                                            <div class="" style="width:822px;">
-                                                <div class="" style="float:left;">
-                                                    <span>共 </span>
-                                                    <span>1</span>
-                                                    <span>人参与</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span>2020-06-03</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span style="color: #cc0000">10 经验</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span class="fa fa-hourglass-half"
-                                                          style="color: #cc0000; vertical-align:middle;">剩余 9 天 7 小时 </span>
-                                                </div>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="btn btn-block btn-social btn-default btn-lg">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="box box-success box-solid">进行中</span>
-                                            作业3
-                                            <div class="" style="width:822px;">
-                                                <div class="" style="float:left;">
-                                                    <span>共 </span>
-                                                    <span>1</span>
-                                                    <span>人参与</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span>2020-06-03</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span style="color: #cc0000">10 经验</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span class="fa fa-hourglass-half"
-                                                          style="color: #cc0000; vertical-align:middle;">剩余 9 天 7 小时 </span>
-                                                </div>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="btn btn-block btn-social btn-default btn-lg">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="box box-success box-solid">进行中</span>
-                                            作业2
-                                            <div class="" style="width:822px;">
-                                                <div class="" style="float:left;">
-                                                    <span>共 </span>
-                                                    <span>1</span>
-                                                    <span>人参与</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span>2020-06-03</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span style="color: #cc0000">10 经验</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span class="fa fa-hourglass-half"
-                                                          style="color: #cc0000; vertical-align:middle;">剩余 9 天 7 小时 </span>
-                                                </div>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="btn btn-block btn-social btn-default btn-lg">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="box box-success box-solid">进行中</span>
-                                            作业
-                                            <div class="" style="width:822px;">
-                                                <div class="" style="float:left;">
-                                                    <span>共 </span>
-                                                    <span>1</span>
-                                                    <span>人参与</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span>2020-06-03</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span style="color: #cc0000">10 经验</span>
-                                                    <span style="margin:0 5px;">|</span>
-                                                    <span class="fa fa-hourglass-half"
-                                                          style="color: #cc0000; vertical-align:middle;">剩余 9 天 7 小时 </span>
-                                                </div>
-                                                <div class="clear"></div>
-                                            </div>
-                                        </button>
-                                    </div>
+                                <div class="" style="float:left;">
+                                    <span style="font-size:12px">共 </span>
+                                    <span style="font-size:12px">1</span>
+                                    <span style="font-size:12px">人参与</span>
+                                    <span style="font-size:12px">|</span>
+                                    <span style="font-size:12px">2020-06-03</span>
+                                    <span style="font-size:12px">|</span>
+                                    <span class="fa fa-hourglass-half"
+                                          style="color: #FF8A00; font-size:12px">剩余 9 天 7 小时</span>
+                                    <div class="clear"></div>
                                 </div>
-                            </div>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-block btn-social btn-default btn-lg">
+                                <i class="fa fa-file-text-o" style="width: 60px"></i>
+                                <div>
+                                    <span class="box box-info box-solid" style="font-size: 15px; color: #00b3ee">进行中</span>
+                                    <span style="font-size: 15px;">作业2</span>
+                                </div>
+
+                                <div class="" style="float:left;">
+                                    <span style="font-size:12px">共 </span>
+                                    <span style="font-size:12px">1</span>
+                                    <span style="font-size:12px">人参与</span>
+                                    <span style="font-size:12px">|</span>
+                                    <span style="font-size:12px">2020-06-03</span>
+                                    <span style="font-size:12px">|</span>
+                                    <span class="fa fa-hourglass-half"
+                                          style="color: #FF8A00; font-size:12px">剩余 9 天 7 小时</span>
+                                    <div class="clear"></div>
+                                </div>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-block btn-social btn-default btn-lg">
+                                <i class="fa fa-file-text-o" style="width: 60px"></i>
+                                <div>
+                                    <span class="box box-info box-solid" style="font-size: 15px; color: #00b3ee">进行中</span>
+                                    <span style="font-size: 15px;">作业1</span>
+                                </div>
+
+                                <div class="" style="float:left;">
+                                    <span style="font-size:12px">共 </span>
+                                    <span style="font-size:12px">1</span>
+                                    <span style="font-size:12px">人参与</span>
+                                    <span style="font-size:12px">|</span>
+                                    <span style="font-size:12px">2020-06-03</span>
+                                    <span style="font-size:12px">|</span>
+                                    <span class="fa fa-hourglass-half"
+                                          style="color: #FF8A00; font-size:12px">剩余 9 天 7 小时</span>
+                                    <div class="clear"></div>
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>
