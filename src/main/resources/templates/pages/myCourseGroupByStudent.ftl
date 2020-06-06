@@ -60,7 +60,8 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                        <a href="#" class="btn btn-primary btn-block"><b>进入</b></a>
+                                        <a href="/homework?courseGroup=${courseGroup.id}"
+                                           class="btn btn-primary btn-block"><b>进入</b></a>
                                     </div>
                                 </div>
                             </div>
