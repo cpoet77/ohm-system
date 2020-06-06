@@ -2,6 +2,8 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CourseGroupEntity;
+import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.viewobject.CourseGroupListVo;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,6 +50,16 @@ public interface CourseGroupService {
     ResponseResult getCourseGroupByTeacherForPage(String teacherId, int page, int size);
 
     /**
+     * 根据教职工号Like分页查询课群
+     *
+     * @param user 教职工用户对象
+     * @param page 页号
+     * @param size 数量
+     * @return CourseGroupListVo
+     */
+    CourseGroupListVo getCourseGroupListByTeacherForPage(UserEntity user, int page, int size);
+
+    /**
      * 根据课群名Like分页查询课群
      *
      * @param courseGroupName 课群名
@@ -67,6 +79,17 @@ public interface CourseGroupService {
      * @return ResponseResult
      */
     ResponseResult getCourseGroupByTeacherAndNameForPage(String teacherId, String courseGroupName, int page, int size);
+
+    /**
+     * 根据课群名Like且教职工号Like查询课群
+     *
+     * @param user            教职工用户对象
+     * @param courseGroupName 课群名
+     * @param page            页号
+     * @param size            数量
+     * @return CourseGroupListVo
+     */
+    CourseGroupListVo getCourseGroupListByTeacherAndNameForPage(UserEntity user, String courseGroupName, int page, int size);
 
     /**
      * 根据课群名Like或教职工号Like查询课群

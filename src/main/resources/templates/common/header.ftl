@@ -19,7 +19,7 @@
                         </a>
                     </li>
                     <li <#if activeCourseGroup??>class="active"</#if>>
-                        <a href="/">
+                        <a href="/myCourseGroup">
                             我的课群
                             <#if activeCourseGroup??><span class="sr-only">(current)</span></#if>
                         </a>

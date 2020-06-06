@@ -1,6 +1,7 @@
 package cs.ohms.subsystem.repository;
 
 import cs.ohms.subsystem.entity.CourseGroupEntity;
+import cs.ohms.subsystem.entity.TeacherEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,8 @@ public interface CourseGroupRepository extends JpaRepository<CourseGroupEntity, 
     Page<CourseGroupEntity> findAllByNameIsLikeAndTeacher_TeacherIdIsLike(String name, String teacher_teacherId, Pageable pageable);
 
     Page<CourseGroupEntity> findAllByNameIsLikeOrTeacher_TeacherIdIsLike(String name, String teacher_teacherId, Pageable pageable);
+
+    Page<CourseGroupEntity> findAllByTeacher(TeacherEntity teacher, Pageable pageable);
+
+    Page<CourseGroupEntity> findAllByTeacherAndNameIsLike(TeacherEntity teacher, String name, Pageable pageable);
 }

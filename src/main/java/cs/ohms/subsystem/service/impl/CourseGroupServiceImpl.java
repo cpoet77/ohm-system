@@ -1,10 +1,7 @@
 package cs.ohms.subsystem.service.impl;
 
 import cs.ohms.subsystem.common.ResponseResult;
-import cs.ohms.subsystem.entity.ClassEntity;
-import cs.ohms.subsystem.entity.CourseGroupEntity;
-import cs.ohms.subsystem.entity.StudentEntity;
-import cs.ohms.subsystem.entity.TeacherEntity;
+import cs.ohms.subsystem.entity.*;
 import cs.ohms.subsystem.entity.middle.StudentCourseGroupEntity;
 import cs.ohms.subsystem.repository.ClassRepository;
 import cs.ohms.subsystem.repository.CourseGroupRepository;
@@ -13,11 +10,13 @@ import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.repository.middle.StudentCourseGroupRepository;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.utils.NStringUtil;
+import cs.ohms.subsystem.viewobject.CourseGroupListVo;
 import cs.ohms.subsystem.viewobject.CourseGroupVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -87,6 +86,19 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     }
 
     @Override
+    public CourseGroupListVo getCourseGroupListByTeacherForPage(UserEntity user, int page, int size) {
+        try {
+            Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByTeacher(teacherRepository.findByUser(user)
+                    , PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
+            return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
+                    .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
+        } catch (Exception e) {
+            log.warn("课群信息查询失败！");
+        }
+        return null;
+    }
+
+    @Override
     public ResponseResult getCourseGroupByNameForPage(String courseGroupName, int page, int size) {
         try {
             Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByNameIsLike(NStringUtil
@@ -112,6 +124,19 @@ public class CourseGroupServiceImpl implements CourseGroupService {
             log.warn("课群信息查询失败！");
         }
         return ResponseResult.enFail();
+    }
+
+    @Override
+    public CourseGroupListVo getCourseGroupListByTeacherAndNameForPage(UserEntity user, String courseGroupName, int page, int size) {
+        try {
+            Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByTeacherAndNameIsLike(teacherRepository.findByUser(user)
+                    , NStringUtil.joint("%{}%", courseGroupName), PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
+            return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
+                    .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
+        } catch (Exception e) {
+            log.warn("课群信息查询失败！");
+        }
+        return null;
     }
 
     @Override

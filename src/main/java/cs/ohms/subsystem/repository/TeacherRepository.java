@@ -2,6 +2,7 @@
 package cs.ohms.subsystem.repository;
 
 import cs.ohms.subsystem.entity.TeacherEntity;
+import cs.ohms.subsystem.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TeacherRepository extends JpaRepository<TeacherEntity, String>, JpaSpecificationExecutor<TeacherEntity> {
+    TeacherEntity findByUser(UserEntity user);
 }
