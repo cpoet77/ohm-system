@@ -32,9 +32,9 @@ public interface CourseGroupRepository extends JpaRepository<CourseGroupEntity, 
 
     Page<CourseGroupEntity> findAllByTeacherAndNameIsLike(TeacherEntity teacher, String name, Pageable pageable);
 
-    @Query(value = "SELECT * FROM ohms_course_group WHERE id IN (SELECT course_group_id FROM ohms_student_course_group WHERE student_id = :student.studentId)", nativeQuery = true)
+    @Query(value = "SELECT * FROM ohms_course_group WHERE id IN (SELECT course_group_id FROM ohms_student_course_group WHERE student_id = :#{#student.studentId})", nativeQuery = true)
     Page<CourseGroupEntity> findAllByStudent(@Param("student") StudentEntity student, Pageable pageable);
 
-    @Query(value = "SELECT * FROM ohms_course_group WHERE id IN (SELECT course_group_id FROM ohms_student_course_group WHERE student_id = :student.studentId) AND name LIKE :name", nativeQuery = true)
+    @Query(value = "SELECT * FROM ohms_course_group WHERE id IN (SELECT course_group_id FROM ohms_student_course_group WHERE student_id = :#{#student.studentId}) AND name LIKE :name", nativeQuery = true)
     Page<CourseGroupEntity> findAllByStudentAndNameIsLike(@Param("student") StudentEntity student, @Param("name") String name, Pageable pageable);
 }

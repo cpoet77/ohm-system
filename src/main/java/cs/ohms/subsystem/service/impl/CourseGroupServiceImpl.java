@@ -66,7 +66,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
                     .add("recordsFiltered", courseGroupPage.getTotalElements())
                     .add("data", courseGroupEntity2Vo(courseGroupPage.getContent())));
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return ResponseResult.enFail();
     }
@@ -80,7 +80,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
                     .add("recordsFiltered", courseGroupPage.getTotalElements())
                     .add("data", courseGroupEntity2Vo(courseGroupPage.getContent())));
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return ResponseResult.enFail();
     }
@@ -93,7 +93,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return null;
     }
@@ -106,7 +106,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return null;
     }
@@ -120,7 +120,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
                     .add("recordsFiltered", courseGroupPage.getTotalElements())
                     .add("data", courseGroupEntity2Vo(courseGroupPage.getContent())));
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return ResponseResult.enFail();
     }
@@ -134,7 +134,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
                     .add("recordsFiltered", courseGroupPage.getTotalElements())
                     .add("data", courseGroupEntity2Vo(courseGroupPage.getContent())));
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return ResponseResult.enFail();
     }
@@ -147,7 +147,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return null;
     }
@@ -160,7 +160,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return null;
     }
@@ -174,7 +174,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
                     .add("recordsFiltered", courseGroupPage.getTotalElements())
                     .add("data", courseGroupEntity2Vo(courseGroupPage.getContent())));
         } catch (Exception e) {
-            log.warn("课群信息查询失败！");
+            log.warn("课群信息查询失败！", e);
         }
         return ResponseResult.enFail();
     }
