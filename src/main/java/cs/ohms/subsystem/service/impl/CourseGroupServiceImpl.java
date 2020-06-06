@@ -13,6 +13,7 @@ import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.CourseGroupListVo;
 import cs.ohms.subsystem.viewobject.CourseGroupVo;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,6 +57,20 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     public CourseGroupEntity findById(Integer id) {
         Optional<CourseGroupEntity> courseGroupOpt = courseGroupRepository.findById(id);
         return courseGroupOpt.orElse(null);
+    }
+
+    @Override
+    public CourseGroupVo findByTeacherAndId(UserEntity user, Integer id) {
+        Optional<CourseGroupEntity> courseGroupOpt = courseGroupRepository.findByTeacherAndId(teacherRepository
+                .findByUser(user), id);
+        return courseGroupOpt.map(this::courseGroupEntity2Vo).orElse(null);
+    }
+
+    @Override
+    public CourseGroupVo findByStudentAndId(UserEntity user, Integer id) {
+        Optional<CourseGroupEntity> courseGroupOpt = courseGroupRepository.findByStudentAndId(studentRepository
+                .findByUser(user), id);
+        return courseGroupOpt.map(this::courseGroupEntity2Vo).orElse(null);
     }
 
     @Override
@@ -280,16 +295,33 @@ public class CourseGroupServiceImpl implements CourseGroupService {
         return false;
     }
 
-    private List<CourseGroupVo> courseGroupEntity2Vo(Collection<CourseGroupEntity> courseGroups) {
+    /**
+     * 实体对象转vo对象
+     *
+     * @param courseGroups 课群实体
+     * @return CourseGroupVo for list
+     */
+    @NotNull
+    private List<CourseGroupVo> courseGroupEntity2Vo(@NotNull Collection<CourseGroupEntity> courseGroups) {
         List<CourseGroupVo> courseGroupVos = new ArrayList<>();
-        courseGroups.forEach(courseGroup -> courseGroupVos.add(new CourseGroupVo().setId(courseGroup.getId())
+        courseGroups.forEach(courseGroup -> courseGroupVos.add(courseGroupEntity2Vo(courseGroup)));
+        return courseGroupVos;
+    }
+
+    /**
+     * 实体对象转vo对象
+     *
+     * @param courseGroup 课群实体
+     * @return CourseGroupVo
+     */
+    private CourseGroupVo courseGroupEntity2Vo(@NotNull CourseGroupEntity courseGroup) {
+        return (new CourseGroupVo().setId(courseGroup.getId())
                 .setTeacherId(courseGroup.getTeacher().getTeacherId())
                 .setTeacherRealName(courseGroup.getTeacher().getUser().getRealName())
                 .setCourseGroupName(courseGroup.getName())
                 .setDescription(courseGroup.getDescription())
                 .setDatetime(courseGroup.getCreateTime())
                 .setCountStudent(studentRepository.countByCourseGroup_Id(courseGroup.getId()))
-                .setState(courseGroup.getState())));
-        return courseGroupVos;
+                .setState(courseGroup.getState()));
     }
 }

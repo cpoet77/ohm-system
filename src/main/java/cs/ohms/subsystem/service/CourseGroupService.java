@@ -4,6 +4,7 @@ import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CourseGroupEntity;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.viewobject.CourseGroupListVo;
+import cs.ohms.subsystem.viewobject.CourseGroupVo;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +30,24 @@ public interface CourseGroupService {
      * @return CourseGroupEntity
      */
     CourseGroupEntity findById(Integer id);
+
+    /**
+     * 根据目标教师信息查找课群
+     *
+     * @param user 教师的用户对象
+     * @param id   课群Id
+     * @return CourseGroupVo
+     */
+    CourseGroupVo findByTeacherAndId(UserEntity user, Integer id);
+
+    /**
+     * 根据目标学生信息查找课群
+     *
+     * @param user 学生的用户对象
+     * @param id   课群id
+     * @return CourseGroupVo
+     */
+    CourseGroupVo findByStudentAndId(UserEntity user, Integer id);
 
     /**
      * 分页获取课程列表

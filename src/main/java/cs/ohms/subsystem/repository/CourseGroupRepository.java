@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * 2020/5/23 23:59
  *
@@ -19,6 +21,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseGroupRepository extends JpaRepository<CourseGroupEntity, Integer>, JpaSpecificationExecutor<CourseGroupEntity> {
     int countByTeacher_TeacherId(String teacherId);
+
+    Optional<CourseGroupEntity> findByTeacherAndId(TeacherEntity teacher, Integer id);
+
+    @Query(value = "SELECT * FROM ohms_course_group WHERE id = (SELECT course_group_id FROM ohms_student_course_group WHERE student_id = :#{#student.studentId} AND course_group_id = :id)", nativeQuery = true)
+    Optional<CourseGroupEntity> findByStudentAndId(@Param("student") StudentEntity student, @Param("id") Integer id);
 
     Page<CourseGroupEntity> findAllByTeacher_TeacherIdIsLike(String teacher_teacherId, Pageable pageable);
 
