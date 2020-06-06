@@ -50,7 +50,8 @@
                                     </div>
                                     <div class="box-footer">
                                         <h3 class="profile-username text-center">${courseGroup.name!""}</h3>
-                                        <p class="text-muted text-center">${courseGroup.teacher.user.realName}</p>
+                                        <p class="text-muted text-center">${courseGroup.teacher.user.realName}
+                                            (${courseGroup.teacher.teacherId})</p>
                                         <ul class="list-group list-group-unbordered">
                                             <li class="list-group-item">
                                                 <b>状态</b>

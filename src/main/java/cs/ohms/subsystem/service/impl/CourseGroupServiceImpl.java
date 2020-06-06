@@ -102,7 +102,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     public CourseGroupListVo getCourseGroupListByStudentForPage(UserEntity user, int page, int size) {
         try {
             Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByStudent(studentRepository.findByUser(user)
-                    , PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
+                    , PageRequest.of(page, size, Sort.Direction.DESC, "create_time"));
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
         } catch (Exception e) {
@@ -156,7 +156,7 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     public CourseGroupListVo getCourseGroupListByStudentAndNameForPage(UserEntity user, String courseGroupName, int page, int size) {
         try {
             Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByStudentAndNameIsLike(studentRepository.findByUser(user)
-                    , NStringUtil.joint("%{}%", courseGroupName), PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
+                    , NStringUtil.joint("%{}%", courseGroupName), PageRequest.of(page, size, Sort.Direction.DESC, "create_time"));
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
         } catch (Exception e) {
