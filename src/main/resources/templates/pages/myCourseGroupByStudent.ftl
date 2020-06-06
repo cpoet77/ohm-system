@@ -45,7 +45,7 @@
                                     </div>
                                     <div class="widget-user-image">
                                         <img class="img-circle"
-                                             src="<#if u.avatar??>${u.avatar}<#elseif u.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
+                                             src="<#if courseGroup.teacher.user.avatar??>${courseGroup.teacher.user.avatar}<#elseif courseGroup.teacher.user.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
                                              alt="avatar">
                                     </div>
                                     <div class="box-footer">
