@@ -45,13 +45,16 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <label><span style="vertical-align: inherit;"><span
-                                            style="vertical-align: inherit;">选择状态</span></span></label>
-                            <select class="form-control">
-                                <option><span style="vertical-align: inherit;"><span style="vertical-align: inherit;">全部作业</span></span></option>
-                                <option><span style="vertical-align: inherit;"><span style="vertical-align: inherit;">进行中</span></span></option>
-                                <option><span style="vertical-align: inherit;"><span style="vertical-align: inherit;">已结束</span></span></option>
-                            </select>
+                            <hr>
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">全部作业
+                            </label>
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">进行中
+                            </label>
+                            <label>
+                                <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">已结束
+                            </label>
                         </div>
                     </div>
                     <div class="box-body">
