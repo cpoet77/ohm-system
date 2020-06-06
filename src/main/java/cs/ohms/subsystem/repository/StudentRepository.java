@@ -2,6 +2,7 @@
 package cs.ohms.subsystem.repository;
 
 import cs.ohms.subsystem.entity.StudentEntity;
+import cs.ohms.subsystem.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,6 +32,8 @@ public interface StudentRepository extends JpaRepository<StudentEntity, String>,
     Page<StudentEntity> findByMajor_Id(Integer majorId, Pageable pageable);
 
     Page<StudentEntity> findByClazz_Id(Integer clazzId, Pageable pageable);
+
+    StudentEntity findByUser(UserEntity user);
 
     @Query(value = "SELECT * FROM ohms_view_student WHERE student_id IN (SELECT student_id FROM ohms_student_course_group WHERE course_group_id = :courseGroupId)", nativeQuery = true)
     Page<StudentEntity> findByCourseGroupId(@Param("courseGroupId") Integer courseGroupId, Pageable pageable);

@@ -99,6 +99,19 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     }
 
     @Override
+    public CourseGroupListVo getCourseGroupListByStudentForPage(UserEntity user, int page, int size) {
+        try {
+            Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByStudent(studentRepository.findByUser(user)
+                    , PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
+            return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
+                    .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
+        } catch (Exception e) {
+            log.warn("课群信息查询失败！");
+        }
+        return null;
+    }
+
+    @Override
     public ResponseResult getCourseGroupByNameForPage(String courseGroupName, int page, int size) {
         try {
             Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByNameIsLike(NStringUtil
@@ -130,6 +143,19 @@ public class CourseGroupServiceImpl implements CourseGroupService {
     public CourseGroupListVo getCourseGroupListByTeacherAndNameForPage(UserEntity user, String courseGroupName, int page, int size) {
         try {
             Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByTeacherAndNameIsLike(teacherRepository.findByUser(user)
+                    , NStringUtil.joint("%{}%", courseGroupName), PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
+            return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
+                    .getTotalPages()).setCourseGroups(courseGroupPage.getContent());
+        } catch (Exception e) {
+            log.warn("课群信息查询失败！");
+        }
+        return null;
+    }
+
+    @Override
+    public CourseGroupListVo getCourseGroupListByStudentAndNameForPage(UserEntity user, String courseGroupName, int page, int size) {
+        try {
+            Page<CourseGroupEntity> courseGroupPage = courseGroupRepository.findAllByStudentAndNameIsLike(studentRepository.findByUser(user)
                     , NStringUtil.joint("%{}%", courseGroupName), PageRequest.of(page, size, Sort.Direction.DESC, "createTime"));
             return (new CourseGroupListVo()).setCount(courseGroupPage.getTotalElements()).setPage(courseGroupPage
                     .getTotalPages()).setCourseGroups(courseGroupPage.getContent());

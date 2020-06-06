@@ -58,6 +58,13 @@ public class MyCourseGroupController {
             return (new ModelAndView("pages/myCourseGroupByTeacher").addObject("search", search)
                     .addObject("courseGroupListVo", courseGroupListVo).addObject("page", page));
         }
-        return new ModelAndView("pages/myCourseGroupByStudent").addObject("search", search);
+        CourseGroupListVo courseGroupListVo = NStringUtil.isEmpty(search) ? courseGroupService
+                .getCourseGroupListByStudentForPage(user, page, length) : courseGroupService
+                .getCourseGroupListByStudentAndNameForPage(user, search, page, length);
+        if (courseGroupListVo == null || page >= courseGroupListVo.getPage()) {
+            throw new NSRuntimeException("获取学生加入的课群信息失败？");
+        }
+        return (new ModelAndView("pages/myCourseGroupByStudent").addObject("search", search)
+                .addObject("courseGroupListVo", courseGroupListVo).addObject("page", page));
     }
 }

@@ -50,7 +50,7 @@ public interface CourseGroupService {
     ResponseResult getCourseGroupByTeacherForPage(String teacherId, int page, int size);
 
     /**
-     * 根据教职工号Like分页查询课群
+     * 查询指定教师的课群信息
      *
      * @param user 教职工用户对象
      * @param page 页号
@@ -58,6 +58,16 @@ public interface CourseGroupService {
      * @return CourseGroupListVo
      */
     CourseGroupListVo getCourseGroupListByTeacherForPage(UserEntity user, int page, int size);
+
+    /**
+     * 查询指定学生的课群信息
+     *
+     * @param user 学生的用户对象
+     * @param page 页号
+     * @param size 数量
+     * @return CourseGroupListVo
+     */
+    CourseGroupListVo getCourseGroupListByStudentForPage(UserEntity user, int page, int size);
 
     /**
      * 根据课群名Like分页查询课群
@@ -81,7 +91,7 @@ public interface CourseGroupService {
     ResponseResult getCourseGroupByTeacherAndNameForPage(String teacherId, String courseGroupName, int page, int size);
 
     /**
-     * 根据课群名Like且教职工号Like查询课群
+     * 查询指定教师的课群信息，且根据课群名作Like查询
      *
      * @param user            教职工用户对象
      * @param courseGroupName 课群名
@@ -90,6 +100,17 @@ public interface CourseGroupService {
      * @return CourseGroupListVo
      */
     CourseGroupListVo getCourseGroupListByTeacherAndNameForPage(UserEntity user, String courseGroupName, int page, int size);
+
+    /**
+     * 查询指定学生加入的课群信息，且根据课群名作Like查询
+     *
+     * @param user            学生的用户对象
+     * @param courseGroupName 课群名
+     * @param page            页号
+     * @param size            数量
+     * @return CourseGroupListVo
+     */
+    CourseGroupListVo getCourseGroupListByStudentAndNameForPage(UserEntity user, String courseGroupName, int page, int size);
 
     /**
      * 根据课群名Like或教职工号Like查询课群
