@@ -1,5 +1,4 @@
 <#-- 学院管理 -->
-<#assign activeIndex></#assign>
 <#assign pageTitle>学院管理</#assign>
 <#assign isCourseManagement = true />
 <#assign isCollegeManagement = true />
@@ -33,10 +32,12 @@
                     <div class="box">
                         <div class="box-header">
                             <div class="btn-group">
-                                <button type="button" class="btn bg-purple" data-toggle="modal"
-                                        data-target="#saveCollegeModal">添加
-                                </button>
-                                <button type="button" class="btn bg-orange">导出</button>
+                                <#if isRoles("admin")>
+                                    <button type="button" class="btn bg-purple" data-toggle="modal"
+                                            data-target="#saveCollegeModal">添加
+                                    </button>
+                                </#if>
+                                <button type="button" class="btn bg-orange" id="exportXlsxBtn">导出</button>
                             </div>
                         </div>
                         <!-- /.box-header -->
@@ -50,7 +51,9 @@
                                     <th>学生数量</th>
                                     <th>介绍</th>
                                     <th>导入时间</th>
-                                    <th>操作</th>
+                                    <#if isRoles("admin")>
+                                        <th>操作</th>
+                                    </#if>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -64,47 +67,51 @@
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
-                <!-- Modal -->
-                <div class="modal fade" id="saveCollegeModal" tabindex="-1" role="dialog"
-                     aria-labelledby="saveCollegeModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="saveCollegeModalLabel"
-                                    v-if="saveOneCollegeInfo.id !== null">
-                                    更新学院信息
-                                </h4>
-                                <h4 class="modal-title" id="saveCollegeModalLabel" v-else>
-                                    添加学院
-                                </h4>
-                            </div>
-                            <div class="modal-body">
-                                <form id="saveOneCollegeInfo">
-                                    <div class="form-group">
-                                        <label for="collegeName">学院名</label>
-                                        <input name="collegeName" type="text" class="form-control" id="collegeName"
-                                               v-model="saveOneCollegeInfo.name" placeholder="请输入学院名">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="collegeDescription">学院简介</label>
-                                        <textarea name="collegeDescription" id="collegeDescription" class="form-control"
-                                                  v-model="saveOneCollegeInfo.description" rows="5"
-                                                  placeholder="请输入学院简介"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="saveOneCollegeInfoSubmit" type="button" class="btn btn-primary"
-                                        v-if="saveOneCollegeInfo.id !== null">更新
-                                </button>
-                                <button id="saveOneCollegeInfoSubmit" type="button" class="btn btn-primary" v-else>添加
-                                </button>
+                <#if isRoles("admin")>
+                    <!-- Modal -->
+                    <div class="modal fade" id="saveCollegeModal" tabindex="-1" role="dialog"
+                         aria-labelledby="saveCollegeModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="saveCollegeModalLabel"
+                                        v-if="saveOneCollegeInfo.id !== null">
+                                        更新学院信息
+                                    </h4>
+                                    <h4 class="modal-title" id="saveCollegeModalLabel" v-else>
+                                        添加学院
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="saveOneCollegeInfo">
+                                        <div class="form-group">
+                                            <label for="collegeName">学院名</label>
+                                            <input name="collegeName" type="text" class="form-control" id="collegeName"
+                                                   v-model="saveOneCollegeInfo.name" placeholder="请输入学院名">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="collegeDescription">学院简介</label>
+                                            <textarea name="collegeDescription" id="collegeDescription"
+                                                      class="form-control"
+                                                      v-model="saveOneCollegeInfo.description" rows="5"
+                                                      placeholder="请输入学院简介"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="saveOneCollegeInfoSubmit" type="button" class="btn btn-primary"
+                                            v-if="saveOneCollegeInfo.id !== null">更新
+                                    </button>
+                                    <button id="saveOneCollegeInfoSubmit" type="button" class="btn btn-primary" v-else>
+                                        添加
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </#if>
             </div>
             <!-- /.row -->
         </section>
@@ -118,10 +125,14 @@
     <!-- DataTables -->
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/plugins/datatables/jszip.min.js"></script>
+    <script src="/static/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
         $(function () {
+            <#if isRoles("admin")>
             const Main = new Vue({
                 el: '#main',
                 data: {
@@ -139,6 +150,7 @@
                     }
                 }
             });
+            </#if>
             const datatable = $('#collegeList').DataTable({
                 language: {
                     url: '/static/plugins/datatables/zh.json'
@@ -153,6 +165,19 @@
                 serverSide: true,
                 processing: true,
                 pageLength: 30,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'export-Vice button',
+                        filename: '学院信息-${siteTitle}-' + NS.uuid(),
+                        title: '学院信息-${siteTitle}',
+                        className: 'hidden',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    }
+                ],
                 ajax: (data, callback, settings) => {
                     NS.post("/teachingSecretary/collegeManagement/collegeInfoList", {
                         draw: data.draw,
@@ -173,14 +198,20 @@
                     {data: 'countStudent'},
                     {data: 'description'},
                     {data: 'datetime'},
+                    <#if isRoles("admin")>
                     {
                         data: null,
                         render: (data, type, row, meta) => {
                             return '<div class="btn-group-sm"><button onclick="NS.updateCollegeInfo(' + meta.row + ')" type="button" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o"></i></button> <button type="button" class="btn btn-danger btn-sm" onclick="NS.deleteCollegeInfo(' + data.id + ')"><i class="fa fa-trash-o"></i></button></div>';
                         }
                     },
+                    </#if>
                 ]
             });
+            $('#exportXlsxBtn').on('click', () => {
+                $('.dt-buttons .buttons-excel').click();
+            });
+            <#if isRoles("admin")>
             const saveCollegeModal = $('#saveCollegeModal');
             const saveOneCollegeInfoForm = $('#saveOneCollegeInfo');
             saveOneCollegeInfoForm.bootstrapValidator({
@@ -248,6 +279,7 @@
                 Main.saveOneCollegeInfo.description = data.description;
                 saveCollegeModal.modal('show');
             });
+            </#if>
         });
     </script>
 </#assign>

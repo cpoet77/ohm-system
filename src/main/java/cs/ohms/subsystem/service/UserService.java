@@ -1,7 +1,12 @@
 // The code file was created by nsleaf (email:nsleaf@foxmail.com) on 2020/4/24.
 package cs.ohms.subsystem.service;
 
+import cs.ohms.subsystem.entity.ClassEntity;
+import cs.ohms.subsystem.entity.RoleEntity;
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.tableobject.StudentInfoTo;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * UserService
@@ -57,10 +62,24 @@ public interface UserService {
     boolean saveUser(UserEntity user);
 
     /**
-     * @param realName 真实姓名
-     * @return UserEntity
+     * 添加学生
+     * <p><b>由于spring在同一server里面不能实现非事务方法触发事务方法回滚，因此将保存入库添加到userServer中</b></p>
+     *
+     * @param clazz         班级
+     * @param studentRole   学生角色
+     * @param studentInfoTo StudentInfoTo
      */
-    UserEntity findUserByRealName(String realName);
+    @Transactional
+    void saveUserIsStudent(ClassEntity clazz, RoleEntity studentRole, StudentInfoTo studentInfoTo);
+
+    /**
+     * 保存教师信息
+     *
+     * @param teacherRole   教师角色
+     * @param teacherInfoTo 教师to对象
+     */
+    @Transactional
+    void saveUserIsTeacher(RoleEntity teacherRole, TeacherInfoTo teacherInfoTo);
 
     /**
      * 根据用户id删除用户
@@ -85,6 +104,17 @@ public interface UserService {
     boolean updateUserById(Boolean currentUserIsAdmin, Integer userId, String realName, Character sex, String email, String phone);
 
     /**
+     * 更新用户
+     *
+     * @param user  目标用户
+     * @param email 邮箱地址
+     * @param phone 手机号
+     * @param sex   性别
+     * @return true|false
+     */
+    boolean updateUser(UserEntity user, String email, String phone, Character sex);
+
+    /**
      * 设置皮肤
      *
      * @param user     需要设置的用户
@@ -92,4 +122,33 @@ public interface UserService {
      * @return true|false
      */
     boolean saveSkin(UserEntity user, String skinName);
+
+    /**
+     * 设置头像
+     *
+     * @param user      目标用户
+     * @param avatarUrl 头像地址
+     * @return true|false
+     */
+    boolean saveAvatar(UserEntity user, String avatarUrl);
+
+    /**
+     * 修改密码
+     *
+     * @param user        目标用户
+     * @param password    原密码
+     * @param newPassword 新密码
+     * @return true|false
+     */
+    boolean changePassword(UserEntity user, String password, String newPassword);
+
+    /**
+     * 获取每日一句
+     * <p><b>1、喜欢你，没道理。</b></p>
+     * <p><b>2、听我良言！</b></p>
+     * <p><b>3、山有木兮木有枝，吾念汝兮汝可知！</b></p>
+     *
+     * @return content|null
+     */
+    String listenToMyGoodWords();
 }

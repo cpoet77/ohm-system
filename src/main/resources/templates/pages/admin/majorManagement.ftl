@@ -1,5 +1,4 @@
 <#-- 专业管理 -->
-<#assign activeIndex></#assign>
 <#assign pageTitle>专业管理</#assign>
 <#assign isCourseManagement = true />
 <#assign isMajorManagement = true />
@@ -36,7 +35,7 @@
                                 <button type="button" class="btn bg-purple" data-toggle="modal"
                                         data-target="#saveMajorModal">添加
                                 </button>
-                                <button type="button" class="btn bg-orange">导出</button>
+                                <button type="button" class="btn bg-orange" id="exportXlsxBtn">导出</button>
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                         data-target="#dataFilterModal">过滤
                                 </button>
@@ -90,7 +89,7 @@
                                                v-model="saveOneMajorInfo.name" placeholder="请输入专业名">
                                     </div>
                                     <div class="form-group">
-                                        <label>选择学院</label>
+                                        <label>学院</label>
                                         <select class="form-control" name="collegeId"
                                                 v-model="saveOneMajorInfo.collegeId">
                                             <option v-for="collegeInfo in collegeInfoList" :key="collegeInfo.id"
@@ -151,6 +150,9 @@
     <!-- DataTables -->
     <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/static/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="/static/plugins/datatables/jszip.min.js"></script>
+    <script src="/static/plugins/datatables/buttons.html5.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script>
@@ -199,6 +201,19 @@
                 serverSide: true,
                 processing: true,
                 pageLength: 35,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'export-Vice button',
+                        filename: '专业信息-${siteTitle}-' + NS.uuid(),
+                        title: '专业信息-${siteTitle}',
+                        className: 'hidden',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4]
+                        }
+                    }
+                ],
                 ajax: (data, callback, settings) => {
                     NS.post('/teachingSecretary/majorManagement/majorInfoList', {
                         draw: data.draw,
@@ -226,6 +241,9 @@
                         }
                     }
                 ]
+            });
+            $('#exportXlsxBtn').on('click', () => {
+                $('.dt-buttons .buttons-excel').click();
             });
             const saveMajorModal = $('#saveMajorModal');
             const dataFilterModal = $('#dataFilterModal');

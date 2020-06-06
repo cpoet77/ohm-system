@@ -29,10 +29,10 @@ public class StudentCourseGroupEntity implements Serializable {
     @Embeddable
     @MappedSuperclass
     public static class Key implements Serializable {
-        @Column(name = "user_id", nullable = false)
-        private Integer userId; // 用户id
+        @Column(name = "student_id", nullable = false)
+        private String studentId; // 学号
 
         @Column(name = "course_group_id", nullable = false)
-        private String courseGroupId; // 课群id
+        private Integer courseGroupId; // 课群id
     }
 }

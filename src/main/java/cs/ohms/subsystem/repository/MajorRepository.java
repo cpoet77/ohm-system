@@ -18,6 +18,8 @@ import java.util.List;
 public interface MajorRepository extends JpaRepository<MajorEntity, Integer>, JpaSpecificationExecutor<MajorEntity> {
     MajorEntity findByName(String name);
 
+    boolean existsByName(String name);
+
     long countByCollege_Id(Integer collegeId);
 
     Page<MajorEntity> findByCollege_Id(Integer collegeId, Pageable pageable);

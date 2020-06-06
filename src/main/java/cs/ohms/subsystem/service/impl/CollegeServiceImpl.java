@@ -7,6 +7,7 @@ import cs.ohms.subsystem.repository.CollegeRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.CollegeService;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.viewobject.CollegeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,13 +31,15 @@ public class CollegeServiceImpl implements CollegeService {
     private CollegeRepository collegeRepository;
     private MajorRepository majorRepository;
     private StudentRepository studentRepository;
+    private ResourceService resourceService;
 
     @Autowired
     public CollegeServiceImpl(CollegeRepository collegeRepository, MajorRepository majorRepository
-            , StudentRepository studentRepository) {
+            , StudentRepository studentRepository, ResourceService resourceService) {
         this.collegeRepository = collegeRepository;
         this.majorRepository = majorRepository;
         this.studentRepository = studentRepository;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -51,8 +54,8 @@ public class CollegeServiceImpl implements CollegeService {
 
     @Override
     public ResponseResult getCollegesByPage(int start, int length) {
-        int page = (int) Math.ceil((double) start / length);
-        Page<CollegeEntity> colleges = collegeRepository.findAll(PageRequest.of(page, length, Sort.Direction.DESC, "datetime"));
+        Page<CollegeEntity> colleges = collegeRepository.findAll(PageRequest.of(resourceService.calculatePageNum(start, length)
+                , length, Sort.Direction.DESC, "datetime"));
         long count = collegeRepository.count();
         List<Object> resultList = new ArrayList<>();
         colleges.forEach(college -> {
@@ -96,8 +99,18 @@ public class CollegeServiceImpl implements CollegeService {
     }
 
     @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public CollegeEntity findCollegeHasCacheByName(String name) {
-        return collegeRepository.findByName(name);
+    @Cacheable(cacheNames = {"user", "common"}, key = "#identity + '_' + #name")
+    public CollegeEntity addCollege(String identity, String name) {
+        if (collegeRepository.existsByName(name)) {
+            return collegeRepository.findByName(name);
+        }
+        if (identity.equals("admin")) {
+            try {
+                return collegeRepository.save(new CollegeEntity().setName(name));
+            } catch (Exception e) {
+                log.warn("创建学院失败！name : {}", name);
+            }
+        }
+        return null;
     }
 }

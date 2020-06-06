@@ -13,17 +13,19 @@ import cs.ohms.subsystem.repository.RoleRepository;
 import cs.ohms.subsystem.repository.TeacherRepository;
 import cs.ohms.subsystem.repository.UserRepository;
 import cs.ohms.subsystem.repository.middle.UserRoleRepository;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.service.TeacherService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
 import cs.ohms.subsystem.utils.NStringUtil;
 import cs.ohms.subsystem.viewobject.TeacherVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,11 +42,12 @@ public class TeacherServiceImpl implements TeacherService {
     private RoleRepository roleRepository;
     private UserRoleRepository userRoleRepository;
     private PasswordCMP passwordCMP;
+    private ResourceService resourceService;
 
     @Autowired
     public TeacherServiceImpl(UserService userService, TeacherRepository teacherRepository, UserRepository userRepository
             , CourseGroupRepository courseGroupRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository
-            , PasswordCMP passwordCMP) {
+            , PasswordCMP passwordCMP, ResourceService resourceService) {
         this.userService = userService;
         this.teacherRepository = teacherRepository;
         this.userRepository = userRepository;
@@ -52,6 +55,7 @@ public class TeacherServiceImpl implements TeacherService {
         this.roleRepository = roleRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordCMP = passwordCMP;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -61,9 +65,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public ResponseResult findTeacherByTeacherNameAndPage(Integer start, Integer length, String findTeacherName) {
-        int page = (int) Math.ceil((double) start / length);
         Page<UserEntity> users = userRepository.findByRealNameIsLikeAndTeacherIsNotNull(NStringUtil.joint("%{}%", findTeacherName)
-                , PageRequest.of(page, length));
+                , PageRequest.of(resourceService.calculatePageNum(start, length), length));
         List<TeacherVo> teacherVos = new ArrayList<>();
         RoleEntity teacherRole = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert teacherRole != null;/* 永远成立的断言 */
@@ -80,8 +83,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public ResponseResult findTeacherByPage(Integer start, Integer length) {
-        int page = (int) Math.ceil((double) start / length);
-        Page<TeacherEntity> teachers = teacherRepository.findAll(PageRequest.of(page, length));
+        Page<TeacherEntity> teachers = teacherRepository.findAll(PageRequest.of(resourceService.calculatePageNum(start, length), length));
         List<TeacherVo> teacherVos = new ArrayList<>();
         RoleEntity role = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert role != null;
@@ -121,6 +123,30 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<TeacherInfoTo> importTeacherInfoForTable(InputStream in) {
+        try {
+            List<TeacherInfoTo> failList = new ArrayList<>();
+            RoleEntity teacherRole = roleRepository.findByName(UserService.USER_TEACHER_ROLE);
+            assert teacherRole != null;
+            List<TeacherInfoTo> teacherInfoTos = resourceService.inputStreamToTable(TeacherInfoTo.class, in);
+            if (teacherInfoTos.isEmpty()) {
+                return null;
+            }
+            teacherInfoTos.forEach(t -> {
+                try {
+                    userService.saveUserIsTeacher(teacherRole, t);
+                } catch (Exception e) {
+                    failList.add(t);/* 添加失败 */
+                }
+            });
+            return failList;
+        } catch (Exception e) {
+            log.warn("教师信息导入失败！", e);
+        }
+        return null;
+    }
+
+    @Override
     public boolean changeTeachingSecretaryRole(Integer userId) {
         RoleEntity teachingSecretaryRole = roleRepository.findByName(UserService.USER_TEACHING_SECRETARY_ROLE);
         assert teachingSecretaryRole != null;
@@ -136,15 +162,5 @@ public class TeacherServiceImpl implements TeacherService {
             log.warn("清除或者添加教学秘书权限失败！msg : {}", e.getLocalizedMessage());
         }
         return false;
-    }
-
-    @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public TeacherEntity findTeacherHasCacheByName(String name) {
-        UserEntity user = userService.findUserByRealName(name);
-        if (user == null) {
-            return null;
-        }
-        return user.getTeacher();
     }
 }

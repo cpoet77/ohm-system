@@ -7,6 +7,8 @@ import cs.ohms.subsystem.repository.ClassRepository;
 import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.ClassService;
+import cs.ohms.subsystem.service.MajorService;
+import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.viewobject.ClassVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +34,23 @@ public class ClassServiceImpl implements ClassService {
     private ClassRepository classRepository;
     private StudentRepository studentRepository;
     private MajorRepository majorRepository;
+    private ResourceService resourceService;
+    private MajorService majorService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, MajorRepository majorRepository) {
+    public ClassServiceImpl(ClassRepository classRepository, StudentRepository studentRepository, MajorRepository majorRepository
+            , ResourceService resourceService, MajorService majorService) {
         this.classRepository = classRepository;
         this.studentRepository = studentRepository;
         this.majorRepository = majorRepository;
+        this.resourceService = resourceService;
+        this.majorService = majorService;
     }
 
 
     @Override
     public ResponseResult getClassByCollegeAndMajorAndPage(Integer collegeId, Integer majorId, Integer start, Integer length) {
-        int page = (int) Math.ceil((double) start / length);
-        Pageable pageable = PageRequest.of(page, length, Sort.Direction.DESC, "datetime");
+        Pageable pageable = PageRequest.of(resourceService.calculatePageNum(start, length), length, Sort.Direction.DESC, "datetime");
         Page<ClassEntity> classEntities = (majorId == -1 ? (collegeId == -1 ? classRepository.findAll(pageable)
                 : classRepository.findAllByCollege_Id(collegeId, pageable)) : classRepository.findAllByMajor_Id(majorId, pageable));
         List<ClassVo> classVos = new ArrayList<>();
@@ -61,6 +67,32 @@ public class ClassServiceImpl implements ClassService {
         return (ResponseResult.enSuccess().add("recordsTotal", count).add("recordsFiltered", majorId != -1
                 ? classRepository.countByMajor_Id(majorId) : (collegeId != -1 ? classRepository.countByCollege_Id(collegeId)
                 : count)).add("data", classVos));
+    }
+
+    @Override
+    public List<ClassVo> getAllClassByMajor(Integer majorId) {
+        List<ClassEntity> classEntities = classRepository.findAllByMajor_Id(majorId);
+        List<ClassVo> classVos = new ArrayList<>();
+        classEntities.forEach(clazz -> classVos.add(new ClassVo().setId(clazz.getId())
+                .setName(clazz.getName())));
+        return classVos;
+    }
+
+    @Override
+    @Cacheable(cacheNames = {"user", "common"}, key = "#identity+ '_' +#collegeName + '_' +#majorName+ '_' +#className")
+    public ClassEntity addClass(String identity, String collegeName, String majorName, String className) {
+        if (classRepository.existsByName(className)) {
+            return classRepository.findByName(className);
+        }
+        MajorEntity major = majorService.addMajor(identity, collegeName, majorName);
+        if (major != null) {
+            try {
+                return classRepository.save(new ClassEntity().setName(className).setMajor(major));
+            } catch (Exception e) {
+                log.warn("添加班级失败!{}", className);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -99,11 +131,5 @@ public class ClassServiceImpl implements ClassService {
             log.warn("班级信息删除失败, classId : {}, msg : {}", classId, e.getLocalizedMessage());
         }
         return false;
-    }
-
-    @Override
-    @Cacheable(cacheNames = {"common"}, key = "#name")
-    public ClassEntity findClassHashCacheByName(String name) {
-        return classRepository.findByName(name);
     }
 }

@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CollegeRepository extends JpaRepository<CollegeEntity, Integer>, JpaSpecificationExecutor<CollegeEntity> {
     CollegeEntity findByName(String name);
+
+    boolean existsByName(String name);
 }

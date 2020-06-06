@@ -1,29 +1,36 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/22.
 package cs.ohms.subsystem.service.impl;
 
+import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
 import com.github.liaochong.myexcel.core.DefaultExcelReader;
+import com.github.liaochong.myexcel.utils.FileExportUtil;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.service.AppService;
 import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.utils.FileUtil;
 import cs.ohms.subsystem.utils.NStringUtil;
+import cs.ohms.subsystem.viewobject.LogFileInfoVo;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  * @see ResourceService
  */
 @Service("resourceService")
+@Slf4j
 public class ResourceServiceImpl implements ResourceService {
     /**
      * 公共文件支持的后缀
@@ -36,6 +43,8 @@ public class ResourceServiceImpl implements ResourceService {
     private final static Set<String> CONFIDENTIAL_FILE_FORMAT_SET = new HashSet<>();
 
     private AppService appService;
+
+    private final static String LOG_DIR = "logs";
 
     @Autowired
     public ResourceServiceImpl(AppService appService) {
@@ -64,6 +73,17 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public <T> void dataExportToTableFile(List<T> data, Class<T> clazz, @NotNull File file) throws IOException {
+        File fileDir = file.getParentFile();
+        if (!fileDir.exists()) {
+            if (!fileDir.mkdirs()) {
+                throw new IOException("创建目录失败！");
+            }
+        }
+        FileExportUtil.export(DefaultExcelBuilder.of(clazz).build(data), file);
+    }
+
+    @Override
     public boolean isCommonFileFormat(String fix) {
         return COMMON_FILE_FORMAT_SET.contains(fix);
     }
@@ -74,8 +94,38 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public int calculatePageNum(int start, int size) {
+        return ((int) Math.ceil((double) start / size));
+    }
+
+    @Override
     public boolean isDemandXlsFile(@NotNull MultipartFile file) {
         return (!file.isEmpty() && ".xlsx".equals(FileUtil.getFilePostfix(file.getOriginalFilename())));
+    }
+
+    @Override
+    public List<LogFileInfoVo> getAllLogFileList() {
+        File dir = new File(LOG_DIR);
+        if (dir.exists() && dir.isDirectory() && dir.canRead()) {
+            List<LogFileInfoVo> logFileInfoVos = new ArrayList<>();
+            for (File file : Objects.requireNonNull(dir.listFiles(((d, name) -> Pattern.matches("^log[0-9\\-]*\\.txt$", name))))) {
+                logFileInfoVos.add(new LogFileInfoVo().setFileName(file.getName()).setSize(file.length()));
+            }
+            return logFileInfoVos;
+        }
+        log.warn("不能正确获取日志列表！");
+        return null;
+    }
+
+    @Override
+    @Cacheable(cacheNames = {"common"}, key = "#fileName")
+    public String getLogFileContent(String fileName) {
+        try {
+            return FileUtil.readFileAsString(NStringUtil.joint("{}/{}", LOG_DIR, fileName));
+        } catch (IOException e) {
+            log.info("读取日志文件失败！fileName : {}", fileName);
+        }
+        return null;
     }
 
     @Override

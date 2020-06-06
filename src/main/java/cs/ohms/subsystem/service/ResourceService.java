@@ -3,8 +3,11 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.viewobject.LogFileInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -33,6 +36,16 @@ public interface ResourceService {
     <T> List<T> inputStreamToTable(Class<T> clazz, InputStream in) throws Exception;
 
     /**
+     * 将数据导出到表格文件
+     *
+     * @param <T>   class 类型
+     * @param data  数据
+     * @param clazz class
+     * @param file  目标文件
+     */
+    <T> void dataExportToTableFile(List<T> data, Class<T> clazz, File file) throws IOException;
+
+    /**
      * 判断是否是支持的公共文件后缀
      *
      * @param fix 文件后缀
@@ -49,12 +62,36 @@ public interface ResourceService {
     boolean isConfidentialFileFormat(String fix);
 
     /**
+     * 计算页码
+     *
+     * @param start 起点
+     * @param size  每一页的数量
+     * @return page num
+     */
+    int calculatePageNum(int start, int size);
+
+    /**
      * 判断上传的表格文件是否满足要求
      *
      * @param file MultipartFile
      * @return true|false
      */
     boolean isDemandXlsFile(MultipartFile file);
+
+    /**
+     * 获取所有日志文件列表
+     *
+     * @return LogFileInfoVo for list
+     */
+    List<LogFileInfoVo> getAllLogFileList();
+
+    /**
+     * 获取日志文件内容
+     *
+     * @param fileName fileName
+     * @return content|null
+     */
+    String getLogFileContent(String fileName);
 
     ResponseResult saveConfidentialResource(UserEntity attribute, String uuid, String name, String fix, String path, Boolean isPublic);
 }

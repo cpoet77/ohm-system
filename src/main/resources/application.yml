@@ -30,3 +30,17 @@ spring:
     show-sql: false
     open-in-view: true
     database: mysql
+  application:
+    name: ohms-subsystem
+
+# 日志配置
+logging:
+  config: classpath:configure/logger.xml
+  file:
+    path: logs
+    name: log.txt
+    max-size: 30MB
+    max-history: 30
+    clean-history-on-start: true
+  pattern:
+    rolling-file-name: log-%d{yyyyMMdd}.txt

@@ -57,7 +57,19 @@ public class ClassManagementController {
             , @RequestParam("length") @NotNull @Min(5) Integer length
             , @RequestParam("collegeId") @NotNull @Min(-1) Integer collegeId
             , @RequestParam("majorId") @NotNull @Min(-1) Integer majorId) {
-        return (classService.getClassByCollegeAndMajorAndPage(collegeId ,majorId, start, length).add("draw", draw));
+        return (classService.getClassByCollegeAndMajorAndPage(collegeId, majorId, start, length).add("draw", draw));
+    }
+
+    /**
+     * 根据专业获取所有班级信息
+     *
+     * @param majorId 专业id
+     * @return ResponseResult
+     */
+    @PostMapping("/allClassListByMajor")
+    @ResponseBody
+    public ResponseResult allClassListByMajor(@RequestParam("majorId") @NotNull @Min(1) Integer majorId) {
+        return ResponseResult.enSuccess().add("clazzs", classService.getAllClassByMajor(majorId));
     }
 
     /**
@@ -71,7 +83,7 @@ public class ClassManagementController {
     @PostMapping("/saveOneClassInfo")
     @ResponseBody
     public ResponseResult saveOneClassInfo(@RequestParam("classId") Integer classId
-            , @RequestParam("className") @NotNull @Length(min = 1, max = 10) String className
+            , @RequestParam("className") @NotNull @Length(min = 1, max = 45) String className
             , @RequestParam("majorId") @NotNull @Min(1) Integer majorId) {
         return classService.saveClass(classId, className, majorId) ? ResponseResult.enSuccess() : ResponseResult.enFail();
     }

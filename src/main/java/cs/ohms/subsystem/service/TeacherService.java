@@ -3,8 +3,10 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.TeacherEntity;
+import cs.ohms.subsystem.tableobject.TeacherInfoTo;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -53,19 +55,18 @@ public interface TeacherService {
     boolean saveTeacher(Boolean currentUserIsAdmin, Integer userId, String teacherId, String realName, Character sex, String phone, String email);
 
     /**
+     * 从表格中导入教师信息
+     *
+     * @param in InputStream
+     * @return 导入失败的列表
+     */
+    List<TeacherInfoTo> importTeacherInfoForTable(InputStream in);
+
+    /**
      * 添加/删除教学秘书角色
      *
      * @param userId 用户id
      * @return true|false
      */
     boolean changeTeachingSecretaryRole(Integer userId);
-
-    /**
-     * 根据name查询teacher
-     * <p>在缓存有效期内，查找cache - database</p>
-     *
-     * @param name 教师名
-     * @return TeacherEntity
-     */
-    TeacherEntity findTeacherHasCacheByName(String name);
 }

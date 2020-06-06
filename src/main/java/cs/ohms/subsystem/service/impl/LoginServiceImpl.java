@@ -8,7 +8,10 @@ import cs.ohms.subsystem.repository.LoginRecordRepository;
 import cs.ohms.subsystem.service.LoginService;
 import cs.ohms.subsystem.utils.JsonUtil;
 import cs.ohms.subsystem.utils.NSIPUtil;
+import cs.ohms.subsystem.utils.NStringUtil;
+import cs.ohms.subsystem.viewobject.LoginRecordVo;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +33,6 @@ import java.util.Map;
 @Service("loginService")
 @Slf4j
 public class LoginServiceImpl implements LoginService {
-
     private LoginRecordRepository loginRecordRepository;
 
     @Autowired
@@ -60,13 +65,74 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResponseResult getLoginInfoListByPage(UserEntity user, Integer page, Integer size) {
+    public ResponseResult getLoginRecordListByUserNameIsLikeFoPage(String userName, int page, int size) {
         try {
-            Page<LoginRecordEntity> userPage = loginRecordRepository.findByUser(user, PageRequest.of(page, size, Sort.Direction.DESC, "datetime"));
-            return ResponseResult.enSuccess().add("list", userPage.toList()).add("count", userPage.getTotalElements()).add("size", userPage.getNumberOfElements()).add("page", page);
+            Page<LoginRecordEntity> loginRecordPage = loginRecordRepository.findByUser_NameIsLike(NStringUtil
+                    .joint("%{}%", userName), PageRequest.of(page, size, Sort.Direction.DESC, "datetime"));
+            return ResponseResult.enSuccess().add("recordsTotal", loginRecordRepository.count())
+                    .add("recordsFiltered", loginRecordPage.getTotalElements()).add("data"
+                            , loginRecordEntity2Vo(loginRecordPage.getContent()));
         } catch (Exception e) {
-            log.warn("获取登录日志失败，userId : {}", user.getId());
+            log.warn("获取登录记录失败！msg {} ", e.getLocalizedMessage());
         }
         return ResponseResult.enFail();
+    }
+
+    @Override
+    public ResponseResult getLoginRecordListForPage(int page, int size) {
+        try {
+            Page<LoginRecordEntity> loginRecordPage = loginRecordRepository.findAll(PageRequest.of(page, size, Sort.Direction.DESC, "datetime"));
+            return ResponseResult.enSuccess().add("recordsTotal", loginRecordRepository.count())
+                    .add("recordsFiltered", loginRecordPage.getTotalElements()).add("data"
+                            , loginRecordEntity2Vo(loginRecordPage.getContent()));
+        } catch (Exception e) {
+            log.warn("获取登录记录失败！msg {} ", e.getLocalizedMessage());
+        }
+        return ResponseResult.enFail();
+    }
+
+    @Override
+    public List<LoginRecordVo> getLoginRecordByUserForPage(Integer userId, int page, int size) {
+        try {
+            Page<LoginRecordEntity> loginRecordPage = loginRecordRepository.findByUser_Id(userId, PageRequest.of(page, size, Sort.Direction.DESC, "datetime"));
+            return loginRecordEntity2Vo(loginRecordPage.getContent());
+        } catch (Exception e) {
+            log.warn("获取登录记录失败！msg {} ", e.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteLoginRecord(Long loginRecordId) {
+        try {
+            loginRecordRepository.deleteById(loginRecordId);
+            return true;
+        } catch (Exception e) {
+            log.warn("登录记录删除失败！id : {}", loginRecordId);
+        }
+        return false;
+    }
+
+    /**
+     * Entity转Vo对象
+     *
+     * @param loginRecords LoginRecordEntity for Collection
+     * @return LoginRecordVo for list
+     */
+    @NotNull
+    private List<LoginRecordVo> loginRecordEntity2Vo(@NotNull Collection<LoginRecordEntity> loginRecords) {
+        List<LoginRecordVo> loginRecordVos = new ArrayList<>();
+        loginRecords.forEach(l -> loginRecordVos.add(new LoginRecordVo().setId(l.getId())
+                .setUserId(l.getUser().getId())
+                .setUserName(l.getUser().getName())
+                .setLoginIp(l.getLoginIp())
+                .setDatetime(l.getDatetime())
+                .setProvince(l.getProvince())
+                .setProvinceCode(l.getProvinceCode())
+                .setCity(l.getCity())
+                .setCityCode(l.getCityCode())
+                .setAddress(l.getAddress())
+                .setAgent(l.getAgent())));
+        return loginRecordVos;
     }
 }
