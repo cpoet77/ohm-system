@@ -36,52 +36,58 @@
                 <!-- /.row -->
                 <!-- 课群显示 -->
                 <div class="box box-info">
-                    <div class="box-body">
-                        <#list courseGroupListVo.courseGroups as courseGroup>
-                            <div class="col-md-3">
-                                <div class="box box-widget widget-user">
-                                    <div class="widget-user-header bg-black"
-                                         style="background: url('../../static/dist/img/photo1.png') center center;">
-                                    </div>
-                                    <div class="widget-user-image">
-                                        <img class="img-circle"
-                                             src="<#if courseGroup.teacher.user.avatar??>${courseGroup.teacher.user.avatar}<#elseif courseGroup.teacher.user.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
-                                             alt="avatar">
-                                    </div>
-                                    <div class="box-footer">
-                                        <h3 class="profile-username text-center">${courseGroup.name!""}</h3>
-                                        <p class="text-muted text-center">${courseGroup.teacher.user.realName}
-                                            (${courseGroup.teacher.teacherId})</p>
-                                        <ul class="list-group list-group-unbordered">
-                                            <li class="list-group-item">
-                                                <b>状态</b>
-                                                <a href="javascript:void(0)" class="pull-right">
-                                                    <#if courseGroup.state>进行中<#else>已结束</#if>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <a href="/homework?courseGroup=${courseGroup.id}"
-                                           class="btn btn-primary btn-block"><b>进入</b></a>
+                    <#if courseGroupListVo.page == 0>
+                        <div class="box-body">
+                            <h3 class="text-center">没有找到任何课群信息！</h3>
+                        </div>
+                    <#else>
+                        <div class="box-body">
+                            <#list courseGroupListVo.courseGroups as courseGroup>
+                                <div class="col-md-3">
+                                    <div class="box box-widget widget-user">
+                                        <div class="widget-user-header bg-black"
+                                             style="background: url('../../static/dist/img/photo1.png') center center;">
+                                        </div>
+                                        <div class="widget-user-image">
+                                            <img class="img-circle"
+                                                 src="<#if courseGroup.teacher.user.avatar??>${courseGroup.teacher.user.avatar}<#elseif courseGroup.teacher.user.sex == 'M'>${m_avatar}<#else>${f_avatar}</#if>"
+                                                 alt="avatar">
+                                        </div>
+                                        <div class="box-footer">
+                                            <h3 class="profile-username text-center">${courseGroup.name!""}</h3>
+                                            <p class="text-muted text-center">${courseGroup.teacher.user.realName}
+                                                (${courseGroup.teacher.teacherId})</p>
+                                            <ul class="list-group list-group-unbordered">
+                                                <li class="list-group-item">
+                                                    <b>状态</b>
+                                                    <a href="javascript:void(0)" class="pull-right">
+                                                        <#if courseGroup.state>进行中<#else>已结束</#if>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <a href="/homework?courseGroup=${courseGroup.id}"
+                                               class="btn btn-primary btn-block"><b>进入</b></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </#list>
-                    </div>
-                    <#if (courseGroupListVo.page > 1)>
-                        <div class="box-footer">
-                            <nav aria-label="courseGroup page">
-                                <ul class="pager">
-                                    <li class="previous <#if (page == 0)>disabled</#if>">
-                                        <a href="<#if (page == 0)>javascript:void(0)<#else>?page=${page - 1}&search=${search!""}</#if>"><span
-                                                    aria-hidden="true">&larr;</span>
-                                            上一页</a></li>
-                                    <li class="next <#if (page + 1 == courseGroupListVo.page)>disabled</#if>">
-                                        <a href="<#if (page + 1 == courseGroupListVo.page)>javascript:void(0)<#else>?page=${page + 1}&search=${search!""}</#if>">下一页<span
-                                                    aria-hidden="true">&rarr;</span></a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            </#list>
                         </div>
+                        <#if (courseGroupListVo.page > 1)>
+                            <div class="box-footer">
+                                <nav aria-label="courseGroup page">
+                                    <ul class="pager">
+                                        <li class="previous <#if (page == 0)>disabled</#if>">
+                                            <a href="<#if (page == 0)>javascript:void(0)<#else>?page=${page - 1}&search=${search!""}</#if>"><span
+                                                        aria-hidden="true">&larr;</span>
+                                                上一页</a></li>
+                                        <li class="next <#if (page + 1 == courseGroupListVo.page)>disabled</#if>">
+                                            <a href="<#if (page + 1 == courseGroupListVo.page)>javascript:void(0)<#else>?page=${page + 1}&search=${search!""}</#if>">下一页<span
+                                                        aria-hidden="true">&rarr;</span></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </#if>
                     </#if>
                 </div>
             </section>

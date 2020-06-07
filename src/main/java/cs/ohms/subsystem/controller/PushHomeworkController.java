@@ -49,8 +49,8 @@ public class PushHomeworkController {
     @GetMapping
     public ModelAndView index(@RequestParam("courseGroup") @NotNull @Min(1) Integer courseGroupId
             , @RequestParam("homework") @NotNull @Min(1) Integer homeworkId) {
-        CourseGroupVo courseGroupVo = courseGroupService.findByStudentAndId((UserEntity) SecurityUtils.getSubject()
-                .getSession().getAttribute(UserService.USER_SELF), courseGroupId);
+        UserEntity user = (UserEntity) SecurityUtils.getSubject().getSession().getAttribute(UserService.USER_SELF);
+        CourseGroupVo courseGroupVo = courseGroupService.findByStudentAndId(user, courseGroupId);
         if (courseGroupVo == null) {
             throw new NSRuntimeException("非法访问课群？");
         }
@@ -59,7 +59,8 @@ public class PushHomeworkController {
             throw new NSRuntimeException("非法访问作业信息？");
         }
         return (new ModelAndView("pages/pushHomeworkView").addObject("courseGroup", courseGroupVo)
-                .addObject("homework", homework));
+                .addObject("homework", homework)
+                .addObject("pushHomework", pushHomeworkService.findByStudentAndHomework(user, homeworkId)));
     }
 
     /**

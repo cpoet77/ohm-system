@@ -3,9 +3,12 @@ package cs.ohms.subsystem.repository;
 
 import cs.ohms.subsystem.entity.HomeworkEntity;
 import cs.ohms.subsystem.entity.PushHomeworkEntity;
+import cs.ohms.subsystem.entity.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -13,4 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PushHomeworkRepository extends JpaRepository<PushHomeworkEntity, Integer>, JpaSpecificationExecutor<PushHomeworkEntity> {
     Long countByHomework(HomeworkEntity homework);
+
+    Optional<PushHomeworkEntity> findByStudentAndHomework_Id(StudentEntity student, Integer homework_id);
 }

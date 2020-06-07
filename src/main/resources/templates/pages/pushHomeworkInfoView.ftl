@@ -1,8 +1,6 @@
 <#-- 教师查看学生已提交的作业详情并完成评分 -->
-<#assign pageTitle>提交作业|${courseGroup.courseGroupName!""}</#assign>
+<#assign pageTitle>作业详情|${homework.title!""}|${courseGroup.courseGroupName!""}</#assign>
 <#assign restHead>
-    <link href="/static/plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet"
-          type="text/css"/>
     <link rel="stylesheet" href="/static/plugins/bootstrapvalidator/bootstrapValidator.min.css">
 </#assign>
 <#include "../common/head.ftl"/>
@@ -13,26 +11,24 @@
         <div class="container">
             <section class="content-header">
                 <h1>
-                    提交作业
+                    提交作业详情
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
                     <li><a href="/myCourseGroup">我的课群</a></li>
                     <li><a href="/homework?courseGroup=${courseGroup.id}">${courseGroup.courseGroupName!""}</a></li>
-                    <li class="active">提交作业</li>
+                    <li class="active">提交作业详情</li>
                 </ol>
             </section>
             <section class="content">
                 <!-- general form elements -->
                 <div class="box box-danger">
-                    <form role="form" id="pushHomeworkForm">
+                    <form role="form" id="markForm">
                         <div class="box-body">
-                            <h3>${homework.title!""}</h3>
-                            <br/>
-                            ${homework.content!"无"}
+                            ${pushHomework.text!""}
                             <br/>
                             <div class="row">
-                                <#list homework.resources as resource>
+                                <#list pushHomework.resources as resource>
                                     <div class="col-md-3 col-sm-6 col-xs-12">
                                         <div class="info-box bg-green"
                                              onclick="NS.to(NS.getSentinelResourceUrl('${resource.id}', '${resource.name}', '${resource.suffix}'))">
@@ -47,20 +43,23 @@
                             </div>
                             <hr/>
                             <div class="form-group">
-                                <label for="textContentEditor">描述</label>
-                                <textarea name="description" id="textContentEditor" rows="20" cols="80"></textarea>
+                                <label for="score">评分</label>
+                                <input name="score" min="0" max="100" type="number" class="form-control" id="score"
+                                       placeholder="输入作业评分" value="${pushHomework.score!""}">
                             </div>
                             <div class="form-group">
-                                <label for="uploadFileInput">附件</label>
-                                <input id="uploadFileInput" name="file" type="file" class="file-loading">
+                                <label for="textContentEditor">评价</label>
+                                <textarea name="description" id="textContentEditor" rows="20"
+                                          cols="80">${pushHomework.assess!""}</textarea>
                             </div>
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                            <button type="button" onclick="NS.to('/homework?courseGroup=${courseGroup.id}')"
+                            <button type="button"
+                                    onclick="NS.to('/pushHomeworkList?courseGroup=${courseGroup.id}&homework=${homework.id}')"
                                     class="btn btn-success pull-left">返回上级
                             </button>
-                            <button id="publishHomeworkBtn" type="button" class="btn btn-warning pull-right">提交作业
+                            <button id="markBtn" type="button" class="btn btn-warning pull-right">保存评价
                             </button>
                         </div>
                     </form>
@@ -73,80 +72,28 @@
 </div>
 <!-- /.content-wrapper -->
 <#assign restFooter>
-    <script src="/static/plugins/bootstrap-fileinput/js/plugins/piexif.min.js" type="text/javascript"></script>
-    <script src="/static/plugins/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript"></script>
-    <script src="/static/plugins/bootstrap-fileinput/js/locales/zh.js" type="text/javascript"></script>
     <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
     <script type="text/javascript" src="/static/plugins/textboxio/textboxio.js"></script>
     <script>
         $(function () {
-            const uploadFiles = new Map();
             const textContentEditor = textboxio.replace('#textContentEditor', NS.textboxioConfig);
-            const uploadFileInput = $('#uploadFileInput');
-            uploadFileInput.fileinput({
-                language: 'zh',
-                uploadUrl: NS.api.uploadSentinelResourceUrl,
-                allowedFileExtensions: ['jpg', 'gif', 'png', 'doc', 'docx', 'xls', 'xlsx', 'zip', 'rar', 'mp4', 'mp3'],
-                showUpload: true,
-                showCaption: true,
-                maxFileCount: 25,
-                maxFileSize: 10240,
-                enctype: 'multipart/form-data',
-                removeFromPreviewOnError: true,
-                validateInitialCount: true,
-                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
-            });
-            uploadFileInput.on('fileuploaded', (event, data, previewId, index) => {
-                const res = data.response;
-                if (res.code === 1000) {
-                    insertResourceToFiles(previewId, res.data.resource);
-                } else {
-                    xtip.msg('系统错误！', {icon: 'e'});
-                }
-            }).on('filesuccessremove', (event, previewId, extra) => {
-                const resource = uploadFiles.get(previewId);
-                if (NS.isNull(resource)) {
-                    return;
-                }
-                NS.post(NS.api.deleteFileUrl, {resourceId: resource.id}, (res) => {
-                    if (res.code === 1000) {
-                        deleteResourceForFiles(previewId);
-                    } else {
-                        xtip.msg('系统错误！', {icon: 'e'});
-                    }
-                });
-            });
+            const markForm = $('#markForm');
 
-            function insertResourceToFiles(previewId, resource) {
-                uploadFiles.set(previewId, resource);
-            }
-
-            function deleteResourceForFiles(previewId) {
-                if (!uploadFiles.delete(previewId)) {
-                    xtip.msg('系统错误！', {icon: 'e'});
-                }
-            }
-
-            const pushHomeworkForm = $('#pushHomeworkForm');
-
-            function reloadPushHomeworkFormValidator() {
+            function reloadMarkFormValidator() {
                 try {
-                    pushHomeworkForm.data('bootstrapValidator').destroy();
-                    pushHomeworkForm.data('bootstrapValidator', null);
+                    markForm.data('bootstrapValidator').destroy();
+                    markForm.data('bootstrapValidator', null);
                 } catch (e) {
                 }
-                pushHomeworkForm.bootstrapValidator({
+                markForm.bootstrapValidator({
                     verbose: false,     /* 对field内的条件按顺序验证 */
                     message: '数据校验失败',
                     fields: {
-                        file: {
+                        score: {
                             validators: {
-                                callback: {
-                                    message: '描述和上传文件至少选择完成一项!',
-                                    callback: function (value, validator) {
-                                        return textContentEditor.content.isDirty() || uploadFiles.size > 0;
-                                    }
+                                notEmpty: {
+                                    message: '请输入分数！'
                                 }
                             }
                         }
@@ -154,30 +101,26 @@
                 });
             }
 
-            $('#publishHomeworkBtn').on('click', () => {
-                reloadPushHomeworkFormValidator();
-                const bootstrapValidator = pushHomeworkForm.data('bootstrapValidator');
+            $('#markBtn').on('click', () => {
+                reloadMarkFormValidator();
+                const bootstrapValidator = markForm.data('bootstrapValidator');
                 if (bootstrapValidator.validate().isValid()) {
-                    const adding = xtip.load('提交中...');
-                    let filesArray = [];
-                    for (let value of uploadFiles.values()) {
-                        filesArray[filesArray.length] = value.id;
-                    }
+                    const adding = xtip.load('保存中...');
                     const description = textContentEditor.content.get();
-                    const files = filesArray.toString();
-                    NS.post('/pushHomework/pushHomework', {
-                        homeworkId: ${homework.id},
-                        description: description,
-                        files: files
-                    }, (res) => {
-                        if (res.code === 1000) {
-                            xtip.msg('提交成功！', {icon: 's'});
-                            NS.to('/homework?courseGroup=${courseGroup.id}', 3000);
-                        } else {
-                            xtip.msg('提交失败！', {icon: 'e'});
-                        }
-                        xtip.close(adding);
-                    });
+                    NS.post('/pushHomeworkInfo/saveScore', {
+                            pushHomeworkId: ${pushHomework.id},
+                            score: new FormData(markForm[0]).get('score'),
+                            assess: description
+                        },
+                        (res) => {
+                            if (res.code === 1000) {
+                                xtip.msg('保存成功！', {icon: 's'});
+                                NS.to('/pushHomeworkList?courseGroup=${courseGroup.id}&homework=${homework.id}', 3000);
+                            } else {
+                                xtip.msg('保存失败！', {icon: 'e'});
+                            }
+                            xtip.close(adding);
+                        });
                 }
             });
         });

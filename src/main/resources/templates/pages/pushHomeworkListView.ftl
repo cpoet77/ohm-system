@@ -52,7 +52,9 @@
                                             <td>${pushHomework.student.clazz.name}</td>
                                             <td>${pushHomework.student.studentId}</td>
                                             <td>${pushHomework.student.user.realName}</td>
-                                            <td><a href="#">查看提交详情</a></td>
+                                            <td>
+                                                <a href="/pushHomeworkInfo?courseGroup=${courseGroup.id}&homework=${homework.id}&pushHomework=${pushHomework.id}">查看提交详情</a>
+                                            </td>
                                         </tr>
                                     </#list>
                                     </tbody>

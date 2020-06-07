@@ -69,4 +69,34 @@ public class PushHomeworkServiceImpl implements PushHomeworkService {
     public PushHomeworkEntity findById(Integer pushHomeworkId) {
         return pushHomeworkRepository.findById(pushHomeworkId).orElse(null);
     }
+
+    @Override
+    public PushHomeworkEntity findByStudentAndHomework(@NotNull UserEntity user, Integer homeworkId) {
+        Optional<UserEntity> userOpt = userRepository.findById(user.getId());
+        return userOpt.flatMap(userEntity -> pushHomeworkRepository.findByStudentAndHomework_Id(userEntity.getStudent()
+                , homeworkId)).orElse(null);
+
+    }
+
+    @Override
+    public boolean saveScore(@NotNull UserEntity user, Integer pushHomeworkId, Integer score, String assess) {
+        Optional<UserEntity> userOpt = userRepository.findById(user.getId());
+        if (!userOpt.isPresent()) {
+            return false;
+        }
+        Optional<PushHomeworkEntity> pushHomeworkOpt = pushHomeworkRepository.findById(pushHomeworkId);
+        if (!pushHomeworkOpt.isPresent()) {
+            return false;
+        }
+        PushHomeworkEntity pushHomework = pushHomeworkOpt.get();
+        try {
+            if (pushHomework.getHomework().getCourseGroup().getTeacher().getTeacherId().equals(user.getTeacher().getTeacherId())) {
+                pushHomeworkRepository.save(pushHomework.setScore(score).setAssess(assess));
+                return true;
+            }
+        } catch (Exception e) {
+            log.warn("评价保存失败！", e);
+        }
+        return false;
+    }
 }

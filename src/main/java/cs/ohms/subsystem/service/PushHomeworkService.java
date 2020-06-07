@@ -26,4 +26,24 @@ public interface PushHomeworkService {
      * @return PushHomeworkEntity
      */
     PushHomeworkEntity findById(Integer pushHomeworkId);
+
+    /**
+     * 根据学生信息与作业id查询是否已提交
+     *
+     * @param user       学生的user实例
+     * @param homeworkId 作业id
+     * @return PushHomeworkEntity
+     */
+    PushHomeworkEntity findByStudentAndHomework(UserEntity user, Integer homeworkId);
+
+    /**
+     * 保存评分
+     *
+     * @param user           教师的user实例
+     * @param pushHomeworkId 提交作业的id
+     * @param score          分数
+     * @param assess         评价
+     * @return true|false
+     */
+    boolean saveScore(UserEntity user, Integer pushHomeworkId, Integer score, String assess);
 }
