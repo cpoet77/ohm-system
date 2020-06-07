@@ -200,8 +200,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<ResourceEntity> findAllByResourceId(Collection<String> ids) {
-        List<ResourceEntity> resources = resourceRepository.findAllById(ids);
-        return resources.size() == ids.size() ? resources : null;
+        return resourceRepository.findAllById(ids);
     }
 
     @Override

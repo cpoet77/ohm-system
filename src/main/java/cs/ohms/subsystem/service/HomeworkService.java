@@ -2,8 +2,10 @@
 package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.entity.UserEntity;
+import cs.ohms.subsystem.viewobject.HomeworkVo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
@@ -23,4 +25,31 @@ public interface HomeworkService {
      */
     boolean addHomework(UserEntity user, Integer courseGroupId, String title, String description, String files
             , LocalDateTime startTime, LocalDateTime endTime);
+
+    /**
+     * 查询课群下的作业信息
+     *
+     * @param user          user
+     * @param isTeacher     是否时教师
+     * @param courseGroupId 课群id
+     * @param state         状态,0\1\2
+     * @param page          页号
+     * @param size          数量
+     * @return HomeworkVo for list
+     */
+    List<HomeworkVo> findByCourseGroupAndStateForPage(UserEntity user, Boolean isTeacher, Integer courseGroupId, int state, int page, int size);
+
+    /**
+     * 查询课群下的作业，name is like
+     *
+     * @param user          user
+     * @param isTeacher     是否是教师
+     * @param courseGroupId 课群id
+     * @param name          课群名
+     * @param state         状态
+     * @param page          页号
+     * @param size          数量
+     * @return HomeworkVo for list
+     */
+    List<HomeworkVo> findByCourseGroupAndNameIsLikeAndStateForPage(UserEntity user, Boolean isTeacher, Integer courseGroupId, String name, int state, int page, int size);
 }
