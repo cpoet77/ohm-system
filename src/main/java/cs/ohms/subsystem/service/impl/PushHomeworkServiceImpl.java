@@ -64,4 +64,9 @@ public class PushHomeworkServiceImpl implements PushHomeworkService {
         }
         return false;
     }
+
+    @Override
+    public PushHomeworkEntity findById(Integer pushHomeworkId) {
+        return pushHomeworkRepository.findById(pushHomeworkId).orElse(null);
+    }
 }
