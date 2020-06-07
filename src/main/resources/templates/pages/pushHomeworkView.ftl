@@ -57,6 +57,24 @@
                                 <#else>
                                     <h3 class="text-center">作业已提交，耐心等待教师评分！</h3>
                                 </#if>
+                                <hr/>
+                                ${pushHomework.text!""}
+                                <br/>
+                                <div class="row">
+                                    <#list pushHomework.resources as resource>
+                                        <div class="col-md-3 col-sm-6 col-xs-12">
+                                            <div class="info-box bg-green"
+                                                 onclick="NS.to(NS.getSentinelResourceUrl('${resource.id}', '${resource.name}', '${resource.suffix}'))">
+                                                <span class="info-box-icon bg-yellow"><i
+                                                            class="fa fa-files-o"></i></span>
+                                                <div class="info-box-content">
+                                                    <span class="info-box-text">${resource.name!""}</span>
+                                                    <span class="info-box-number">${resource.suffix}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </#list>
+                                </div>
                             <#else>
                                 <div class="form-group">
                                     <label for="textContentEditor">描述</label>
