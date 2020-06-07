@@ -51,7 +51,12 @@
             /**
              * 受保护的文件访问基地址
              */
-            baseSentinelResourceUrl: '/file/resource'
+            baseSentinelResourceUrl: '/file/resource',
+
+            /**
+             * 删除文件资源
+             */
+            deleteFileUrl: '/file/deleteFile'
         },
         /**
          * 发起post请求
@@ -186,6 +191,16 @@
         getSentinelResourceUrl: function (id, name, fix) {
             return ((NS.isNull(id) || NS.isNull(name) || NS.isNull(fix)) ? '' : NS.api.baseSentinelResourceUrl
                 + "/" + id + "/" + name + fix);
+        },
+
+        /**
+         * 获取受保护文件的url地址，传入上传成功后的返回的resource
+         *
+         * @param resource
+         * @returns {string}
+         */
+        getSentinelResourceUrlI: function (resource) {
+            return (NS.getSentinelResourceUrl(resource.id, resource.name, resource.suffix));
         },
 
         /**

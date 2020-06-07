@@ -2,6 +2,7 @@
 package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
+import cs.ohms.subsystem.entity.ResourceEntity;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.viewobject.LogFileInfoVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -93,5 +95,61 @@ public interface ResourceService {
      */
     String getLogFileContent(String fileName);
 
-    ResponseResult saveConfidentialResource(UserEntity attribute, String uuid, String name, String fix, String path, Boolean isPublic);
+    /**
+     * 保存受保护资源的信息入库
+     *
+     * @param user     拥有者
+     * @param uuid     资源uuid
+     * @param name     资源名
+     * @param fix      资源后缀
+     * @param path     资源路径
+     * @param isPublic 是否公开资源
+     * @return ResponseResult
+     */
+    ResponseResult saveConfidentialResource(UserEntity user, String uuid, String name, String fix, String path, Boolean isPublic);
+
+    /**
+     * 删除用户指定的资源
+     *
+     * @param user       目标用户
+     * @param resourceId 资源id
+     * @return true|false
+     */
+    boolean deleteResource(UserEntity user, String resourceId);
+
+    /**
+     * 获取文件对象，当没有权限访问或者资源不存在的时返回null
+     *
+     * @param user       用户
+     * @param resourceId 资源id
+     * @param fileName   文件名
+     * @param fix        后缀
+     * @return File|null
+     */
+    File getResourceFile(UserEntity user, String resourceId, String fileName, String fix);
+
+    /**
+     * 判断用户是否有权限访问指定资源
+     *
+     * @param userId     用户id
+     * @param resourceId 资源id
+     * @return true|false
+     */
+    boolean haveAccessTo(Integer userId, String resourceId);
+
+    /**
+     * 获取指定ids的资源实体
+     *
+     * @param ids ids
+     * @return ResourceEntity for list
+     */
+    List<ResourceEntity> findAllByResourceId(Collection<String> ids);
+
+    /**
+     * 格式：id1,id2,id3...
+     *
+     * @param ids ids
+     * @return ResourceEntity  for list
+     */
+    List<ResourceEntity> findAllByResourceId(String ids);
 }

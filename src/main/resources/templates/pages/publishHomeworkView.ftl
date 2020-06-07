@@ -26,7 +26,7 @@
             <section class="content">
                 <!-- general form elements -->
                 <div class="box box-danger">
-                    <form role="form">
+                    <form role="form" id="publishHomeworkForm">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="title">标题</label>
@@ -35,7 +35,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="textContentEditor">描述</label>
-                                <textarea id="textContentEditor" rows="20" cols="80"></textarea>
+                                <textarea name="description" id="textContentEditor" rows="20" cols="80"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="uploadFileInput">附件</label>
@@ -47,7 +47,8 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right" id="startTimeAndEndTime">
+                                    <input type="text" name="startTimeAndEndTime" class="form-control pull-right"
+                                           id="startTimeAndEndTime">
                                 </div>
                             </div>
                         </div>
@@ -56,7 +57,8 @@
                             <button type="button" onclick="NS.to('/homework?courseGroup=${courseGroup.id}')"
                                     class="btn btn-success pull-left">返回上级
                             </button>
-                            <button type="button" class="btn btn-warning pull-right">发布作业</button>
+                            <button id="publishHomeworkBtn" type="button" class="btn btn-warning pull-right">发布作业
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -78,12 +80,36 @@
     <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
     <script>
         $(function () {
+            const uploadFiles = new Map();
             const textContentEditor = textboxio.replace('#textContentEditor', NS.textboxioConfig);
             const uploadFileInput = $('#uploadFileInput');
+            let startTime = null;
+            let endTime = null;
             $('#startTimeAndEndTime').daterangepicker({
-                timePicker: true,
-                timePickerIncrement: 30,
-                format: 'MM/DD/YYYY h:mm A'
+                'locale': {
+                    "format": 'YYYY-MM-DD HH:mm:ss',
+                    "separator": " 至 ",
+                    "applyLabel": "确定",
+                    "cancelLabel": "取消",
+                    "fromLabel": "开始时间",
+                    "toLabel": "结束时间'",
+                    "customRangeLabel": "自定义",
+                    "weekLabel": "W",
+                    "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+                    "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                    "firstDay": 1
+                },
+                "timePicker": true,
+                "timePicker24Hour": true,
+                "startDate": moment(),
+                "endDate": moment(),
+                "minDate": moment(),
+                "maxDate": moment().add(45, 'days'),
+                "opens": "center",
+                "drops": "up"
+            }, function (start, end, label) {
+                startTime = start.format('YYYY-MM-DD HH:mm:ss');
+                endTime = end.format('YYYY-MM-DD HH:mm:ss');
             });
             uploadFileInput.fileinput({
                 language: 'zh',
@@ -94,15 +120,109 @@
                 maxFileCount: 25,
                 maxFileSize: 10240,
                 enctype: 'multipart/form-data',
+                removeFromPreviewOnError: true,
                 validateInitialCount: true,
                 msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
             });
             uploadFileInput.on('fileuploaded', (event, data, previewId, index) => {
                 const res = data.response;
                 if (res.code === 1000) {
-
+                    insertResourceToFiles(previewId, res.data.resource);
                 } else {
                     xtip.msg('系统错误！', {icon: 'e'});
+                }
+            }).on('filesuccessremove', (event, previewId, extra) => {
+                const resource = uploadFiles.get(previewId);
+                if (NS.isNull(resource)) {
+                    return;
+                }
+                NS.post(NS.api.deleteFileUrl, {resourceId: resource.id}, (res) => {
+                    if (res.code === 1000) {
+                        deleteResourceForFiles(previewId);
+                    } else {
+                        xtip.msg('系统错误！', {icon: 'e'});
+                    }
+                });
+            });
+
+            function insertResourceToFiles(previewId, resource) {
+                uploadFiles.set(previewId, resource);
+            }
+
+            function deleteResourceForFiles(previewId) {
+                if (!uploadFiles.delete(previewId)) {
+                    xtip.msg('系统错误！', {icon: 'e'});
+                }
+            }
+
+            const publishHomeworkForm = $('#publishHomeworkForm');
+
+            function reloadPublishHomeworkFormValidator() {
+                try {
+                    publishHomeworkForm.data('bootstrapValidator').destroy();
+                    publishHomeworkForm.data('bootstrapValidator', null);
+                } catch (e) {
+                }
+                publishHomeworkForm.bootstrapValidator({
+                    verbose: false,     /* 对field内的条件按顺序验证 */
+                    message: '数据校验失败',
+                    fields: {
+                        title: {
+                            validators: {
+                                notEmpty: {
+                                    message: '作业标题不能为空'
+                                },
+                                stringLength: {
+                                    min: 2,
+                                    max: 64,
+                                    message: '作业标题长度在1-64位'
+                                }
+                            }
+                        },
+                        startTimeAndEndTime: {
+                            validators: {
+                                callback: {
+                                    message: '请确定作业的开始时间和结束时间',
+                                    callback: function (value, validator) {
+                                        return !(NS.isNull(startTime) || NS.isNull(endTime) || startTime === endTime);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            $('#publishHomeworkBtn').on('click', () => {
+                reloadPublishHomeworkFormValidator();
+                const bootstrapValidator = publishHomeworkForm.data('bootstrapValidator');
+                if (bootstrapValidator.validate().isValid()) {
+                    const adding = xtip.load('发布中...');
+                    let filesArray = [];
+                    for (let value of uploadFiles.values()) {
+                        filesArray[filesArray.length] = value.id;
+                    }
+                    const title = (new FormData(publishHomeworkForm[0])).get('title');
+                    const description = textContentEditor.content.get();
+                    const files = filesArray.toString();
+                    NS.post('/publishHomework/addHomework', {
+                        courseGroupId: ${courseGroup.id},
+                        title: title,
+                        description: description,
+                        files: files,
+                        startTime: startTime,
+                        endTime: endTime
+                    }, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('发布成功！', {icon: 's'});
+                            setTimeout(() => {
+                                NS.reload();
+                            }, 3000);
+                        } else {
+                            xtip.msg('发布失败！', {icon: 'e'});
+                        }
+                        xtip.close(adding);
+                    });
                 }
             });
         });

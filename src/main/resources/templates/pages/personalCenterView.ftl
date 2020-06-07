@@ -509,6 +509,7 @@
                 maxFileCount: 1,
                 maxFileSize: 1024,
                 enctype: 'multipart/form-data',
+                removeFromPreviewOnError: true,
                 validateInitialCount: true,
                 msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
             });
