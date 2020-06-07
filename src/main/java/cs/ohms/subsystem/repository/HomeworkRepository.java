@@ -10,12 +10,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * @author <a href="https://www.nsleaf.cn">nsleaf</a>
  */
 @Repository
 public interface HomeworkRepository extends JpaRepository<HomeworkEntity, Integer>, JpaSpecificationExecutor<HomeworkEntity> {
+    Optional<HomeworkEntity> findByCourseGroup_IdAndId(Integer courseGroup_id, Integer id);
+
     Page<HomeworkEntity> findByCourseGroup(CourseGroupEntity courseGroup, Pageable pageable);
 
     Page<HomeworkEntity> findByCourseGroupAndTitleIsLike(CourseGroupEntity courseGroup, String title, Pageable pageable);

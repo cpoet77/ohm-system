@@ -60,7 +60,8 @@
                             </form>
                         </div>
                         <div class="box-body">
-                            <div type="button" class="btn btn-block btn-social btn-default btn-lg"
+                            <div type="button" v-on:click="toHomeworkView(homework.id)"
+                                 class="btn btn-block btn-social btn-default btn-lg"
                                  v-for="homework in homeworkList">
                                 <i class="fa fa-file-text-o" style="width: 60px"></i>
                                 <div>
@@ -128,6 +129,12 @@
                         this.page = 0;
                         this.homeworkList = [];
                         this.loadHomeworkList();
+                    },
+                    toHomeworkView: function (homeworkId) {
+                        if (NS.isNull(homeworkId)) {
+                            return;
+                        }
+                        NS.to('/pushHomework?courseGroup=${courseGroup.id}&homework=' + homeworkId);
                     }
                 },
                 created: function () {

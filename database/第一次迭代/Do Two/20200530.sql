@@ -196,6 +196,8 @@ create table if not exists ohms_push_homework
     student_id  CHAR(12) not null comment '学号',
     push_time   datetime not null default current_timestamp comment '上传时间',
     text        text     null comment '作业描述',
+    score       INT               DEFAULT NULL COMMENT '评分',
+    assess     TEXT     NULL COMMENT '教师评价',
     foreign key (homework_id) references ohms_homework (id) on delete cascade on update cascade,
     foreign key (student_id) references ohms_student (student_id) on delete cascade on update cascade
 ) engine innoDB comment '学生已上传的作业';

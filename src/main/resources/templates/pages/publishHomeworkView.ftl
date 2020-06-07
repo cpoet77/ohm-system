@@ -1,5 +1,5 @@
 <#-- 教师发布作业 -->
-<#assign pageTitle>发布作业|${courseGroup.name!""}</#assign>
+<#assign pageTitle>发布作业|${courseGroup.courseGroupName!""}</#assign>
 <#assign restHead>
     <link href="/static/plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet"
           type="text/css"/>
@@ -19,7 +19,7 @@
                 <ol class="breadcrumb">
                     <li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
                     <li><a href="/myCourseGroup">我的课群</a></li>
-                    <li><a href="/homework?courseGroup=${courseGroup.id}">${courseGroup.name!""}</a></li>
+                    <li><a href="/homework?courseGroup=${courseGroup.id}">${courseGroup.courseGroupName!""}</a></li>
                     <li class="active">发布作业</li>
                 </ol>
             </section>

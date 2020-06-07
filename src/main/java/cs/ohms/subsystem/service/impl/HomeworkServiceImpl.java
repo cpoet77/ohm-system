@@ -78,6 +78,12 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
+    public HomeworkEntity findByCourseGroupAndId(@NotNull Integer courseGroupId, Integer homeworkId) {
+        Optional<HomeworkEntity> homeworkOpt = homeworkRepository.findByCourseGroup_IdAndId(courseGroupId, homeworkId);
+        return homeworkOpt.orElse(null);
+    }
+
+    @Override
     public List<HomeworkVo> findByCourseGroupAndStateForPage(@NotNull UserEntity user, Boolean isTeacher, Integer courseGroupId, int state, int page, int size) {
         CourseGroupEntity courseGroup = isTeacher ? getCourseGroupByTeacher(user, courseGroupId) : getCourseGroupByStudent(user, courseGroupId);
         if (courseGroup == null) {

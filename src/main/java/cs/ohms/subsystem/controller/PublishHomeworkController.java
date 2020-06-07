@@ -2,12 +2,12 @@
 package cs.ohms.subsystem.controller;
 
 import cs.ohms.subsystem.common.ResponseResult;
-import cs.ohms.subsystem.entity.CourseGroupEntity;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.exception.NSRuntimeException;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.service.HomeworkService;
 import cs.ohms.subsystem.service.UserService;
+import cs.ohms.subsystem.viewobject.CourseGroupVo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -49,7 +49,8 @@ public class PublishHomeworkController {
      */
     @GetMapping
     public ModelAndView index(@RequestParam("courseGroup") @NotNull @Min(1) Integer courseGroupId) {
-        CourseGroupEntity courseGroup = courseGroupService.findById(courseGroupId);
+        CourseGroupVo courseGroup = courseGroupService.findByTeacherAndId((UserEntity) SecurityUtils.getSubject()
+                .getSession().getAttribute(UserService.USER_SELF), courseGroupId);
         if (courseGroup == null) {
             throw new NSRuntimeException("未找到课群相关信息");
         }

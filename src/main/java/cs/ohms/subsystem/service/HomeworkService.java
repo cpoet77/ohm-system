@@ -1,6 +1,7 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/06/07.
 package cs.ohms.subsystem.service;
 
+import cs.ohms.subsystem.entity.HomeworkEntity;
 import cs.ohms.subsystem.entity.UserEntity;
 import cs.ohms.subsystem.viewobject.HomeworkVo;
 
@@ -25,6 +26,15 @@ public interface HomeworkService {
      */
     boolean addHomework(UserEntity user, Integer courseGroupId, String title, String description, String files
             , LocalDateTime startTime, LocalDateTime endTime);
+
+    /**
+     * 查找作业
+     *
+     * @param courseGroupId 课群id
+     * @param homeworkId    作业id
+     * @return 作业实体
+     */
+    HomeworkEntity findByCourseGroupAndId(Integer courseGroupId, Integer homeworkId);
 
     /**
      * 查询课群下的作业信息

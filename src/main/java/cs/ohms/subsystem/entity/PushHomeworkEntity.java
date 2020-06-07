@@ -43,6 +43,12 @@ public class PushHomeworkEntity implements Serializable {
     @Column
     private String text;//文本描述
 
+    @Column
+    private Integer score;//评分
+
+    @Column
+    private String assess;//评语
+
     @ManyToMany
     @JoinTable(name = "ohms_push_homework_resource", joinColumns = {@JoinColumn(name = "push_homework_id", referencedColumnName = "id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "id", nullable = false)})

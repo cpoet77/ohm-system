@@ -1,85 +1,186 @@
-<#assign activeIndex = true />
-<#assign pageTitle>提交作业</#assign>
-<#include "../common/head.ftl" />
+<#-- 学生提交作业 -->
+<#assign pageTitle>提交作业|${courseGroup.courseGroupName!""}</#assign>
+<#assign restHead>
+    <link href="/static/plugins/bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet"
+          type="text/css"/>
+    <link rel="stylesheet" href="/static/plugins/bootstrapvalidator/bootstrapValidator.min.css">
+</#assign>
+<#include "../common/head.ftl"/>
+<!-- Full Width Column -->
 <div class="wrapper">
-    <#include "../common/header.ftl">
-    <!-- Full Width Column -->
+    <#include "../common/header.ftl"/>
     <div class="content-wrapper">
         <div class="container">
-            <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
                     提交作业
-                    <small></small>
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
-                    <li><a href="#">我的作业</a></li>
+                    <li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
+                    <li><a href="/myCourseGroup">我的课群</a></li>
+                    <li><a href="/homework?courseGroup=${courseGroup.id}">${courseGroup.courseGroupName!""}</a></li>
                     <li class="active">提交作业</li>
                 </ol>
             </section>
-
-            <!-- Main content -->
             <section class="content">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-primary">
-                            <div class="box-header with-border callout callout-info bg-red">
-                                <h6 class="box-title ">填写提交作业信息</h6>
+                <!-- general form elements -->
+                <div class="box box-danger">
+                    <form role="form" id="pushHomeworkForm">
+                        <div class="box-body">
+                            <h3>${homework.title!""}</h3>
+                            <br/>
+                            ${homework.content!"无"}
+                            <br/>
+                            <div class="row">
+                                <#list homework.resources as resource>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <div class="info-box bg-green"
+                                             onclick="NS.to(NS.getSentinelResourceUrl('${resource.id}', '${resource.name}', '${resource.suffix}'))">
+                                            <span class="info-box-icon bg-yellow"><i class="fa fa-files-o"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">${resource.name!""}</span>
+                                                <span class="info-box-number">${resource.suffix}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </#list>
                             </div>
-                            <!-- /.box-header -->
-                            <div class="box-body">
-                                <div class="form-group box box-info">
-                                    <br>
-                                    <h3 class="box-title">第一章、虎落平阳你不陪，东山再起你是谁</h3>
-                                </div>
-                                <div class="form-group box box-info ">
-                                    <br>
-                                    <h4 class="box-title">作业详情</h4>
-                                    <h5 class="box-title"> 4个附件</h5>
-                                    <div class="box-group">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <a style="background-image: url(../../static/dist/img/user1-128x128.jpg)"
-                                           href="#"> 下载 </a>
-                                    </div>
-                                </div>
-                                <div class="form-group box box-info">
-                                    <br>
-                                    <h4 class="box-title ">作业内容</h4>
-                                    <textarea class="form-control" placeholder="作业内容"
-                                              style="width: 100%; height: 180px; font-size: 14px; line-height: 16px; border: 1px solid #dddddd; padding: 10px;">
-                                    </textarea>
-                                </div>
-                                <div class="form-group box box-info"><br>
-                                    <div class="btn btn-default btn-file">
-                                        <i class="fa fa-paperclip"></i> 添加附件
-                                        <input type="file" name="attachment">
-                                    </div>
-                                    <div class="bg-yellow">
-                                        <b>
-                                            注意! 最多可添加 30 个附件，单个文件最大限制 300 MB，视频支持 MP4 格式, H.264+AAC, 建议大小: 640*480,
-                                            更多信息请参考
-                                        </b>
-                                    </div>
-                                </div>
-
-                                <div class="table table-bordered text-center">
-                                    <button type="button" class="btn btn-info">提交</button>
-                                    <button type="reset" class="btn btn-info">重置</button>
-                                </div>
+                            <hr/>
+                            <div class="form-group">
+                                <label for="textContentEditor">描述</label>
+                                <textarea name="description" id="textContentEditor" rows="20" cols="80"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="uploadFileInput">附件</label>
+                                <input id="uploadFileInput" name="file" type="file" class="file-loading">
                             </div>
                         </div>
-                    </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="button" onclick="NS.to('/homework?courseGroup=${courseGroup.id}')"
+                                    class="btn btn-success pull-left">返回上级
+                            </button>
+                            <button id="publishHomeworkBtn" type="button" class="btn btn-warning pull-right">提交作业
+                            </button>
+                        </div>
+                    </form>
                 </div>
+                <!-- /.box -->
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.container -->
     </div>
+    <#include "../common/copyright.ftl"/>
 </div>
 <!-- /.content-wrapper -->
-<#include "../common/copyright.ftl">
-<#include "../common/footer.ftl">
+<#assign restFooter>
+    <script src="/static/plugins/bootstrap-fileinput/js/plugins/piexif.min.js" type="text/javascript"></script>
+    <script src="/static/plugins/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript"></script>
+    <script src="/static/plugins/bootstrap-fileinput/js/locales/zh.js" type="text/javascript"></script>
+    <script src="/static/plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+    <script src="/static/plugins/bootstrapvalidator/zh.js"></script>
+    <script type="text/javascript" src="/static/plugins/textboxio/textboxio.js"></script>
+    <script>
+        $(function () {
+            const uploadFiles = new Map();
+            const textContentEditor = textboxio.replace('#textContentEditor', NS.textboxioConfig);
+            const uploadFileInput = $('#uploadFileInput');
+            uploadFileInput.fileinput({
+                language: 'zh',
+                uploadUrl: NS.api.uploadSentinelResourceUrl,
+                allowedFileExtensions: ['jpg', 'gif', 'png', 'doc', 'docx', 'xls', 'xlsx', 'zip', 'rar', 'mp4', 'mp3'],
+                showUpload: true,
+                showCaption: true,
+                maxFileCount: 25,
+                maxFileSize: 10240,
+                enctype: 'multipart/form-data',
+                removeFromPreviewOnError: true,
+                validateInitialCount: true,
+                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
+            });
+            uploadFileInput.on('fileuploaded', (event, data, previewId, index) => {
+                const res = data.response;
+                if (res.code === 1000) {
+                    insertResourceToFiles(previewId, res.data.resource);
+                } else {
+                    xtip.msg('系统错误！', {icon: 'e'});
+                }
+            }).on('filesuccessremove', (event, previewId, extra) => {
+                const resource = uploadFiles.get(previewId);
+                if (NS.isNull(resource)) {
+                    return;
+                }
+                NS.post(NS.api.deleteFileUrl, {resourceId: resource.id}, (res) => {
+                    if (res.code === 1000) {
+                        deleteResourceForFiles(previewId);
+                    } else {
+                        xtip.msg('系统错误！', {icon: 'e'});
+                    }
+                });
+            });
+
+            function insertResourceToFiles(previewId, resource) {
+                uploadFiles.set(previewId, resource);
+            }
+
+            function deleteResourceForFiles(previewId) {
+                if (!uploadFiles.delete(previewId)) {
+                    xtip.msg('系统错误！', {icon: 'e'});
+                }
+            }
+
+            const pushHomeworkForm = $('#pushHomeworkForm');
+
+            function reloadPushHomeworkFormValidator() {
+                try {
+                    pushHomeworkForm.data('bootstrapValidator').destroy();
+                    pushHomeworkForm.data('bootstrapValidator', null);
+                } catch (e) {
+                }
+                pushHomeworkForm.bootstrapValidator({
+                    verbose: false,     /* 对field内的条件按顺序验证 */
+                    message: '数据校验失败',
+                    fields: {
+                        file: {
+                            validators: {
+                                callback: {
+                                    message: '描述和上传文件至少选择完成一项!',
+                                    callback: function (value, validator) {
+                                        return textContentEditor.content.isDirty() || uploadFiles.size > 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            $('#publishHomeworkBtn').on('click', () => {
+                reloadPushHomeworkFormValidator();
+                const bootstrapValidator = pushHomeworkForm.data('bootstrapValidator');
+                if (bootstrapValidator.validate().isValid()) {
+                    const adding = xtip.load('提交中...');
+                    let filesArray = [];
+                    for (let value of uploadFiles.values()) {
+                        filesArray[filesArray.length] = value.id;
+                    }
+                    const description = textContentEditor.content.get();
+                    const files = filesArray.toString();
+                    NS.post('/pushHomework/pushHomework', {
+                        homeworkId: ${homework.id},
+                        description: description,
+                        files: files
+                    }, (res) => {
+                        if (res.code === 1000) {
+                            xtip.msg('提交成功！', {icon: 's'});
+                            NS.to('/homework?courseGroup=${courseGroup.id}', 3000);
+                        } else {
+                            xtip.msg('提交失败！', {icon: 'e'});
+                        }
+                        xtip.close(adding);
+                    });
+                }
+            });
+        });
+    </script>
+</#assign>
+<#include "../common/footer.ftl" />

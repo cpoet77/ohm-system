@@ -12,6 +12,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -44,12 +45,14 @@ public class LoginController {
     /**
      * 返回登录视图
      *
-     * @param backUrl 登录后回调的地址
+     * @param request HttpServletRequest
      * @return ModelAndView
      */
     @GetMapping
-    public ModelAndView index(@RequestParam(required = false) String backUrl) {
+    public ModelAndView index(@NotNull HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
+        String queryStr = request.getQueryString();
+        String backUrl = queryStr.replaceAll("^backUrl=", "");
         if (subject.isAuthenticated()) {
             if (NStringUtil.isEmpty(backUrl)) {
                 return (new ModelAndView(NStringUtil.joint("redirect:{}", subject.hasRole("admin")
