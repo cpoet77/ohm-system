@@ -6,7 +6,7 @@
     <#include "common/header.ftl" />
     <div class="content-wrapper">
         <div>
-            <img src="../static/images/2.jpg" style="width:1535px; height:620px">
+            <img src="../static/images/2.jpg" style="width:1535px; height:620px" alt="">
         </div>
         <div class="container">
         </div>
