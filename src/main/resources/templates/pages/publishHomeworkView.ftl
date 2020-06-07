@@ -215,9 +215,7 @@
                     }, (res) => {
                         if (res.code === 1000) {
                             xtip.msg('发布成功！', {icon: 's'});
-                            setTimeout(() => {
-                                NS.reload();
-                            }, 3000);
+                            NS.to('/homework?courseGroup=${courseGroup.id}', 3000);
                         } else {
                             xtip.msg('发布失败！', {icon: 'e'});
                         }

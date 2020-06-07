@@ -137,6 +137,19 @@ public class FileController {
     }
 
     /**
+     * 用户删除自身的资源
+     *
+     * @param resourceId 资源id
+     * @return ResponseResult
+     */
+    @PostMapping("/deleteFile")
+    @ResponseBody
+    public ResponseResult deleteFile(@RequestParam("resourceId") @NotEmpty @Length(min = 32, max = 32) String resourceId) {
+        return (resourceService.deleteResource((UserEntity) SecurityUtils.getSubject().getSession().getAttribute(UserService.USER_SELF)
+                , resourceId) ? ResponseResult.enSuccess() : ResponseResult.enFail());
+    }
+
+    /**
      * 下载受保护的资源
      * <p>注意：需要进行资源下载权限验证</p>
      *
@@ -145,23 +158,23 @@ public class FileController {
      * @param fix        后缀
      * @param response   HttpServletResponse
      */
-//    @GetMapping("/resource/{resourceId}/{fileName}.{fix}")
-//    @RequiresAuthentication
-//    public void resource(@PathVariable @NotEmpty @Length(min = 32, max = 32) String resourceId
-//            , @PathVariable @NotEmpty String fileName, @PathVariable @NotEmpty String fix
-//            , @NotNull HttpServletResponse response) {
-//        File file = resourceService.getResourceFile((UserEntity) SecurityUtils.getSubject().getSession()
-//                .getAttribute(UserService.USER_SELF), resourceId, fileName, NStringUtil.joint(".{}", fix));
-//        try {
-//            if (file != null) {
-//                doWriteData(file, response.getOutputStream());
-//            } else {
-//                throw new NSRuntimeException("Unqualified files or Output Stream");
-//            }
-//        } catch (IOException e) {
-//            log.warn("Failed to get output stream");
-//        }
-//    }
+    @GetMapping("/resource/{resourceId}/{fileName}.{fix}")
+    @RequiresAuthentication
+    public void resource(@PathVariable @NotEmpty @Length(min = 32, max = 32) String resourceId
+            , @PathVariable @NotEmpty String fileName, @PathVariable @NotEmpty String fix
+            , @NotNull HttpServletResponse response) {
+        File file = resourceService.getResourceFile((UserEntity) SecurityUtils.getSubject().getSession()
+                .getAttribute(UserService.USER_SELF), resourceId, fileName, NStringUtil.joint(".{}", fix));
+        try {
+            if (file != null) {
+                doWriteData(file, response.getOutputStream());
+            } else {
+                throw new NSRuntimeException("Unqualified files or Output Stream");
+            }
+        } catch (IOException e) {
+            log.warn("Failed to get output stream");
+        }
+    }
 
     /**
      * 将文件数据写入输出流
