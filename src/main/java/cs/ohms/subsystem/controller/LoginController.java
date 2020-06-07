@@ -52,7 +52,7 @@ public class LoginController {
     public ModelAndView index(@NotNull HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
         String queryStr = request.getQueryString();
-        String backUrl = queryStr.replaceAll("^backUrl=", "");
+        String backUrl = NStringUtil.isEmpty(queryStr) ? "/" : queryStr.replaceAll("^backUrl=", "");
         if (subject.isAuthenticated()) {
             if (NStringUtil.isEmpty(backUrl)) {
                 return (new ModelAndView(NStringUtil.joint("redirect:{}", subject.hasRole("admin")
