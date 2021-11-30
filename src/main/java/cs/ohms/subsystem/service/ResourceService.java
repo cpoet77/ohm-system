@@ -4,7 +4,7 @@ package cs.ohms.subsystem.service;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.ResourceEntity;
 import cs.ohms.subsystem.entity.UserEntity;
-import cs.ohms.subsystem.viewobject.LogFileInfoVo;
+import cs.ohms.subsystem.vo.LogFileInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

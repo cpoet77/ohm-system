@@ -3,7 +3,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.TeacherEntity;
-import cs.ohms.subsystem.tableobject.TeacherInfoTo;
+import cs.ohms.subsystem.to.TeacherInfoTo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;

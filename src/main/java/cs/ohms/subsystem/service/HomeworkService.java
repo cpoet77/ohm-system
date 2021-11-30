@@ -3,7 +3,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.entity.HomeworkEntity;
 import cs.ohms.subsystem.entity.UserEntity;
-import cs.ohms.subsystem.viewobject.HomeworkVo;
+import cs.ohms.subsystem.vo.HomeworkVo;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -3,7 +3,7 @@ package cs.ohms.subsystem.controller.admin;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.service.ResourceService;
-import cs.ohms.subsystem.viewobject.LogFileInfoVo;
+import cs.ohms.subsystem.vo.LogFileInfoVo;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

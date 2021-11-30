@@ -1,4 +1,4 @@
-package cs.ohms.subsystem.viewobject;
+package cs.ohms.subsystem.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

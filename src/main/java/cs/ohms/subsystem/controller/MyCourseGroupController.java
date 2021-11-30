@@ -5,7 +5,7 @@ import cs.ohms.subsystem.exception.NSRuntimeException;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.service.UserService;
 import cs.ohms.subsystem.utils.NStringUtil;
-import cs.ohms.subsystem.viewobject.CourseGroupListVo;
+import cs.ohms.subsystem.vo.CourseGroupListVo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;

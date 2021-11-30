@@ -2,7 +2,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.ClassEntity;
-import cs.ohms.subsystem.viewobject.ClassVo;
+import cs.ohms.subsystem.vo.ClassVo;
 
 import java.util.List;
 

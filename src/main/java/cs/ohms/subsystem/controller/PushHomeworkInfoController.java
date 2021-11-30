@@ -9,7 +9,7 @@ import cs.ohms.subsystem.exception.NSRuntimeException;
 import cs.ohms.subsystem.service.CourseGroupService;
 import cs.ohms.subsystem.service.PushHomeworkService;
 import cs.ohms.subsystem.service.UserService;
-import cs.ohms.subsystem.viewobject.CourseGroupVo;
+import cs.ohms.subsystem.vo.CourseGroupVo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;

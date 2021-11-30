@@ -4,8 +4,8 @@ package cs.ohms.subsystem.service;
 import cs.ohms.subsystem.entity.ClassEntity;
 import cs.ohms.subsystem.entity.RoleEntity;
 import cs.ohms.subsystem.entity.UserEntity;
-import cs.ohms.subsystem.tableobject.StudentInfoTo;
-import cs.ohms.subsystem.tableobject.TeacherInfoTo;
+import cs.ohms.subsystem.to.StudentInfoTo;
+import cs.ohms.subsystem.to.TeacherInfoTo;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

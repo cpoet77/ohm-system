@@ -9,7 +9,7 @@ import cs.ohms.subsystem.repository.*;
 import cs.ohms.subsystem.service.HomeworkService;
 import cs.ohms.subsystem.service.ResourceService;
 import cs.ohms.subsystem.utils.NStringUtil;
-import cs.ohms.subsystem.viewobject.HomeworkVo;
+import cs.ohms.subsystem.vo.HomeworkVo;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

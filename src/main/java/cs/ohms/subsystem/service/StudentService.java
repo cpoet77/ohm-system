@@ -1,7 +1,7 @@
 package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
-import cs.ohms.subsystem.tableobject.StudentInfoTo;
+import cs.ohms.subsystem.to.StudentInfoTo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;

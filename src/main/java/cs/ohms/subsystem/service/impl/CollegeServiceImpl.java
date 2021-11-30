@@ -8,7 +8,7 @@ import cs.ohms.subsystem.repository.MajorRepository;
 import cs.ohms.subsystem.repository.StudentRepository;
 import cs.ohms.subsystem.service.CollegeService;
 import cs.ohms.subsystem.service.ResourceService;
-import cs.ohms.subsystem.viewobject.CollegeVo;
+import cs.ohms.subsystem.vo.CollegeVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,7 +9,7 @@ import cs.ohms.subsystem.service.LoginService;
 import cs.ohms.subsystem.utils.JsonUtil;
 import cs.ohms.subsystem.utils.NSIPUtil;
 import cs.ohms.subsystem.utils.NStringUtil;
-import cs.ohms.subsystem.viewobject.LoginRecordVo;
+import cs.ohms.subsystem.vo.LoginRecordVo;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

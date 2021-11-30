@@ -3,7 +3,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.UserEntity;
-import cs.ohms.subsystem.viewobject.LoginRecordVo;
+import cs.ohms.subsystem.vo.LoginRecordVo;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.servlet.http.HttpServletRequest;

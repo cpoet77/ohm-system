@@ -3,7 +3,7 @@ package cs.ohms.subsystem.service;
 
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CollegeEntity;
-import cs.ohms.subsystem.viewobject.CollegeVo;
+import cs.ohms.subsystem.vo.CollegeVo;
 
 import java.util.List;
 

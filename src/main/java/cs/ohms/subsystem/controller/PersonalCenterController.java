@@ -8,7 +8,7 @@ import cs.ohms.subsystem.service.UserService;
 import cs.ohms.subsystem.validation.annotation.NSCharCheck;
 import cs.ohms.subsystem.validation.annotation.NSEmail;
 import cs.ohms.subsystem.validation.annotation.NSPhone;
-import cs.ohms.subsystem.viewobject.LoginRecordVo;
+import cs.ohms.subsystem.vo.LoginRecordVo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;

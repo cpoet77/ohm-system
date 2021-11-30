@@ -3,8 +3,8 @@ package cs.ohms.subsystem.service;
 import cs.ohms.subsystem.common.ResponseResult;
 import cs.ohms.subsystem.entity.CourseGroupEntity;
 import cs.ohms.subsystem.entity.UserEntity;
-import cs.ohms.subsystem.viewobject.CourseGroupListVo;
-import cs.ohms.subsystem.viewobject.CourseGroupVo;
+import cs.ohms.subsystem.vo.CourseGroupListVo;
+import cs.ohms.subsystem.vo.CourseGroupVo;
 
 import java.util.Collection;
 import java.util.List;

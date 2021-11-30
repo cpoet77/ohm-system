@@ -1,5 +1,5 @@
 // The code file was created by <a href="https://www.nsleaf.cn">nsleaf</a> (email:nsleaf@foxmail.com) on 2020/05/25.
-package cs.ohms.subsystem.viewobject;
+package cs.ohms.subsystem.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
